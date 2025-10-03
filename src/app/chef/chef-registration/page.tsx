@@ -1,25 +1,138 @@
 export default function ChefRegistration() {
   return (
     <>
-      <header className="relative h-[500]">
-        {/* image container */}
-        <div className="relative -z-10 mt-18 h-full bg-[url('/registration/header-chef-mobile.webp')] bg-cover bg-no-repeat md:bg-[url('/registration/header-chef.webp')] md:bg-auto">
-          <div className="absolute inset-0 -z-10 bg-black/40" />
-          <div className="absolute top-[50%] left-[50%] w-lg -translate-[50%] text-center md:w-3xl">
-            <h1 className="text-lg font-semibold text-white md:text-3xl">
-              Fare ciò che si ama
-            </h1>
-            <button className="mt-8 rounded-4xl bg-[#F4C858] px-6 py-3 text-sm font-semibold md:px-8 md:py-3">
-              Diventa uno dei nostri chef
-            </button>
+      <div className="-z-4 bg-[#F0EFEF]">
+        <header className="relative h-[500] w-screen">
+          {/* image container */}
+          <div className="relative z-10 mt-18 h-full bg-[url('/registration/header-chef-mobile.webp')] bg-cover md:bg-[url('/registration/header-chef.webp')]">
+            <div className="absolute inset-0 -z-5 bg-black/40" />
+            <div className="absolute top-[50%] left-[50%] -translate-[50%] text-center md:w-xl">
+              <h1 className="text-lg font-semibold text-white md:text-3xl">
+                Fare ciò che si ama
+              </h1>
+              <button className="z-20 mt-8 rounded-4xl bg-[#F4C858] px-6 py-3 text-sm font-semibold md:px-8 md:py-3">
+                Diventa uno dei nostri chef
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="absolute bottom-0 h-18 w-full rounded-t-3xl bg-red-500"></div>
-      </header>
-      {/* description section */}
-      <section>
-        <div className="w-full"></div>
-      </section>
+          <div className="absolute bottom-0 z-20 w-full md:px-4">
+            <div className="z-20 mx-auto h-14 rounded-t-3xl bg-white lg:max-w-4xl 2xl:max-w-7xl"></div>
+          </div>
+        </header>
+
+        {/* description section */}
+        <section className="w-full md:px-4">
+          <div className="mx-auto bg-white lg:max-w-4xl 2xl:max-w-7xl">
+            {/* first container */}
+            <div className="w-full items-center gap-8 p-3 md:flex">
+              <div className="pb-8 md:pb-0">
+                <h1 className="text-center text-2xl font-semibold md:text-4xl">
+                  Sii il capo di te stesso
+                </h1>
+                <h2 className="pt-2 text-center">
+                  Prendi il controllo del tuo tempo e del tuo futuro. È tempo di
+                  liberarsi dai confini delle mura del ristorante e dare forma
+                  alla tua storia.
+                </h2>
+              </div>
+              {/* images container */}
+              <div className="flex items-center justify-center">
+                <div className="h-[230px] w-[170px] px-2 md:h-[215px] md:w-[152px]">
+                  <div className="h-full w-full rounded-2xl bg-[url('/registration/man-in-nature.webp')] bg-cover"></div>
+                </div>
+                <div>
+                  <div className="h-[160px] w-[170px] pb-1 md:h-[153px] md:w-[150px]">
+                    <div className="h-full w-full rounded-2xl bg-[url('/registration/woman-chef.webp')] bg-cover"></div>
+                  </div>
+                  <div className="h-[160px] w-[170px] pt-1 md:h-[153px] md:w-[150px]">
+                    <div className="h-full w-full rounded-2xl bg-[url('/registration/fish-market.webp')] bg-cover"></div>
+                  </div>
+                </div>
+                <div className="h-[230px] w-[170px] px-2 md:h-[215px] md:w-[152px]">
+                  <div className="h-full w-full rounded-2xl bg-[url('/registration/woman-with-spoon.webp')] bg-cover"></div>
+                </div>
+              </div>
+            </div>
+            {/* second container */}
+            <div className="pt-20">
+              <div className="w-full items-center gap-8 p-3 md:flex md:flex-row-reverse">
+                <div className="pb-8 md:pb-0">
+                  <h1 className="text-center text-2xl font-semibold md:text-4xl">
+                    Cucina le tue creazioni
+                  </h1>
+                  <h2 className="pt-2 text-center">
+                    Metti i tuoi piatti caratteristici sotto i riflettori e
+                    libera tutte le tue grandi idee.
+                  </h2>
+                </div>
+                {/* images container */}
+                <div className="flex items-center justify-center">
+                  <div className="pt-9">
+                    <div className="h-48 w-44 p-1 md:h-50 md:w-46 lg:h-56 lg:w-52">
+                      <div className="h-full w-full rounded-2xl bg-[url('/registration/potato-with-somethin.webp')] bg-cover"></div>
+                    </div>
+                    <div className="h-48 w-44 p-1 md:h-50 md:w-46 lg:h-56 lg:w-52">
+                      <div className="h-full w-full rounded-2xl bg-[url('/registration/man-in-nature-with-food.webp')] bg-cover"></div>
+                    </div>
+                  </div>
+                  <div className="pb-9">
+                    <div className="h-48 w-44 p-1 md:h-50 md:w-46 lg:h-56 lg:w-52">
+                      <div className="h-full w-full rounded-2xl bg-[url('/registration/woman-with-cream.webp')] bg-cover"></div>
+                    </div>
+                    <div className="h-48 w-44 p-1 md:h-50 md:w-46 lg:h-56 lg:w-52">
+                      <div className="h-full w-full rounded-2xl bg-[url('/registration/strange-dessert.webp')] bg-cover"></div>
+                    </div>
+                  </div>
+                  <div className="pt-9">
+                    <div className="h-48 w-44 p-1 md:h-50 md:w-46 lg:h-56 lg:w-52">
+                      <div className="h-full w-full rounded-2xl bg-[url('/registration/smoking-whaterver-that-is.webp')] bg-cover"></div>
+                    </div>
+                    <div className="h-48 w-44 p-1 md:h-50 md:w-46 lg:h-56 lg:w-52">
+                      <div className="h-full w-full rounded-2xl bg-[url('/registration/rice-yellow.webp')] bg-cover"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* third container */}
+            <div className="pt-20">
+              <div className="w-full items-center gap-8 p-3 md:flex">
+                <div className="pb-8 md:pb-0">
+                  <h1 className="text-center text-2xl font-semibold md:text-4xl">
+                    Costruisci connessioni vere
+                  </h1>
+                  <h2 className="pt-2 text-center">
+                    Ispira i tuoi ospiti con le storie dietro i tuoi piatti ed
+                    entra a far parte di una vivace comunità di chef per far
+                    crescere la tua attività.
+                  </h2>
+                </div>
+                {/* images container */}
+                <div className="flex items-center justify-center">
+                  <div className="p-1">
+                    <div className="h-48 w-48 p-1 pb-2 md:h-50 md:w-46 lg:h-56 lg:w-60">
+                      <div className="h-full w-full rounded-2xl bg-[url('/registration/people-in-kitchen.webp')] bg-cover"></div>
+                    </div>
+                    <div className="h-56 w-48 pt-2 md:h-58 md:w-46 lg:h-64 lg:w-60">
+                      <div className="h-full w-full rounded-2xl bg-[url('/registration/man-chef-explaining.webp')] bg-cover"></div>
+                    </div>
+                  </div>
+                  <div className="p-1 pt-10">
+                    <div className="h-68 w-52 p-1 md:h-64 md:w-48 lg:h-68 lg:w-60">
+                      <div className="h-full w-full rounded-2xl bg-[url('/registration/table-of-people.webp')] bg-cover"></div>
+                    </div>
+                  </div>
+                  <div className="p-1 pb-10">
+                    <div className="h-68 w-52 p-1 md:h-64 md:w-48 lg:h-68 lg:w-60">
+                      <div className="h-full w-full rounded-2xl bg-[url('/registration/two-man-coocking.webp')] bg-cover"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </>
   );
 }

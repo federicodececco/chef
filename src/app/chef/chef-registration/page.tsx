@@ -2,7 +2,7 @@ export default function ChefRegistration() {
   return (
     <>
       <div className="-z-4 bg-[#F0EFEF]">
-        <header className="relative h-[500] w-screen">
+        <header className="relative h-[500] w-full">
           {/* image container */}
           <div className="relative z-10 mt-18 h-full bg-[url('/registration/header-chef-mobile.webp')] bg-cover md:bg-[url('/registration/header-chef.webp')]">
             <div className="absolute inset-0 -z-5 bg-black/40" />
@@ -21,8 +21,8 @@ export default function ChefRegistration() {
         </header>
 
         {/* description section */}
-        <section className="w-full md:px-4">
-          <div className="mx-auto bg-white lg:max-w-4xl 2xl:max-w-7xl">
+        <section className="w-full pb-20 md:px-4">
+          <div className="mx-auto rounded-b-3xl bg-white lg:max-w-4xl 2xl:max-w-7xl">
             {/* first container */}
             <div className="w-full items-center gap-8 p-3 md:flex">
               <div className="pb-8 md:pb-0">
@@ -95,7 +95,7 @@ export default function ChefRegistration() {
               </div>
             </div>
             {/* third container */}
-            <div className="pt-20">
+            <div className="relative -bottom-15 pt-20">
               <div className="w-full items-center gap-8 p-3 md:flex">
                 <div className="pb-8 md:pb-0">
                   <h1 className="text-center text-2xl font-semibold md:text-4xl">

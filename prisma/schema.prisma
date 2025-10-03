@@ -1,31 +1,103 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Chefs {
-    id          String   @id @default(cuid())
-    bio         String?  @db.VarChar(400)
-    avatarUrl   String?
-    phoneNumber String?
-    nation      String?
-    slug        String?
-    createdAt   DateTime @default(now())
+model Chef {
+  id          String   @id @default(cuid())
+  bio         String?  @db.VarChar(400)
+  avatarUrl   String?
+  phoneNumber String?
+  nation      String?
+  slug        String?
+  createdAt   DateTime @default(now())
 
-    user User @relation(fields: [id], references: [id], onDelete: Cascade)
+  Menus  Menu[]
+  Photos Photo[]
+  Dishes Dish[]
+
+  user User @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id        String   @id @default(cuid())
-    firstname String
-    lastname  String
-    email     String
-    password  String
-    createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  firstname String
+  lastname  String
+  email     String
+  password  String
+  createdAt DateTime @default(now())
 
-    chef Chefs?
+  chef Chef?
+}
+
+model Menu {
+  id         String   @id @default(cuid())
+  chefId     String
+  created_at DateTime @default(now())
+
+  Dishes Dish[]
+
+  chef Chef @relation(fields: [chefId], references: [id], onDelete: Cascade)
+
+  @@index([chefId])
+}
+
+model Photo {
+  id         String   @id @default(cuid())
+  imageUrl   String
+  imageName  String
+  chefId     String
+  created_at DateTime @default(now())
+
+  chef Chef @relation(fields: [chefId], references: [id], onDelete: Cascade)
+
+  @@index([chefId])
+}
+
+model Dish {
+  id         String   @id @default(cuid())
+  listOrder  Int
+  name       String
+  course     String
+  menuId     String
+  chefId     String
+  created_at DateTime @default(now())
+
+  categories Category[]
+
+  chef Chef @relation(fields: [chefId], references: [id], onDelete: Cascade)
+  menu Menu @relation(fields: [menuId], references: [id])
+
+  @@index([chefId])
+}
+
+model Category {
+  id         String   @id @default(cuid())
+  name       String
+  created_at DateTime @default(now())
+
+  Dishes Dish[]
+}
+
+model Chat {
+  id     String @id @default(cuid())
+  chefId String
+  userId String
+
+  Messages Message[]
+
+  @@index([chefId])
+}
+
+model Message {
+  id     String  @id @default(cuid())
+  chatId String
+  isChef Boolean
+  text   String
+
+  Chat Chat @relation(fields: [chatId], references: [id])
 }

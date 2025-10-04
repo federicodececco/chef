@@ -280,7 +280,7 @@ export default function ChefRegistration() {
           </div>
         </section>
         {/* faq section */}
-        <section>
+        <section className="mx-auto max-w-6xl">
           <FaqComponent />
         </section>
       </div>

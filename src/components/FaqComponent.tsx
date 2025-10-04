@@ -47,8 +47,8 @@ export default function FAQAccordion() {
   };
 
   return (
-    <div className="min-h-screen px-4 py-12">
-      <div className="mx-auto md:flex md:max-w-7xl md:gap-20">
+    <div className="px-4 py-12">
+      <div className="mx-auto justify-center md:flex md:gap-20">
         <div className="mb-12 text-center">
           <h1 className="mb-3 text-4xl font-bold">Domande Frequenti</h1>
           <p className="text-lg text-white/70">

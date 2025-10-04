@@ -2,6 +2,7 @@
 import ChefCarousel from "@/components/ChefCarousel";
 import CitySlider from "@/components/CitySlider";
 import FaqComponent from "@/components/FaqComponent";
+import RegistrationPopUp from "@/components/RegistrationPopUp";
 import {
   CalendarDays,
   File,
@@ -12,10 +13,17 @@ import {
   Shield,
   SlidersVertical,
 } from "lucide-react";
+import { useState } from "react";
 
 export default function ChefRegistration() {
+  const [isPopUpOpen, setisPopUpOpen] = useState(false);
+
+  const handleToggle = () => {
+    setisPopUpOpen(!isPopUpOpen);
+  };
   return (
     <>
+      {isPopUpOpen && <RegistrationPopUp handleToggle={handleToggle} />}
       <div className="-z-4 bg-[#232323] md:bg-[#0A0A0A]">
         <header className="relative h-[500] w-full">
           {/* image container */}
@@ -26,7 +34,10 @@ export default function ChefRegistration() {
               <h1 className="text-lg font-semibold text-white md:text-3xl">
                 Fare ciò che si ama
               </h1>
-              <button className="z-20 mt-8 rounded-4xl bg-[#F4C858] px-6 py-3 text-sm font-semibold md:px-8 md:py-3">
+              <button
+                className="z-20 mt-8 rounded-4xl bg-[#F4C858] px-6 py-3 text-sm font-semibold md:px-8 md:py-3"
+                onClick={handleToggle}
+              >
                 Diventa uno dei nostri chef
               </button>
             </div>

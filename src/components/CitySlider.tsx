@@ -31,14 +31,14 @@ export default function CitySlider() {
               i % 2 ? (
                 <span
                   key={i}
-                  className="bg-black bg-clip-text text-6xl font-bold whitespace-nowrap text-transparent"
+                  className="bg-[#C8A36A] bg-clip-text text-6xl font-bold whitespace-nowrap text-transparent"
                 >
                   {word}
                 </span>
               ) : (
                 <span
                   key={i}
-                  className="bg-white bg-clip-text text-6xl font-bold whitespace-nowrap text-transparent"
+                  className="bg-white/70 bg-clip-text text-6xl font-bold whitespace-nowrap text-transparent"
                 >
                   {word}
                 </span>
@@ -52,14 +52,14 @@ export default function CitySlider() {
               i % 2 ? (
                 <span
                   key={i}
-                  className="bg-black bg-clip-text text-6xl font-bold whitespace-nowrap text-transparent"
+                  className="bg-[#C8A36A] bg-clip-text text-6xl font-bold whitespace-nowrap text-transparent"
                 >
                   {word}
                 </span>
               ) : (
                 <span
                   key={i}
-                  className="bg-white bg-clip-text text-6xl font-bold whitespace-nowrap text-transparent"
+                  className="bg-white/70 bg-clip-text text-6xl font-bold whitespace-nowrap text-transparent"
                 >
                   {word}
                 </span>

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+h1 {
+  color: #c8a36a;
+}
 @keyframes scroll-right {
   0% {
     transform: translateX(-50%);

@@ -26,11 +26,11 @@ export default function ChefRegistration() {
   return (
     <>
       {isPopUpOpen && <RegistrationPopUp handleToggle={handleToggle} />}
-      <div className="-z-4 bg-[#232323] md:bg-[#0A0A0A]">
+      <div className="-z-4 mt-18 bg-[#232323] md:bg-[#0A0A0A]">
         <header className="relative h-[500] w-full">
           {/* image container */}
 
-          <div className="relative z-10 mt-18 h-full">
+          <div className="relative z-10 h-full">
             <div className="relative h-full">
               <Image
                 src={headerImage}
@@ -41,7 +41,7 @@ export default function ChefRegistration() {
                 blurDataURL="data:image/jpeg;base64,/9j"
               />
             </div>
-            <div className="absolute inset-0 -z-5 bg-black/40" />
+            <div className="absolute inset-0 z-0 bg-black/40" />
             <div className="absolute top-[50%] left-[50%] -translate-[50%] text-center md:w-xl">
               <h1 className="text-lg font-semibold text-white md:text-3xl">
                 Fare ciò che si ama

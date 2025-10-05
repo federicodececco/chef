@@ -8,18 +8,22 @@ datasource db {
 }
 
 model Chef {
-  id          String   @id @default(cuid())
-  bio         String?  @db.VarChar(400)
+  id          String  @id @default(cuid())
+  bio         String? @db.VarChar(800)
+  bioBrief    String?
   avatarUrl   String?
   coverUrl    String?
   phoneNumber String?
   nation      String?
   slug        String?
-  createdAt   DateTime @default(now())
+  nationality String?
+
+  createdAt DateTime @default(now())
 
   Menus  Menu[]
   Photos Photo[]
   Dishes Dish[]
+  Facts  Facts[]
 
   user User @relation(fields: [id], references: [id], onDelete: Cascade)
 }
@@ -41,6 +45,18 @@ model Menu {
   created_at DateTime @default(now())
 
   Dishes Dish[]
+
+  chef Chef @relation(fields: [chefId], references: [id], onDelete: Cascade)
+
+  @@index([chefId])
+}
+
+model Facts {
+  id         String   @id @default(cuid())
+  short      String
+  long       String
+  chefId     String
+  created_at DateTime @default(now())
 
   chef Chef @relation(fields: [chefId], references: [id], onDelete: Cascade)
 

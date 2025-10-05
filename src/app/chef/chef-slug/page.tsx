@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Chef } from "@prisma/client";
 import HeaderComponent from "@/components/HeaderComponent";
 import HeroPersonalComponent from "@/components/HeroPersonalComponent";
+import MenuCarouselComponent from "@/components/MenuCarouselComponent";
 
 export default function ChefPersonalPage() {
   const [chefData, setChefData] = useState<Chef | undefined>();
@@ -22,6 +23,7 @@ export default function ChefPersonalPage() {
     setAvatarImage(res.data.avatarUrl);
     setIsLoading(false);
     console.log(res.data);
+    console.log(res.data.Menus);
   };
   useEffect(() => {
     fetchData("cmgdlc2dc0000iw7w7irjpprz");
@@ -45,7 +47,10 @@ export default function ChefPersonalPage() {
             briefDescription={chefData?.bioBrief}
           />
         </section>
-        <section></section>
+        <section className="bg-[#232323] py-4 pb-10 md:px-4">
+          <h1 className="py-6 text-center text-4xl">I miei menu</h1>
+          <MenuCarouselComponent menus={chefData?.Menus} />
+        </section>
       </>
     );
   }

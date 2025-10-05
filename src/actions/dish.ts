@@ -29,6 +29,7 @@ export async function createDish(data: {
 
     return { success: true, data: dish };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to create dish" };
   }
 }
@@ -40,7 +41,7 @@ export async function updateDish(
     course?: string;
     listOrder?: number;
     categoryIds?: string[];
-  }
+  },
 ) {
   try {
     const { categoryIds, ...dishData } = data;
@@ -137,7 +138,7 @@ export async function getDishesByChef(chefId: string) {
 }
 
 export async function reorderDishes(
-  dishUpdates: { id: string; listOrder: number }[]
+  dishUpdates: { id: string; listOrder: number }[],
 ) {
   try {
     await prisma.$transaction(
@@ -145,8 +146,8 @@ export async function reorderDishes(
         prisma.dish.update({
           where: { id },
           data: { listOrder },
-        })
-      )
+        }),
+      ),
     );
 
     return { success: true };

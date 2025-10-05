@@ -3,10 +3,12 @@ import { getChef, updateChef, deleteChef } from "@/actions/chef";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await getChef(params.id);
+    const { id } = await params;
+
+    const result = await getChef(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });

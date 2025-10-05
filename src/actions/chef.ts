@@ -57,9 +57,8 @@ export async function getChef(id: string) {
       where: { id },
       include: {
         user: true,
-        Menus: true,
+        Menus: { include: { Dishes: true } },
         Photos: true,
-        Dishes: true,
         Facts: true,
       },
     });

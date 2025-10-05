@@ -3,8 +3,13 @@
 import { prisma } from "@/lib/prisma";
 
 export async function createPhoto(data: {
+  filename: string;
+  path: string;
+  size: number;
+  width?: number;
+  height?: number;
+  mimeType: string;
   imageUrl: string;
-  imageName: string;
   chefId: string;
 }) {
   try {
@@ -13,16 +18,22 @@ export async function createPhoto(data: {
     });
     return { success: true, data: photo };
   } catch (error) {
+    console.error("Database error:", error);
     return { success: false, error: "Failed to create photo" };
   }
 }
 
 export async function createMultiplePhotos(
   photos: {
+    filename: string;
+    path: string;
+    size: number;
+    width?: number;
+    height?: number;
+    mimeType: string;
     imageUrl: string;
-    imageName: string;
     chefId: string;
-  }[]
+  }[],
 ) {
   try {
     const createdPhotos = await prisma.photo.createMany({
@@ -40,7 +51,7 @@ export async function updatePhoto(
   data: {
     imageUrl?: string;
     imageName?: string;
-  }
+  },
 ) {
   try {
     const photo = await prisma.photo.update({

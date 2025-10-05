@@ -48,8 +48,13 @@ model Menu {
 
 model Photo {
   id         String   @id @default(cuid())
+  filename   String
+  path       String
+  size       Int
+  width      Int?
+  height     Int?
+  mimeType   String
   imageUrl   String
-  imageName  String
   chefId     String
   created_at DateTime @default(now())
 

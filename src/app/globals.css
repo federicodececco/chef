@@ -1,6 +1,8 @@
 @import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../../.flowbite-react/class-list.json";
 @import "../util/fonts/font.css";
-
+@plugin "daisyui";
 body {
   font-family:
     "Italiana",

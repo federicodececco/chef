@@ -61,8 +61,16 @@ export async function POST(request: NextRequest) {
     const uploadDir = join(process.cwd(), "public", "uploads", folder);
     const filepath = join(uploadDir, filename);
     await writeFile(filepath, resizedBuffer);
-    const path = `/uploads/${filename}`;
+    let path = `/uploads/images/${filename}`;
 
+    if (type === "avatar") {
+      path = `/uploads/avatarImages/${filename}`;
+      const chefResult = await updateChef(chefId, { avatarUrl: path });
+    }
+    if (type === "cover") {
+      path = `/uploads/coverImages/${filename}`;
+      const chefResult = await updateChef(chefId, { coverUrl: path });
+    }
     const result = await createPhoto({
       filename: file.name,
       path: path,
@@ -70,27 +78,12 @@ export async function POST(request: NextRequest) {
       width: finalMetadata.width,
       height: finalMetadata.height,
       mimeType: "image/jpeg",
-      imageUrl: `/uploads/${filename}`,
+      imageUrl: path,
       chefId: chefId,
     });
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });
-    }
-
-    if (type === "avatar") {
-      const avatarPath = `/uploads/avatarImages/${filename}`;
-      const chefResult = await updateChef(chefId, { avatarUrl: path });
-      if (!chefResult.success) {
-        return NextResponse.json({ error: result.error }, { status: 500 });
-      }
-    }
-    if (type === "cover") {
-      const coverPath = `/uploads/coverImages/${filename}`;
-      const chefResult = await updateChef(chefId, { coverUrl: path });
-      if (!chefResult.success) {
-        return NextResponse.json({ error: result.error }, { status: 500 });
-      }
     }
 
     return NextResponse.json({

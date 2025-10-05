@@ -42,3 +42,7 @@ next-env.d.ts
 
 /src/generated/prisma
 **/prisma/**
+
+/public/uploads/avatarImages/** 
+/public/uploads/coverImages/** 
+/public/uploads/images/** 

@@ -4,9 +4,10 @@ import {
   createMultiplePhotos,
   getAllPhotos,
 } from "@/actions/photo";
-import { join } from "path";
+import path, { join } from "path";
 import sharp from "sharp";
 import { writeFile } from "fs/promises";
+import { updateChef } from "@/actions/chef";
 
 export async function POST(request: NextRequest) {
   try {
@@ -60,10 +61,11 @@ export async function POST(request: NextRequest) {
     const uploadDir = join(process.cwd(), "public", "uploads", folder);
     const filepath = join(uploadDir, filename);
     await writeFile(filepath, resizedBuffer);
+    const path = `/uploads/${filename}`;
 
     const result = await createPhoto({
       filename: file.name,
-      path: `/uploads/${filename}`,
+      path: path,
       size: resizedBuffer.length,
       width: finalMetadata.width,
       height: finalMetadata.height,
@@ -74,6 +76,21 @@ export async function POST(request: NextRequest) {
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });
+    }
+
+    if (type === "avatar") {
+      const avatarPath = `/uploads/avatarImages/${filename}`;
+      const chefResult = await updateChef(chefId, { avatarUrl: path });
+      if (!chefResult.success) {
+        return NextResponse.json({ error: result.error }, { status: 500 });
+      }
+    }
+    if (type === "cover") {
+      const coverPath = `/uploads/coverImages/${filename}`;
+      const chefResult = await updateChef(chefId, { coverUrl: path });
+      if (!chefResult.success) {
+        return NextResponse.json({ error: result.error }, { status: 500 });
+      }
     }
 
     return NextResponse.json({

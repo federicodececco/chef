@@ -50,9 +50,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
     if (result.data?.id) {
-      console.log("erorre");
+      const chefSlug = `${result.data.firstname.toLowerCase}-${result.data.lastname.toLowerCase}`;
       const chefResult = await createChef({
         id: result.data.id,
+        slug: chefSlug,
       });
       if (!chefResult.success) {
         return NextResponse.json({ error: result.error }, { status: 500 });

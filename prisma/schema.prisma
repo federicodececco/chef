@@ -11,6 +11,7 @@ model Chef {
   id          String   @id @default(cuid())
   bio         String?  @db.VarChar(400)
   avatarUrl   String?
+  coverUrl    String?
   phoneNumber String?
   nation      String?
   slug        String?

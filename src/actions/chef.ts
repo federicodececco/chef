@@ -24,10 +24,11 @@ export async function updateChef(
   data: {
     bio?: string;
     avatarUrl?: string;
+    coverUrl?: string;
     phoneNumber?: string;
     nation?: string;
     slug?: string;
-  }
+  },
 ) {
   try {
     const chef = await prisma.chef.update({

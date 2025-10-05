@@ -3,10 +3,11 @@ import { getUser, updateUser, deleteUser } from "@/actions/user";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await getUser(params.id);
+    const { id } = await params;
+    const result = await getUser(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });
@@ -65,14 +66,16 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await deleteUser(params.id);
+    const { id } = await params;
+    const result = await getUser(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
+    await deleteUser(id);
 
     return NextResponse.json(
       { message: "User deleted successfully" },

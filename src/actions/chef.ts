@@ -60,6 +60,7 @@ export async function getChef(id: string) {
         Menus: true,
         Photos: true,
         Dishes: true,
+        Facts: true,
       },
     });
     return { success: true, data: chef };

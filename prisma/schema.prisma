@@ -16,7 +16,6 @@ model Chef {
   phoneNumber String?
   nation      String?
   slug        String?
-  nationality String?
 
   createdAt DateTime @default(now())
 

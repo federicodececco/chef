@@ -33,12 +33,17 @@ export default function ChefPersonalPage() {
     return (
       <>
         <HeaderComponent
-          mainText={`Chef ${chefData.user.firstname} ${chefData.user.lastname}`}
+          mainText={`Chef ${chefData?.user?.firstname} ${chefData?.user?.lastname}`}
           subText={`Chef Privato dall'italia`}
-          imageUrl={chefData.coverUrl}
+          imageUrl={chefData?.coverUrl}
         ></HeaderComponent>
-        <section className="bg-[#0A0A0A] md:px-4">
-          <HeroPersonalComponent imageUrl={chefData?.avatarUrl} />
+        <section className="bg-[#0A0A0A] pb-10 md:px-4">
+          <HeroPersonalComponent
+            imageUrl={chefData?.avatarUrl}
+            description={chefData?.bio}
+            facts={chefData?.Facts}
+            briefDescription={chefData?.bioBrief}
+          />
         </section>
         <section></section>
       </>

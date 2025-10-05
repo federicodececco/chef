@@ -27,16 +27,21 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
+
     const body = await request.json();
 
-    const { bio, avatarUrl, phoneNumber, nation, slug } = body;
+    const { bio, bioBrief, avatarUrl, coverUrl, phoneNumber, nation, slug } =
+      body;
 
-    const result = await updateChef(params.id, {
+    const result = await updateChef(id, {
       bio,
+      bioBrief,
       avatarUrl,
+      coverUrl,
       phoneNumber,
       nation,
       slug,

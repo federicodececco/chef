@@ -1,4 +1,5 @@
 "use client";
+import headerImage from "../../../../public/registration/header-chef.webp";
 import ChefCarousel from "@/components/ChefCarousel";
 import CitySlider from "@/components/CitySlider";
 import FaqComponent from "@/components/FaqComponent";
@@ -13,6 +14,7 @@ import {
   Shield,
   SlidersVertical,
 } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function ChefRegistration() {
@@ -28,7 +30,17 @@ export default function ChefRegistration() {
         <header className="relative h-[500] w-full">
           {/* image container */}
 
-          <div className="relative z-10 mt-18 h-full bg-[url('/registration/header-chef-mobile.webp')] bg-cover md:bg-[url('/registration/header-chef.webp')]">
+          <div className="relative z-10 mt-18 h-full">
+            <div className="relative h-full">
+              <Image
+                src={headerImage}
+                alt="Header image"
+                fill
+                className="object-cover object-top"
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j"
+              />
+            </div>
             <div className="absolute inset-0 -z-5 bg-black/40" />
             <div className="absolute top-[50%] left-[50%] -translate-[50%] text-center md:w-xl">
               <h1 className="text-lg font-semibold text-white md:text-3xl">

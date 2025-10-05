@@ -1,3 +1,5 @@
+import Image from "next/image";
+import headerImage from "../../../../public/chef/header-image.jpg";
 const MockChef = {
   id: "idchef",
   bio: "",
@@ -13,7 +15,17 @@ export default function ChefPersonalPage() {
       <header className="relative h-[500] w-full">
         {/* image container */}
 
-        <div className="relative z-10 mt-18 h-full bg-[url('/chef/header-image.jpg')] bg-cover bg-center">
+        <div className="relative z-10 mt-18 h-full bg-cover bg-center">
+          <div className="relative h-full">
+            <Image
+              src={headerImage}
+              alt="Header image"
+              fill
+              className="object-cover"
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j"
+            />
+          </div>
           <div className="absolute inset-0 -z-5 bg-black/40" />
           <div className="absolute top-[50%] left-[50%] -translate-[50%] text-center md:w-xl">
             <h1 className="text-lg font-semibold text-white md:text-3xl">

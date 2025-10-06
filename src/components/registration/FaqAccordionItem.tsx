@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+export const revalidate = 3600;
 
 interface FaqAccordionItemInterface {
   faq: { question: string; answer: string };

@@ -58,8 +58,11 @@ export default function ChefPersonalPage() {
             <GalleryComponent photos={chefData?.Photos} />
           </div>
         </section>
-        <section>
-          <ChefReviewComponent />
+        <section className="bg-[#232323] py-6 md:px-4">
+          <ChefReviewComponent
+            reviews={chefData?.Review}
+            firstname={chefData?.user?.firstname}
+          />
         </section>
       </>
     );

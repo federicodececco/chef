@@ -11,74 +11,6 @@ export default function MenuCarouselComponent({
 }: MenuCarouselComponentInterface) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const menuItems = [
-    {
-      title: "Toscana e Maiorca innamorate",
-      category: "IN ARRIVO",
-      subtitle: "Scegli 2 piatti",
-      items: [
-        "Carpaccio di melanzane / Carpaccio di melanzane",
-        "Crostini Toscani (pomodoro piccante, funghi di bosco, paté di pollo)",
-        "Palette di carne e formaggio / Salsicce e formaggi assortiti",
-        "Crema di zucca, patate dolci e carote con filetto di foca / Crema di zucca con patate dolci, carote e sgombro",
-      ],
-      primo: {
-        category: "PRIMO",
-        subtitle: "Tutto compreso",
-      },
-      piattoPrincipale: {
-        category: "PIATTO PRINCIPALE",
-        subtitle: "Scegli 2 piatti",
-        items: ["Alla griglia..."],
-      },
-    },
-    {
-      title: "Colazione mediterranea",
-      category: "IN ARRIVO",
-      subtitle: "Tutto compreso",
-      items: [
-        "Caffè premium",
-        "Selezione di tè (tè verde, nero, bianco)",
-        "Succhi personalizzati",
-        "Alba di mimosa",
-      ],
-      primo: {
-        category: "CUGINO",
-        subtitle: "Tutto compreso",
-      },
-      piattoPrincipale: {
-        category: "PIATTO PRINCIPALE",
-        subtitle: "Scegli 2 piatti",
-        items: [
-          "Pasticceria e gastronomo",
-          "Ciotola con yogurt greco",
-          "Ciotola con kefir, frutta secca",
-          "Selezione di toast (prosciutto, formaggio)",
-        ],
-      },
-    },
-    {
-      title: "Menu Degustazione",
-      category: "IN ARRIVO",
-      subtitle: "Esperienza completa",
-      items: [
-        "Antipasti della casa",
-        "Bruschette miste",
-        "Insalata caprese",
-        "Olive e pane fatto in casa",
-      ],
-      primo: {
-        category: "PRIMO",
-        subtitle: "Tutto compreso",
-      },
-      piattoPrincipale: {
-        category: "PIATTO PRINCIPALE",
-        subtitle: "Chef's choice",
-        items: ["Pesce del giorno", "Carne alla brace", "Risotto speciale"],
-      },
-    },
-  ];
-
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % menus.length);
   };
@@ -163,7 +95,7 @@ export default function MenuCarouselComponent({
                       <h3 className="text-lg font-semibold tracking-wide text-white/70 uppercase">
                         Primi
                       </h3>
-                      <p className="mt-1 text-base font-medium text-white/80">
+                      <div className="mt-1 text-base font-medium text-white/80">
                         {menu.Dishes.filter((item) => item.course === "primo")
                           .sort((a, b) => a.order - b.order)
                           .map((item, idx) => (
@@ -174,7 +106,7 @@ export default function MenuCarouselComponent({
                               {item.name}
                             </p>
                           ))}
-                      </p>
+                      </div>
                     </div>
                   </div>
 

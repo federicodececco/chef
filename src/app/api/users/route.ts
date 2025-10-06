@@ -22,7 +22,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { firstname, lastname, email, password } = body;
+    const { firstname, lastname, email, password, isChef } = body;
 
     if (!firstname || !lastname || !email || !password) {
       return NextResponse.json(
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
-    if (result.data?.id) {
+    if (result.data?.id && isChef) {
       const chefSlug = `${result.data.firstname.toLowerCase}-${result.data.lastname.toLowerCase}`;
       const chefResult = await createChef({
         id: result.data.id,

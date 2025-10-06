@@ -17,8 +17,9 @@ export async function createReview(data: {
         text: data.text,
       },
     });
-    return { succes: true, data: review };
+    return { success: true, data: review };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Error creating review" };
   }
 }

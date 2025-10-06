@@ -3,6 +3,15 @@
 @source "../../.flowbite-react/class-list.json";
 @import "../util/fonts/font.css";
 @plugin "daisyui";
+
+/* main colors */
+
+@theme {
+  --color-gold: #c8a36a;
+  --color-first-theme: #0a0a0a;
+  --color-second-theme: #232323;
+}
+
 body {
   font-family:
     "Italiana",

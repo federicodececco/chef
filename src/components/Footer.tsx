@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
-    <footer className="bg-[#232323] pt-20 text-white/70">
-      <div className="mx-auto max-w-6xl gap-3 px-10 pb-10 text-center lg:grid lg:grid-cols-4 lg:text-left">
+    <footer className="bg-first-theme pt-20 text-white/70">
+      <div className="border-gold mx-auto max-w-6xl gap-3 border-t-1 border-dashed px-10 pt-4 pb-10 text-center lg:grid lg:grid-cols-4 lg:text-left">
         <div className="col-span-2 flex flex-col gap-10">
           <div className="mx-auto w-1/2 lg:mx-0">
             <img
@@ -36,7 +36,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="h-40 border-t-1 border-[#0A0A0A]"></div>
+      <div className="border-second-theme h-40 border-t-1"></div>
     </footer>
   );
 }

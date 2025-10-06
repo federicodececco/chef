@@ -12,7 +12,7 @@ export const revalidate = 3600;
 
 export default function ChefRegistration() {
   return (
-    <div className="-z-4 mt-18 bg-[#232323] md:bg-[#0A0A0A]">
+    <div className="-z-4 bg-[#232323] md:bg-[#0A0A0A]">
       <ChefHeader />
 
       <DescriptionSection />

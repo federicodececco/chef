@@ -63,7 +63,7 @@ export default function ReservationComponent({
         <button className="mt-15 rounded-2xl bg-[#c8a36a] px-8 py-4 text-white hover:cursor-pointer lg:hidden">
           Prenota
         </button>
-        <div className="mx-auto max-w-lg rounded-b-2xl bg-[#c8a36a]">
+        <div className="mx-auto hidden max-w-lg rounded-b-2xl bg-[#c8a36a] lg:block">
           <h2 className="py-4 text-4xl">
             Prenota la tua esperienza con {firstname}
           </h2>

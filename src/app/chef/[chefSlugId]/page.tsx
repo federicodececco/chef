@@ -11,28 +11,53 @@ import MenuCarouselComponent from "@/components/MenuCarouselComponent";
 import GalleryComponent from "@/components/GalleryComponent";
 import ChefReviewComponent from "@/components/ChefReviewsComponent";
 import ReservationComponent from "@/components/ReservationComponent";
+import { useRouter, useParams } from "next/navigation";
+import { ChefComplete } from "@/util/types";
 
 export default function ChefPersonalPage() {
-  const [chefData, setChefData] = useState<Chef | undefined>();
+  const { chefSlugId } = useParams<{ chefSlugId: string }>();
+
+  const [chefData, setChefData] = useState<ChefComplete | undefined>();
   const [isLoading, setIsLoading] = useState(true);
   const [headerImage, setHeaderImage] = useState<string | null>();
   const [avatarImage, setAvatarImage] = useState<string | null>();
+  const router = useRouter();
 
-  const fetchData = async (chefId: string) => {
-    setIsLoading(true);
-    const res = await axiosIstance.get(`/chefs/${chefId}`);
-    setChefData(res.data);
-    setHeaderImage(res.data.coverUrl);
-    setAvatarImage(res.data.avatarUrl);
-    setIsLoading(false);
-    console.log(res.data);
-    console.log(res.data.Menus);
-  };
   useEffect(() => {
-    fetchData("cmgdlc2dc0000iw7w7irjpprz");
-  }, []);
+    if (!chefSlugId) return;
+
+    const [idPart, ...slugParts] = chefSlugId.split("-");
+    const chefId = idPart;
+    const slug = slugParts.join("-");
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const res = await axiosIstance.get(`/chefs/${chefId}`);
+        const data = res.data;
+
+        setChefData(data);
+        setHeaderImage(data.coverUrl);
+        setAvatarImage(data.avatarUrl);
+
+        if (data.slug && data.slug !== slug) {
+          router.replace(`/chefs/${chefId}-${data.slug}`);
+        }
+      } catch (err) {
+        console.error("Errore nel caricamento dello chef:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [chefSlugId, router]);
   if (isLoading) {
     return <div>io sono un caricamento</div>;
+  }
+
+  if (!chefData) {
+    return <div>404</div>;
   }
   if (!isLoading) {
     return (
@@ -46,27 +71,27 @@ export default function ChefPersonalPage() {
           <HeroPersonalComponent
             imageUrl={chefData?.avatarUrl}
             description={chefData?.bio}
-            facts={chefData?.Facts}
+            facts={chefData!.Facts}
             briefDescription={chefData?.bioBrief}
           />
         </section>
         <section className="bg-[#232323] py-4 pb-10 md:px-4">
           <h1 className="py-6 text-center text-4xl">I miei menu</h1>
-          <MenuCarouselComponent menus={chefData?.Menus} />
+          <MenuCarouselComponent menus={chefData!.Menus} />
         </section>
         <section className="bg-[#232323] md:px-4">
           <div className="px-4 md:px-0">
-            <GalleryComponent photos={chefData?.Photos} />
+            <GalleryComponent photos={chefData!.Photos} />
           </div>
         </section>
         <section className="bg-[#232323] py-6 md:px-4">
           <ChefReviewComponent
-            reviews={chefData?.Review}
-            firstname={chefData?.user?.firstname}
+            reviews={chefData!.Review}
+            firstname={chefData!.user!.firstname}
           />
         </section>
-        <section className="rounded-2xl bg-[#0A0A0A] py-6 md:px-4 lg:bg-[#232323]">
-          <ReservationComponent firstname={chefData?.user?.firstname} />
+        <section className="rounded-t-2xl bg-[#0A0A0A] py-6 md:px-4 lg:bg-[#232323]">
+          <ReservationComponent firstname={chefData!.user!.firstname} />
         </section>
       </>
     );

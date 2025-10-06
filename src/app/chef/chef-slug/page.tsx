@@ -10,6 +10,7 @@ import HeroPersonalComponent from "@/components/HeroPersonalComponent";
 import MenuCarouselComponent from "@/components/MenuCarouselComponent";
 import GalleryComponent from "@/components/GalleryComponent";
 import ChefReviewComponent from "@/components/ChefReviewsComponent";
+import ReservationComponent from "@/components/ReservationComponent";
 
 export default function ChefPersonalPage() {
   const [chefData, setChefData] = useState<Chef | undefined>();
@@ -41,7 +42,7 @@ export default function ChefPersonalPage() {
           subText={`Chef Privato dall'italia`}
           imageUrl={chefData?.coverUrl}
         ></HeaderComponent>
-        <section className="bg-[#0A0A0A] pb-10 md:px-4">
+        <section className="bg-[#232323] pb-10 md:bg-[#0A0A0A] md:px-4">
           <HeroPersonalComponent
             imageUrl={chefData?.avatarUrl}
             description={chefData?.bio}
@@ -63,6 +64,9 @@ export default function ChefPersonalPage() {
             reviews={chefData?.Review}
             firstname={chefData?.user?.firstname}
           />
+        </section>
+        <section className="rounded-2xl bg-[#0A0A0A] py-6 md:px-4 lg:bg-[#232323]">
+          <ReservationComponent firstname={chefData?.user?.firstname} />
         </section>
       </>
     );

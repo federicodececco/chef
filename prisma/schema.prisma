@@ -23,6 +23,7 @@ model Chef {
   Photos Photo[]
   Dishes Dish[]
   Facts  Facts[]
+  Review Review[]
 
   user User @relation(fields: [id], references: [id], onDelete: Cascade)
 }
@@ -35,7 +36,8 @@ model User {
   password  String
   createdAt DateTime @default(now())
 
-  chef Chef?
+  chef   Chef?
+  Review Review[]
 }
 
 model Menu {
@@ -106,9 +108,10 @@ model Category {
 }
 
 model Chat {
-  id     String @id @default(cuid())
-  chefId String
-  userId String
+  id        String   @id @default(cuid())
+  chefId    String
+  userId    String
+  createdAt DateTime @default(now())
 
   Messages Message[]
 
@@ -116,10 +119,23 @@ model Chat {
 }
 
 model Message {
-  id     String  @id @default(cuid())
-  chatId String
-  isChef Boolean
-  text   String
+  id        String   @id @default(cuid())
+  chatId    String
+  isChef    Boolean
+  text      String
+  createdAt DateTime @default(now())
 
   Chat Chat @relation(fields: [chatId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  chefId    String
+  userId    String
+  rating    Int
+  text      String   @db.VarChar(800)
+  createdAt DateTime @default(now())
+
+  chef Chef @relation(fields: [chefId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }

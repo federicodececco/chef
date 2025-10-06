@@ -125,7 +125,7 @@ export async function deleteFact(id: string) {
   }
 }
 
-// BULK CREATE - Crea multipli facts
+/* used to create multiple facts simultaneously */
 export async function createMultipleFacts(
   chefId: string,
   facts: Array<{ short: string; long: string }>,

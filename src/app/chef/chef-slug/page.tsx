@@ -9,6 +9,7 @@ import HeaderComponent from "@/components/HeaderComponent";
 import HeroPersonalComponent from "@/components/HeroPersonalComponent";
 import MenuCarouselComponent from "@/components/MenuCarouselComponent";
 import GalleryComponent from "@/components/GalleryComponent";
+import ChefReviewComponent from "@/components/ChefReviewsComponent";
 
 export default function ChefPersonalPage() {
   const [chefData, setChefData] = useState<Chef | undefined>();
@@ -56,6 +57,9 @@ export default function ChefPersonalPage() {
           <div className="px-4 md:px-0">
             <GalleryComponent photos={chefData?.Photos} />
           </div>
+        </section>
+        <section>
+          <ChefReviewComponent />
         </section>
       </>
     );

@@ -60,6 +60,7 @@ export async function getChef(id: string) {
         Menus: { include: { Dishes: true } },
         Photos: true,
         Facts: true,
+        Review: true,
       },
     });
     return { success: true, data: chef };

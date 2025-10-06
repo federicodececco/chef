@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMessage } from "@/actions/message";
+import { requireAuth } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const result = await createMessage(body);
+    const user = await requireAuth(req);
+
+    if (!user) {
+      return NextResponse.json({ error: "Access Denied" }, { status: 403 });
+    }
+
+    const isChef = user.isChef;
+
+    const { chatId, text } = await req.json();
+    const result = await createMessage({ chatId, text, isChef });
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });

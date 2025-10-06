@@ -23,7 +23,7 @@ export async function createReview(data: {
   }
 }
 
-export async function geteReviewsByChefId(chefId: string) {
+export async function getReviewsByChefId(chefId: string) {
   try {
     const reviews = await prisma.review.findMany({
       where: { chefId: chefId },
@@ -35,7 +35,7 @@ export async function geteReviewsByChefId(chefId: string) {
     return { success: false, error: "Error fetching reviews" };
   }
 }
-export async function geteReviewsByUserId(userId: string) {
+export async function getReviewsByUserId(userId: string) {
   try {
     const reviews = await prisma.review.findMany({
       where: { userId: userId },

@@ -125,7 +125,7 @@ export async function getDishesByChef(chefId: string) {
       where: { chefId },
       include: {
         categories: true,
-        menu: true,
+        Menus: true,
       },
       orderBy: {
         listOrder: "asc",

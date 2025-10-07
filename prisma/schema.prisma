@@ -45,9 +45,9 @@ model Menu {
   id         String   @id @default(cuid())
   chefId     String
   name       String
+  maxPeople  Int?
   created_at DateTime @default(now())
-
-  Dishes Dish[]
+  Dishes     Dish[]
 
   chef Chef @relation(fields: [chefId], references: [id], onDelete: Cascade)
 
@@ -85,17 +85,17 @@ model Photo {
 
 model Dish {
   id         String   @id @default(cuid())
-  listOrder  Int
+  listOrder  Int?
   name       String
   course     String
-  menuId     String
+  menuId     String?
   chefId     String
   created_at DateTime @default(now())
+  Menus      Menu[]
 
   categories Category[]
 
   chef Chef @relation(fields: [chefId], references: [id], onDelete: Cascade)
-  menu Menu @relation(fields: [menuId], references: [id])
 
   @@index([chefId])
 }

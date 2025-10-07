@@ -14,6 +14,23 @@ export async function createMenu(data: { chefId: string }) {
   }
 }
 
+export async function updateMenu(id: string, data: { name: string }) {
+  try {
+    const menu = await prisma.menu.update({
+      where: { id },
+      data,
+      include: {
+        Dishes: true,
+      },
+    });
+
+    return { success: true, data: menu };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Failed to update menu" };
+  }
+}
+
 export async function deleteMenu(id: string) {
   try {
     const menu = await prisma.menu.findUnique({
@@ -98,5 +115,84 @@ export async function getAllMenus() {
     return { success: true, data: menus };
   } catch (error) {
     return { success: false, error: "Failed to fetch menus" };
+  }
+}
+
+export async function addDishToMenu(menuId: string, dishId: string) {
+  try {
+    const menu = await prisma.menu.update({
+      where: { id: menuId },
+      data: {
+        Dishes: {
+          connect: { id: dishId },
+        },
+      },
+      include: {
+        Dishes: {
+          orderBy: {
+            listOrder: "asc",
+          },
+        },
+      },
+    });
+
+    return { success: true, data: menu };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Failed to add dish to menu" };
+  }
+}
+
+export async function removeDishFromMenu(menuId: string, dishId: string) {
+  try {
+    const menu = await prisma.menu.update({
+      where: { id: menuId },
+      data: {
+        Dishes: {
+          disconnect: { id: dishId },
+        },
+      },
+      include: {
+        Dishes: {
+          orderBy: {
+            listOrder: "asc",
+          },
+        },
+      },
+    });
+
+    return { success: true, data: menu };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Failed to remove dish from menu" };
+  }
+}
+
+export async function reorderMenuDishes(menuId: string, dishIds: string[]) {
+  try {
+    await Promise.all(
+      dishIds.map((dishId, index) =>
+        prisma.dish.update({
+          where: { id: dishId },
+          data: { listOrder: index + 1 },
+        }),
+      ),
+    );
+
+    const menu = await prisma.menu.findUnique({
+      where: { id: menuId },
+      include: {
+        Dishes: {
+          orderBy: {
+            listOrder: "asc",
+          },
+        },
+      },
+    });
+
+    return { success: true, data: menu };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Failed to reorder dishes" };
   }
 }

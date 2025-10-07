@@ -37,6 +37,7 @@ export default function ChefPersonalPage() {
         const data = res.data;
 
         setChefData(data);
+
         setHeaderImage(data.coverUrl);
         setAvatarImage(data.avatarUrl);
 

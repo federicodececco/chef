@@ -61,6 +61,16 @@ export async function getChef(id: string) {
         Photos: true,
         Facts: true,
         Review: true,
+        Dishes: {
+          include: {
+            Menus: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
     return { success: true, data: chef };

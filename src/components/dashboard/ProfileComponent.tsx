@@ -5,6 +5,7 @@ import { Save, Camera, Upload } from "lucide-react";
 import { ChefComplete } from "@/util/types";
 import Image from "next/image";
 import axiosInstance from "@/lib/axios";
+import CityMapSelector from "./CityMapSelector";
 
 interface ProfileComponentInterface {
   chef: ChefComplete;
@@ -19,12 +20,16 @@ export default function ProfileComponent({
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [city, setCity] = useState("");
 
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
 
   const handleSave = async () => {
     setIsSaving(true);
+    if (city != "") {
+      localChef.city = city;
+    }
     await onUpdate(localChef);
     setTimeout(() => setIsSaving(false), 500);
   };
@@ -240,6 +245,7 @@ export default function ProfileComponent({
               className="w-full rounded border border-[#c8a36a]/30 bg-[#0a0a0a] p-3 text-white outline-none focus:border-[#c8a36a]"
             />
           </div>
+          <CityMapSelector city={city} setCity={setCity}></CityMapSelector>
         </div>
 
         <button

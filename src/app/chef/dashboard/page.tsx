@@ -376,6 +376,7 @@ export default function ChefDashboard() {
         {activeTab === "profile" && (
           <ProfileComponent chef={chef} onUpdate={handleUpdateChef} />
         )}
+
         {activeTab === "menus" && (
           <MenuComponent
             chef={chef}

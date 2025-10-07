@@ -19,8 +19,7 @@ import ReviewComponent from "@/components/dashboard/ReviewComponent";
 import MessagesComponent from "@/components/dashboard/MessaggesComponent";
 import axiosIstance from "@/lib/axios";
 import { ChefComplete } from "@/util/types";
-
-// Le interfacce rimangono invariate
+import { useRouter } from "next/navigation";
 export interface ChefInterface {
   id: string;
   bio?: string;
@@ -72,6 +71,7 @@ export default function ChefDashboard() {
   const [activeTab, setActiveTab] = useState("profile");
   const [isLoading, setIsLoading] = useState(true);
   const [chef, setChef] = useState<ChefComplete | undefined>();
+  const router = useRouter();
 
   const chefId = "cmgdlc2dc0000iw7w7irjpprz";
 
@@ -303,6 +303,16 @@ export default function ChefDashboard() {
     { id: "messages", label: "Messaggi", icon: MessageSquare },
   ];
 
+  const handleLogOut = async () => {
+    /*  await axiosIstance.post("/api/logout"); */
+    router.push("/chef/chef-registration");
+  };
+
+  const handleNavigateToPage = async () => {
+    const url = `${chef?.id}-${chef?.slug}`;
+    router.push(`/chef/${url}`);
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-[#0a0a0a] text-white">
@@ -323,7 +333,15 @@ export default function ChefDashboard() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <div className="sticky top-0 z-10 border-b border-white/10 bg-[#232323]">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex gap-1 overflow-x-auto">
+          <div className="flex gap-3 overflow-x-auto">
+            <button
+              onClick={() => {
+                handleNavigateToPage();
+              }}
+              className="bg-gold hover:bg-second-theme my-auto rounded-md px-3 py-2 text-white/70 duration-200 hover:cursor-pointer"
+            >
+              Vai alla tua pagina
+            </button>
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -341,6 +359,15 @@ export default function ChefDashboard() {
                 </button>
               );
             })}
+            <div className=""></div>
+            <button
+              onClick={() => {
+                handleLogOut();
+              }}
+              className="bg-gold hover:bg-second-theme my-auto rounded-md px-3 py-2 text-white/70 duration-200 hover:cursor-pointer"
+            >
+              Logout
+            </button>
           </div>
         </div>
       </div>

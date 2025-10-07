@@ -42,7 +42,7 @@ export default function ChefPersonalPage() {
         setAvatarImage(data.avatarUrl);
 
         if (data.slug && data.slug !== slug) {
-          router.replace(`/chefs/${chefId}-${data.slug}`);
+          router.replace(`/chef/${chefId}-${data.slug}`);
         }
       } catch (err) {
         console.error("Errore nel caricamento dello chef:", err);

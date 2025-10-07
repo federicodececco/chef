@@ -1,15 +1,16 @@
 import Footer from "@/components/Footer";
-import "./globals.css";
 import NavBar from "@/components/NavBar";
 
-export default function RootLayout({
+export default function ChefPersonalPageLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="relative">{children}</body>
-    </html>
+    <section>
+      <NavBar />
+      <div className="mt-18">{children}</div>
+      <Footer />
+    </section>
   );
 }

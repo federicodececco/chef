@@ -130,14 +130,14 @@ export default function ChefDashboard() {
     }
   };
 
-  const handleUploadPhoto = async (file: File) => {
-    const formData = new FormData();
-    formData.append("photo", file);
+  const handleUploadPhoto = async (data: any) => {
     try {
-      const res = await axiosIstance.post(`/chefs/${chefId}/photos`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      setPhotos([...photos, res.data]);
+      const newPhoto = {
+        imageUrl: data.imageUrl,
+        id: data.id,
+        filename: data.filename,
+      };
+      setPhotos([...photos, newPhoto]);
     } catch (error) {
       console.error("Errore nel caricamento della foto:", error);
     }
@@ -145,7 +145,6 @@ export default function ChefDashboard() {
 
   const handleDeletePhoto = async (id: string) => {
     try {
-      await axiosIstance.delete(`/photos/${id}`);
       setPhotos(photos.filter((photo) => photo.id !== id));
     } catch (error) {
       console.error("Errore nell'eliminazione della foto:", error);

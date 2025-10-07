@@ -3,10 +3,11 @@ import { getPhoto, updatePhoto, deletePhoto } from "@/actions/photo";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await getPhoto(params.id);
+    const { id } = await params;
+    const result = await getPhoto(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });
@@ -44,10 +45,13 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await deletePhoto(params.id);
+    const { id } = await params;
+    const result = await deletePhoto(id);
+
+    console.log(result);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });

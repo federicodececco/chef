@@ -22,10 +22,12 @@ export async function createUser(data: {
     const { password: _, ...userWithoutPassword } = user;
 
     return { success: true, data: userWithoutPassword };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating user:", error);
 
-    if (error.code === "P2002") {
+    const prismaError = error as { code?: string };
+
+    if (prismaError.code === "P2002") {
       return { success: false, error: "Email già registrata" };
     }
 
@@ -55,8 +57,10 @@ export async function updateUser(
     });
 
     return { success: true, data: user };
-  } catch (error) {
-    console.error(error);
+  } catch (error: unknown) {
+    const prismaError = error as { code?: string };
+
+    console.error(prismaError);
     return { success: false, error: "Failed to update user" };
   }
 }
@@ -88,8 +92,9 @@ export async function getUser(id: string) {
       },
     });
     return { success: true, data: user };
-  } catch (error) {
-    console.error(error);
+  } catch (error: unknown) {
+    const prismaError = error as { code?: string };
+    console.error(prismaError);
     return { success: false, error: "Failed to fetch user" };
   }
 }
@@ -108,8 +113,9 @@ export async function getUserByEmail(email: string) {
       },
     });
     return { success: true, data: user };
-  } catch (error) {
-    console.error(error);
+  } catch (error: unknown) {
+    const prismaError = error as { code?: string };
+    console.error(prismaError);
     return { success: false, error: "Failed to fetch user" };
   }
 }
@@ -129,8 +135,9 @@ export async function getAllUsers() {
       },
     });
     return { success: true, data: users };
-  } catch (error) {
-    console.error(error);
+  } catch (error: unknown) {
+    const prismaError = error as { code?: string };
+    console.error(prismaError);
     return { success: false, error: "Failed to fetch users" };
   }
 }

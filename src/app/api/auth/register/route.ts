@@ -86,17 +86,23 @@ export async function POST(request: NextRequest) {
           slug: chef.slug,
         };
         console.log("Chef created successfully:", chefData);
-      } catch (chefError: any) {
-        console.error("Error creating chef:", chefError);
+      } catch (error: unknown) {
+        console.error("Error creating chef:", error);
 
         await prisma.user.delete({ where: { id: userResult.data.id } });
+
+        const getErrorMessage = (err: unknown): string => {
+          if (err instanceof Error) return err.message;
+          if (typeof err === "string") return err;
+          return "Errore sconosciuto";
+        };
 
         return NextResponse.json(
           {
             error: "Errore durante la creazione del profilo chef",
             details:
               process.env.NODE_ENV === "development"
-                ? chefError.message
+                ? getErrorMessage(error)
                 : undefined,
           },
           { status: 500 },
@@ -130,25 +136,30 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unexpected registration error:", error);
-    console.error("Error stack:", error.stack);
 
-    if (error.code === "P2002") {
+    if (error instanceof Error) {
+      console.error("Error stack:", error.stack);
+    }
+
+    const prismaError = error as { code?: string };
+
+    if (prismaError.code === "P2002") {
       return NextResponse.json(
         { error: "Email già registrata" },
         { status: 409 },
       );
     }
 
-    if (error.code === "P2003") {
+    if (prismaError.code === "P2003") {
       return NextResponse.json(
         { error: "Errore di relazione nel database" },
         { status: 500 },
       );
     }
 
-    if (error.code === "P1001") {
+    if (prismaError.code === "P1001") {
       return NextResponse.json(
         { error: "Impossibile connettersi al database" },
         { status: 500 },
@@ -159,7 +170,11 @@ export async function POST(request: NextRequest) {
       {
         error: "Errore durante la registrazione",
         details:
-          process.env.NODE_ENV === "development" ? error.message : undefined,
+          process.env.NODE_ENV === "development"
+            ? error instanceof Error
+              ? error.message
+              : String(error)
+            : undefined,
       },
       { status: 500 },
     );

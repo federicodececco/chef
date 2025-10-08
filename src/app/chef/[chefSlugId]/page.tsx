@@ -126,7 +126,7 @@ export default function ChefPersonalPage() {
     <>
       <HeaderComponent
         mainText={`Chef ${chefData.user?.firstname} ${chefData.user?.lastname}`}
-        subText="Chef Privato dall'Italia"
+        subText={`Chef Privato da ${chefData.city}`}
         imageUrl={chefData.coverUrl}
       />
 
@@ -153,10 +153,12 @@ export default function ChefPersonalPage() {
       </section>
 
       <section className="bg-[#232323] py-6 md:px-4">
-        <ChefReviewComponent
-          reviews={chefData.Review || []}
-          firstname={chefData.user?.firstname || ""}
-        />
+        {chefData.Review.length > 0 && (
+          <ChefReviewComponent
+            reviews={chefData.Review || []}
+            firstname={chefData.user?.firstname || ""}
+          />
+        )}
       </section>
 
       <section className="rounded-t-2xl bg-[#0A0A0A] py-6 md:px-4 lg:bg-[#232323]">

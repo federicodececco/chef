@@ -48,7 +48,7 @@ export interface DishInterface {
   course: string;
   listOrder?: number;
   chefId: string;
-  menus?: { id: string; name: string }[];
+  Menus?: { id: string; name: string }[];
 }
 
 export interface PhotoInterface {

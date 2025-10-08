@@ -116,12 +116,12 @@ export default function MenuComponent({
 
   const menuDishes = selectedMenu
     ? dishes
-        .filter((dish) => dish.menus?.some((m) => m.id === selectedMenuId))
+        .filter((dish) => dish.Menus?.some((m) => m.id === selectedMenuId))
         .sort((a, b) => (a.listOrder || 0) - (b.listOrder || 0))
     : [];
 
   const availableDishes = dishes.filter(
-    (dish) => !dish.menus?.some((m) => m.id === selectedMenuId),
+    (dish) => !dish.Menus?.some((m) => m.id === selectedMenuId),
   );
 
   const handleAdd = () => {

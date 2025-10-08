@@ -25,7 +25,11 @@ export async function updateMenu(id: string, data: { name: string }) {
       where: { id },
       data,
       include: {
-        Dishes: true,
+        Dishes: {
+          orderBy: {
+            listOrder: "asc",
+          },
+        },
       },
     });
 

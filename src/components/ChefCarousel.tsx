@@ -100,27 +100,29 @@ export default function ChefCarousel() {
     <div className="mx-auto w-full">
       <div className="relative max-w-6xl">
         <div className="carousel carousel-center bg-neutral rounded-box relative mx-auto w-full space-x-4 p-4">
-          {actualSlides.map((slide) => (
-            <div
-              onClick={() => {
-                handleNavigation(slide.id, slide.chefSlug);
-              }}
-              key={slide.id}
-              className={`carousel-item relative z-10 flex justify-center text-5xl font-bold text-white hover:animate-pulse hover:cursor-pointer`}
-            >
-              <Image
-                src={slide.avatarUrl}
-                width={300}
-                height={500}
-                alt={`${slide.user.firstname} ${slide.user.lastname}`}
-                className="rounded-box cover z-2 object-cover"
-              />
-              <div className="absolute inset-0 z-5 bg-black/50"></div>
-              <h2 className="text-gold absolute z-10 text-center text-5xl font-bold">
-                {`${slide.user.firstname} ${slide.user.lastname}`}
-              </h2>
-            </div>
-          ))}
+          {actualSlides
+            .filter((slide) => slide.avatarUrl && slide.avatarUrl.trim() !== "")
+            .map((slide) => (
+              <div
+                onClick={() => {
+                  handleNavigation(slide.id, slide.chefSlug);
+                }}
+                key={slide.id}
+                className={`carousel-item relative z-10 flex justify-center text-5xl font-bold text-white hover:animate-pulse hover:cursor-pointer`}
+              >
+                <Image
+                  src={slide.avatarUrl}
+                  width={300}
+                  height={500}
+                  alt={`${slide.user.firstname} ${slide.user.lastname}`}
+                  className="rounded-box cover z-2 object-cover"
+                />
+                <div className="absolute inset-0 z-5 bg-black/50"></div>
+                <h2 className="text-gold absolute z-10 text-center text-5xl font-bold">
+                  {`${slide.user.firstname} ${slide.user.lastname}`}
+                </h2>
+              </div>
+            ))}
         </div>
       </div>
     </div>

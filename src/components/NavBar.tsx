@@ -3,6 +3,8 @@
 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
+import { ChefHat, DoorOpen, House, LogIn, NotebookText } from "lucide-react";
 
 export default function NavBar() {
   const { user, isAuthenticated, isChef, chefSlug, logout } = useAuth();
@@ -29,13 +31,134 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="bg-first-theme absolute -top-18 z-12 grid h-18 w-full grid-cols-12 text-center text-white">
-      {/*  {currentUser && (
-        <ChatComponent
-          currentUserId={currentUser}
-          isChef={isChef}
-        ></ChatComponent>
-      )} */}
+    <>
+      <div className="navbar bg-first-theme absolute -top-18 z-12 hidden h-18 shadow-sm md:flex">
+        <div className="flex-9">
+          <div
+            className="btn bg-first-theme btn-ghost relative min-h-[70px] w-1/4 border-none lg:mx-0"
+            onClick={() => {
+              router.push(`/`);
+            }}
+          >
+            <Image
+              fill
+              className="object-contain"
+              src="/registration/logo-oro-COD.png"
+              alt="Logo"
+            />
+          </div>
+        </div>
+        <div className="flex-1">
+          <ul className="menu menu-horizontal px-1">
+            <li>
+              {!isAuthenticated && (
+                <button
+                  onClick={() => {
+                    handleLogin();
+                  }}
+                  className="outline-gold bg-gold hover:text-gold rounded-xl px-2 duration-200 hover:cursor-pointer hover:bg-transparent hover:outline"
+                >
+                  Login
+                </button>
+              )}
+              {isAuthenticated && (
+                <button
+                  className="outline-gold bg-gold hover:text-gold rounded-xl px-2 duration-200 hover:cursor-pointer hover:bg-transparent hover:outline"
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </button>
+              )}
+            </li>
+            {isChef && (
+              <li className="">
+                <details>
+                  <summary className="text-gold">Pagine</summary>
+                  <ul className="bg-first-theme rounded-t-none p-2">
+                    <li className="text-white/70">
+                      <span
+                        onClick={() => {
+                          router.push(`/chef/${chefSlug}`);
+                        }}
+                      >
+                        Pagina personale
+                      </span>
+                    </li>
+                    <li className="text-white/70">
+                      <span
+                        onClick={() => {
+                          handleNavigation("dashboard");
+                        }}
+                      >
+                        Area Riservata
+                      </span>
+                    </li>
+                  </ul>
+                </details>
+              </li>
+            )}
+          </ul>
+        </div>
+      </div>
+
+      <div className="dock text-gold bg-first-theme border-gold z-21 border-t-1 md:hidden">
+        <button
+          onClick={() => {
+            router.push(`/`);
+          }}
+        >
+          <House />
+          <span className="dock-label">Home</span>
+        </button>
+        {!isAuthenticated && (
+          <button
+            className="dock-label"
+            onClick={() => {
+              handleLogin();
+            }}
+          >
+            <LogIn />
+            <span>Login</span>
+          </button>
+        )}
+
+        {isChef && (
+          <button
+            onClick={() => {
+              router.push(`/chef/${chefSlug}`);
+            }}
+          >
+            <NotebookText />
+            <span className="dock-label">Pagina personale</span>
+          </button>
+        )}
+        {isChef && (
+          <button
+            onClick={() => {
+              handleNavigation("dashboard");
+            }}
+          >
+            <ChefHat />
+            <span className="dock-label">Area Riservata</span>
+          </button>
+        )}
+        {isAuthenticated && (
+          <button
+            className=""
+            onClick={() => {
+              handleLogout();
+            }}
+          >
+            <DoorOpen />
+            <span className="dock-label">Logout</span>
+          </button>
+        )}
+      </div>
+    </>
+
+    /*  <nav className="bg-first-theme absolute -top-18 z-12 grid h-18 w-full grid-cols-12 text-center text-white">
       Sono una navbar
       <div className="col-start-10 flex items-center justify-center">
         {!isAuthenticated && (
@@ -83,6 +206,6 @@ export default function NavBar() {
           </button>
         )}
       </div>
-    </nav>
+    </nav> */
   );
 }

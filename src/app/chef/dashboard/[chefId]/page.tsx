@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from "react";
 import {
-  ChefHat,
   User,
   Menu as MenuIcon,
   Image,
   Utensils,
   Star,
   MessageSquare,
+  DoorOpen,
+  NotebookText,
+  ChefHat,
 } from "lucide-react";
 import ProfileComponent from "@/components/dashboard/ProfileComponent";
 import MenuComponent from "@/components/dashboard/MenuComponent";
@@ -22,6 +24,7 @@ import { ChefComplete } from "@/util/types";
 import { useRouter, useParams } from "next/navigation";
 import { Review } from "@prisma/client";
 import { useAuth } from "@/context/AuthContext";
+import Custom404 from "@/components/codes/Custom404";
 export interface ChefInterface {
   id: string;
   bio?: string | null;
@@ -266,7 +269,7 @@ export default function ChefDashboard() {
     { id: "menus", label: "Menu", icon: MenuIcon },
     { id: "dishes", label: "Piatti", icon: Utensils },
     { id: "photos", label: "Foto", icon: Image },
-    { id: "facts", label: "Fatti", icon: ChefHat },
+    { id: "facts", label: "Fatti", icon: NotebookText },
     { id: "reviews", label: "Recensioni", icon: Star },
     { id: "messages", label: "Messaggi", icon: MessageSquare },
   ];
@@ -336,16 +339,12 @@ export default function ChefDashboard() {
   }
 
   if (!chef) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-[#0a0a0a] text-white">
-        Errore: impossibile caricare i dati dello chef.
-      </div>
-    );
+    return <Custom404 />;
   }
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
-      <div className="sticky top-0 z-10 border-b border-white/10 bg-[#232323]">
+      <div className="sticky top-0 z-10 hidden border-b border-white/10 bg-[#232323] md:block">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex gap-3 overflow-x-auto">
             <button
@@ -383,6 +382,72 @@ export default function ChefDashboard() {
               Logout
             </button>
           </div>
+        </div>
+      </div>
+
+      <div className="fab text-gold md:hidden">
+        <div
+          tabIndex={0}
+          role="button"
+          className="btn btn-lg btn-circle bg-first-theme border-gold"
+        >
+          <ChefHat className="text-gold" />
+        </div>
+
+        <div className="text-gold">
+          Profilo
+          <button
+            className="btn btn-lg btn-circle text-gold bg-first-theme"
+            onClick={() => setActiveTab("profile")}
+          >
+            <User />
+          </button>
+        </div>
+        <div className="text-gold">
+          Menu
+          <button
+            className="btn btn-lg btn-circle text-gold bg-first-theme"
+            onClick={() => setActiveTab("menus")}
+          >
+            <MenuIcon />
+          </button>
+        </div>
+        <div className="text-gold">
+          Piatti
+          <button
+            className="btn btn-lg btn-circle text-gold bg-first-theme"
+            onClick={() => setActiveTab("dishes")}
+          >
+            <Utensils />
+          </button>
+        </div>
+        <div className="text-gold">
+          Fatti
+          <button
+            className="btn btn-lg btn-circle text-gold bg-first-theme"
+            onClick={() => setActiveTab("fatti")}
+          >
+            <NotebookText />
+          </button>
+        </div>
+
+        <div className="text-gold">
+          Messaggi
+          <button
+            className="btn btn-lg btn-circle text-gold bg-first-theme"
+            onClick={() => setActiveTab("messages")}
+          >
+            <MessageSquare />
+          </button>
+        </div>
+        <div className="text-gold">
+          Alla pagina
+          <button
+            className="btn btn-lg btn-circle text-gold bg-first-theme"
+            onClick={() => handleNavigateToPage()}
+          >
+            <DoorOpen />
+          </button>
         </div>
       </div>
 

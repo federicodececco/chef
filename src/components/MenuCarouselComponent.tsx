@@ -45,7 +45,7 @@ export default function MenuCarouselComponent({
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="top-1/2 -left-10 z-20 hidden -translate-y-1/2 rounded-full bg-[#0A0A0A] p-3 shadow-lg outline outline-[#c8a36a] transition-colors hover:bg-[#c8a36a] md:absolute md:block"
+            className="absolute right-20 bottom-0 z-20 -translate-y-1/2 rounded-full bg-[#0A0A0A] p-3 shadow-lg outline outline-[#c8a36a] transition-colors hover:bg-[#c8a36a] md:right-2/2 md:bottom-1/2"
             aria-label="Previous slide"
           >
             <ChevronLeft className="h-6 w-6 text-[#c8a36a]" />
@@ -53,7 +53,7 @@ export default function MenuCarouselComponent({
 
           <button
             onClick={nextSlide}
-            className="top-1/2 right-14 z-20 hidden -translate-y-1/2 rounded-full bg-[#0A0A0A] p-3 shadow-lg outline outline-[#c8a36a] transition-colors hover:bg-[#c8a36a] md:absolute md:block"
+            className="absolute right-0 bottom-0 z-20 -translate-y-1/2 rounded-full bg-[#0A0A0A] p-3 shadow-lg outline outline-[#c8a36a] transition-colors hover:bg-[#c8a36a] md:right-14 md:bottom-1/2"
             aria-label="Next slide"
           >
             <ChevronRight className="h-6 w-6 text-amber-600" />

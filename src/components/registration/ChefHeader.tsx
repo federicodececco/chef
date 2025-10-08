@@ -30,10 +30,10 @@ export default function ChefHeader() {
           <div className="absolute inset-0 z-0 bg-black/40" />
           <div className="absolute top-[50%] left-[50%] -translate-[50%] text-center md:w-xl">
             <h1 className="text-lg font-semibold text-white md:text-3xl">
-              Fare ciò che si ama
+              Fà ciò che ami
             </h1>
             <button
-              className="z-20 mt-8 rounded-4xl bg-[#F4C858] px-6 py-3 text-sm font-semibold md:px-8 md:py-3"
+              className="bg-gold hover:text-first-theme z-20 mt-8 rounded-4xl px-6 py-3 text-sm font-semibold duration-200 hover:bg-[#F4C858] md:px-8 md:py-3"
               onClick={handleToggle}
             >
               Diventa uno dei nostri chef

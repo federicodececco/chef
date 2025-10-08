@@ -9,7 +9,7 @@ export default function ChefPersonalPageLayout({
   return (
     <section>
       <NavBar />
-      <div className="mt-18">{children}</div>
+      <div className="md:mt-18">{children}</div>
       <Footer />
     </section>
   );

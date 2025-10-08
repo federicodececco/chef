@@ -17,28 +17,28 @@ export default function TakeControlSection() {
         <h2 className="pt-12 text-white/70">Il tuo talento, le tue regole.</h2>
       </div>
       <div className="flex flex-wrap justify-center gap-10 pt-10">
-        <div className="w-80 rounded-2xl bg-white py-8 pr-20 pl-5 shadow-2xl xl:pr-10">
+        <div className="bg-second-theme w-80 rounded-2xl py-8 pr-20 pl-5 shadow-2xl xl:pr-10">
           <div className="py-3">
             <SlidersVertical size={35} color="gold" />
           </div>
           <h1 className="text-lg font-bold">Cucina i tuoi menu</h1>
           <h2>Lascia che la tua creatività brilli.</h2>
         </div>
-        <div className="w-80 rounded-2xl bg-white py-8 pr-20 pl-5 shadow-2xl xl:pr-10">
+        <div className="bg-second-theme w-80 rounded-2xl py-8 pr-20 pl-5 shadow-2xl xl:pr-10">
           <div className="py-3">
             <CalendarDays size={35} color="gold" />
           </div>
           <h1 className="text-lg font-bold">Decidi i tuoi orari</h1>
           <h2>Lavori solo il martedì? Perfetto.</h2>
         </div>
-        <div className="w-80 rounded-2xl bg-white py-8 pr-20 pl-5 shadow-2xl xl:pr-10">
+        <div className="bg-second-theme w-80 rounded-2xl py-8 pr-20 pl-5 shadow-2xl xl:pr-10">
           <div className="py-3">
             <MessagesSquare size={35} color="gold" />
           </div>
           <h1 className="text-lg font-bold">Parla con i tuoi ospiti.</h1>
           <h2>Crea un contatto personale con i tuoi ospiti.</h2>
         </div>
-        <div className="w-80 rounded-2xl bg-white py-8 pr-20 pl-5 shadow-2xl xl:pr-10">
+        <div className="bg-second-theme w-80 rounded-2xl py-8 pr-20 pl-5 shadow-2xl xl:pr-10">
           <div className="py-3">
             <ReceiptText size={35} color="gold" />
           </div>

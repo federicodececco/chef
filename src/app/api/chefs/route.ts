@@ -3,7 +3,7 @@ import { createChef, getAllChefs } from "@/actions/chef";
 
 export async function GET() {
   try {
-    const result = await getAllChefs();
+    const result = await getAllChefs({ limit: 7 });
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });

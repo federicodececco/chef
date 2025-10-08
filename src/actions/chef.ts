@@ -105,9 +105,10 @@ export async function getChefBySlug(slug: string) {
   }
 }
 
-export async function getAllChefs() {
+export async function getAllChefs(options?: { limit?: number }) {
   try {
     const chefs = await prisma.chef.findMany({
+      take: options?.limit,
       include: {
         user: true,
       },

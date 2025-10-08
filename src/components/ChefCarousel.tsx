@@ -1,68 +1,99 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import axiosIstance from "@/lib/axios";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+interface Slide {
+  id: string;
+  avatarUrl: string;
+  user: {
+    firstname: string;
+    lastname: string;
+  };
+  chefSlug: string;
+}
 
 export default function ChefCarousel() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [chefs, setChefs] = useState();
+  const router = useRouter();
 
-  const slides = [
-    { id: 1, title: "Chef 1" },
-    { id: 2, title: "Chef 2" },
-    { id: 3, title: "Chef 3" },
-    { id: 4, title: "Chef 4" },
-    { id: 5, title: "Chef 5" },
+  const handleNavigation = (id: string, chefSlug: string) => {
+    const url = `/chef/${id}-${chefSlug}`;
+    router.push(url);
+  };
+
+  const slides: Slide[] = [
+    {
+      id: "1",
+      avatarUrl: "/registration/placeholder.png",
+      user: {
+        firstname: "chef",
+        lastname: "1",
+      },
+      chefSlug: "1/chef",
+    },
+    {
+      id: "2",
+      avatarUrl: "/registration/placeholder.png",
+      user: {
+        firstname: "chef",
+        lastname: "2",
+      },
+      chefSlug: "2/chef",
+    },
+    {
+      id: "3",
+      avatarUrl: "/registration/placeholder.png",
+      user: {
+        firstname: "chef",
+        lastname: "3",
+      },
+      chefSlug: "3/chef",
+    },
   ];
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => Math.min(prev + 1, slides.length - 1));
+  const [actualSlides, setActualSlides] = useState<Slide[]>(slides);
+  const fetchChef = async () => {
+    try {
+      const res = await axiosIstance.get("/chefs");
+      if (res) {
+        setActualSlides(res.data);
+      } else setActualSlides(slides);
+      console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => Math.max(prev - 1, 0));
-  };
-  const slideWidth = 320;
-  const gap = 16;
+  useEffect(() => {
+    fetchChef();
+  }, []);
 
   return (
-    <div className="w-full overflow-clip px-4">
-      <div className="relative mx-auto max-w-6xl">
-        <div className="relative overflow-hidden md:overflow-visible">
-          <div
-            className="flex gap-4 transition-transform duration-500 ease-in-out"
-            style={{
-              transform: `translateX(-${currentSlide * (slideWidth + gap)}px)`,
-            }}
-          >
-            {slides.map((slide, index) => (
-              <div
-                key={slide.id}
-                className={`flex min-h-100 min-w-80 items-center justify-center rounded-2xl bg-[url('/registration/placeholder.png')] shadow-xl transition-opacity duration-300 ${
-                  index !== currentSlide
-                    ? "opacity-40 md:opacity-100"
-                    : "opacity-100"
-                }`}
-              >
-                <h2 className="text-5xl font-bold text-white">{slide.title}</h2>
-              </div>
-            ))}
-          </div>
-
-          {currentSlide > 0 && (
-            <button
-              onClick={prevSlide}
-              className="absolute top-1/2 left-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-lg transition-all hover:scale-110 hover:bg-white"
+    <div className="mx-auto w-full">
+      <div className="relative max-w-6xl">
+        <div className="carousel carousel-center bg-neutral rounded-box relative mx-auto w-full space-x-4 p-4">
+          {actualSlides.map((slide, index) => (
+            <div
+              onClick={() => {
+                handleNavigation(slide.id, slide.chefSlug);
+              }}
+              key={slide.id}
+              className={`carousel-item relative z-10 flex justify-center text-5xl font-bold text-white hover:animate-pulse hover:cursor-pointer`}
             >
-              <ChevronLeft className="h-6 w-6 text-gray-800" />
-            </button>
-          )}
-
-          {currentSlide < slides.length - 1 && (
-            <button
-              onClick={nextSlide}
-              className="absolute top-1/2 right-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-lg transition-all hover:scale-110 hover:bg-white"
-            >
-              <ChevronRight className="h-6 w-6 text-gray-800" />
-            </button>
-          )}
+              <Image
+                src={slide.avatarUrl}
+                width={300}
+                height={500}
+                alt={`${slide.user.firstname} ${slide.user.lastname}`}
+                className="rounded-box cover z-2 object-cover"
+              />
+              <div className="absolute inset-0 z-5 bg-black/50"></div>
+              <h2 className="text-gold absolute z-10 text-center text-5xl font-bold">
+                {`${slide.user.firstname} ${slide.user.lastname}`}
+              </h2>
+            </div>
+          ))}
         </div>
       </div>
     </div>

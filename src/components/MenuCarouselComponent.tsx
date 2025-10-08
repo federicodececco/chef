@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Menu } from "@prisma/client";
+import { Menu, Dish } from "@prisma/client";
+
+interface MenuWithDishes extends Menu {
+  Dishes: Dish[];
+}
 
 interface MenuCarouselComponentInterface {
-  menus: Menu[];
+  menus: MenuWithDishes[];
 }
 
 export default function MenuCarouselComponent({
@@ -65,7 +69,6 @@ export default function MenuCarouselComponent({
                     {menu.name}
                   </h2>
 
-                  {/* antipasto section*/}
                   <div className="mb-8">
                     <div className="mb-4 border-l-4 border-[#c8a36a] pl-4">
                       <h3 className="text-lg font-semibold tracking-wide text-white/70 uppercase">
@@ -76,8 +79,10 @@ export default function MenuCarouselComponent({
                       </p>
                     </div>
                     <div className="space-y-2 pl-4">
-                      {menu.Dishes.filter((item) => item.course === "antipasto")
-                        .sort((a, b) => a.order - b.order)
+                      {menu.Dishes.filter(
+                        (item) => item.course.toLowerCase() === "antipasto",
+                      )
+                        .sort((a, b) => (a.listOrder || 0) - (b.listOrder || 0))
                         .map((item, idx) => (
                           <p
                             key={idx}
@@ -89,15 +94,18 @@ export default function MenuCarouselComponent({
                     </div>
                   </div>
 
-                  {/* Primo Section */}
                   <div className="mb-8">
                     <div className="border-l-4 border-[#c8a36a] pl-4">
                       <h3 className="text-lg font-semibold tracking-wide text-white/70 uppercase">
                         Primi
                       </h3>
                       <div className="mt-1 text-base font-medium text-white/80">
-                        {menu.Dishes.filter((item) => item.course === "primo")
-                          .sort((a, b) => a.order - b.order)
+                        {menu.Dishes.filter(
+                          (item) => item.course.toLowerCase() === "primo",
+                        )
+                          .sort(
+                            (a, b) => (a.listOrder || 0) - (b.listOrder || 0),
+                          )
                           .map((item, idx) => (
                             <p
                               key={idx}
@@ -109,8 +117,6 @@ export default function MenuCarouselComponent({
                       </div>
                     </div>
                   </div>
-
-                  {/* Piatto Principale Section */}
                   <div className="mb-6">
                     <div className="mb-4 border-l-4 border-[#c8a36a] pl-4">
                       <h3 className="text-lg font-semibold tracking-wide text-white/70 uppercase">
@@ -121,8 +127,10 @@ export default function MenuCarouselComponent({
                       </p>
                     </div>
                     <div className="space-y-2 pl-4">
-                      {menu.Dishes.filter((item) => item.course === "secondo")
-                        .sort((a, b) => a.order - b.order)
+                      {menu.Dishes.filter(
+                        (item) => item.course.toLowerCase() === "secondo",
+                      )
+                        .sort((a, b) => (a.listOrder || 0) - (b.listOrder || 0))
                         .map((item, idx) => (
                           <p
                             key={idx}
@@ -133,7 +141,6 @@ export default function MenuCarouselComponent({
                         ))}
                     </div>
                   </div>
-                  {/* Dolce Section */}
                   <div className="mb-6">
                     <div className="mb-4 border-l-4 border-[#c8a36a] pl-4">
                       <h3 className="text-lg font-semibold tracking-wide text-white/70 uppercase">
@@ -144,8 +151,10 @@ export default function MenuCarouselComponent({
                       </p>
                     </div>
                     <div className="space-y-2 pl-4">
-                      {menu.Dishes.filter((item) => item.course === "dolce")
-                        .sort((a, b) => a.order - b.order)
+                      {menu.Dishes.filter(
+                        (item) => item.course.toLowerCase() === "dolce",
+                      )
+                        .sort((a, b) => (a.listOrder || 0) - (b.listOrder || 0))
                         .map((item, idx) => (
                           <p
                             key={idx}
@@ -156,8 +165,6 @@ export default function MenuCarouselComponent({
                         ))}
                     </div>
                   </div>
-
-                  {/* View Complete Menu Link */}
                 </div>
                 <div className="mt-8 border-t border-[#c8a36a] pt-6 text-center">
                   <a
@@ -172,7 +179,6 @@ export default function MenuCarouselComponent({
           </div>
         </div>
 
-        {/* Dots Indicator */}
         <div className="mt-6 flex justify-center gap-2">
           {menus.map((_, index) => (
             <button

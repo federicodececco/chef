@@ -1,10 +1,10 @@
 import Image from "next/image";
 
 interface HeaderComponentInterface {
-  handleToggle?: any;
+  handleToggle?: () => void;
   mainText: string;
   subText?: string;
-  imageUrl: string | any;
+  imageUrl: string | null;
 }
 
 export default function HeaderComponent({
@@ -19,14 +19,20 @@ export default function HeaderComponent({
 
       <div className="relative z-10 h-full">
         <div className="relative h-full">
-          <Image
-            src={imageUrl}
-            alt="Header image"
-            fill
-            className="object-cover object-top"
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j"
-          />
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt="Header image"
+              fill
+              className="object-cover object-top"
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center bg-gray-800">
+              <p className="text-white">Nessuna immagine disponibile</p>
+            </div>
+          )}
         </div>
         <div className="absolute inset-0 z-0 bg-black/50" />
         <div className="absolute top-[50%] left-[50%] -translate-[50%] text-center md:w-xl">

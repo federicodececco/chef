@@ -51,7 +51,7 @@ export default function FAQAccordion() {
         <div className="mb-12 text-center">
           <h1 className="mb-3 text-4xl font-bold">Domande Frequenti</h1>
           <p className="text-lg text-white/70">
-            Al tuo tavolo non c'è spazio per i dubbi.
+            Al tuo tavolo non c&apos;è spazio per i dubbi.
           </p>
         </div>
 

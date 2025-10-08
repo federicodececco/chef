@@ -25,11 +25,12 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const body = await req.json();
-    const result = await updatePhoto(params.id, body);
+    const result = await updatePhoto(id, body);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });

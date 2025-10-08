@@ -3,11 +3,12 @@ import { updateCategory, deleteCategory } from "@/actions/category";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const body = await req.json();
-    const result = await updateCategory(params.id, body);
+    const result = await updateCategory(id, body);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });

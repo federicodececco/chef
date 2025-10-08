@@ -3,11 +3,12 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const chats = await prisma.chat.findMany({
-      where: { userId: params.userId },
+      where: { userId: id },
       include: {
         Messages: {
           orderBy: { createdAt: "asc" },

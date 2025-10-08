@@ -28,7 +28,7 @@ export default function SupportSection() {
             <Globe color="#c8a36a" size={30} />
             <h1 className="pt-4">Assicurazione globale</h1>
             <h2 className="text-white/70">
-              Copriamo qualsiasi incidente durante l'esperienza.
+              Copriamo qualsiasi incidente durante l&apos;èesperienza.
             </h2>
           </div>
           <div className="w-full py-3">

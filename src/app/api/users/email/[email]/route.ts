@@ -3,10 +3,11 @@ import { getUserByEmail } from "@/actions/user";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { email: string } },
+  { params }: { params: Promise<{ email: string }> },
 ) {
   try {
-    const result = await getUserByEmail(params.email);
+    const { email } = await params;
+    const result = await getUserByEmail(email);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });

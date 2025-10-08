@@ -3,10 +3,11 @@ import { getMenusByChef } from "@/actions/menu";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { chefId: string } },
+  { params }: { params: Promise<{ chefId: string }> },
 ) {
   try {
-    const result = await getMenusByChef(params.chefId);
+    const { chefId } = await params;
+    const result = await getMenusByChef(chefId);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });

@@ -3,10 +3,11 @@ import { getChatsByUser } from "@/actions/chat";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { userId: string } },
+  { params }: { params: Promise<{ userId: string }> },
 ) {
   try {
-    const result = await getChatsByUser(params.userId);
+    const { userId } = await params;
+    const result = await getChatsByUser(userId);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });

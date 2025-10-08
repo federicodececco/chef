@@ -3,10 +3,11 @@ import { getMessage, deleteMessage } from "@/actions/message";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await getMessage(params.id);
+    const { id } = await params;
+    const result = await getMessage(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });
@@ -24,10 +25,11 @@ export async function GET(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await deleteMessage(params.id);
+    const { id } = await params;
+    const result = await deleteMessage(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });

@@ -3,10 +3,11 @@ import { getChefBySlug } from "@/actions/chef";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   try {
-    const result = await getChefBySlug(params.slug);
+    const { slug } = await params;
+    const result = await getChefBySlug(slug);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });

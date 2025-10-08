@@ -10,6 +10,7 @@ import { Edit, PlusCircle, Trash2, X, Check } from "lucide-react";
 interface DishesComponentInterface {
   dishes: DishInterface[];
   menus: MenuInterface[];
+  chefId: string;
   onAdd: (dish: Omit<DishInterface, "id">) => void;
   onUpdate: (id: string, dish: Partial<DishInterface>) => void;
   onDelete: (id: string) => void;
@@ -18,6 +19,7 @@ interface DishesComponentInterface {
 export default function DishesComponent({
   dishes,
   menus,
+  chefId,
   onAdd,
   onUpdate,
   onDelete,
@@ -36,7 +38,10 @@ export default function DishesComponent({
 
   const handleAdd = () => {
     if (formData.name.trim()) {
-      onAdd(formData);
+      onAdd({
+        ...formData,
+        chefId: chefId,
+      });
       setFormData({
         name: "",
         course: "Antipasto",

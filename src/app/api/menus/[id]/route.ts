@@ -4,10 +4,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await getMenu(params.id);
+    const { id } = await params;
+    const result = await getMenu(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });
@@ -109,10 +110,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await deleteMenu(params.id);
+    const { id } = await params;
+    const result = await deleteMenu(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });

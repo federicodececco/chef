@@ -1,23 +1,22 @@
 "use client";
-import { Map as LeafletMap, Circle, Marker } from "leaflet";
-import { useState, useEffect, useRef } from "react";
+import { Map as LeafletMap, Circle, Marker, LatLng } from "leaflet";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface Coordinates {
   lat: number;
   lng: number;
 }
 
-interface SavedLocation {
-  city: string;
-  coordinates: Coordinates;
-  radiusMeters: number;
-  radiusKm: string;
-  timestamp: string;
-}
-
 interface CityMapSelector {
   city: string;
   setCity: (city: string) => void;
+}
+
+/* leaflet */
+declare global {
+  interface Window {
+    L: typeof import("leaflet");
+  }
 }
 
 export default function CityMapSelector({ setCity }: CityMapSelector) {
@@ -31,34 +30,92 @@ export default function CityMapSelector({ setCity }: CityMapSelector) {
   const circleRef = useRef<Circle | null>(null);
   const markerRef = useRef<Marker | null>(null);
 
+  const addCityMarker = useCallback(
+    (
+      latlng: Coordinates,
+      mapInstance: LeafletMap,
+      L: typeof import("leaflet"),
+    ) => {
+      if (markerRef.current) mapInstance.removeLayer(markerRef.current);
+      if (circleRef.current) mapInstance.removeLayer(circleRef.current);
+
+      const newMarker = L.marker([latlng.lat, latlng.lng]).addTo(mapInstance);
+      const newCircle = L.circle([latlng.lat, latlng.lng], {
+        radius: radius,
+        color: "#3b82f6",
+        fillColor: "#3b82f6",
+        fillOpacity: 0.2,
+        weight: 2,
+      }).addTo(mapInstance);
+
+      markerRef.current = newMarker;
+      circleRef.current = newCircle;
+      setSelectedCity(latlng);
+
+      mapInstance.setView([latlng.lat, latlng.lng], 12);
+
+      fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`,
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          const city =
+            data.address.city ||
+            data.address.town ||
+            data.address.village ||
+            data.address.municipality ||
+            "Località sconosciuta";
+          setCityName(city);
+
+          newMarker.bindPopup("").openPopup();
+        })
+        .catch((err) => {
+          console.error("Errore geocoding:", err);
+          setCityName("Località sconosciuta");
+        });
+    },
+    [radius],
+  );
+
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
     document.head.appendChild(link);
+
     const script = document.createElement("script");
     script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+
     const initMap = () => {
-      if (typeof window !== "undefined" && (window as any).L) {
-        const L = (window as any).L;
+      if (typeof window !== "undefined" && window.L) {
+        const L = window.L;
         const mapInstance = L.map("map").setView([41.9028, 12.4964], 6);
+
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution: "© OpenStreetMap contributors",
           maxZoom: 19,
         }).addTo(mapInstance);
+
         setMap(mapInstance);
         setIsMapReady(true);
-        mapInstance.on("click", (e: any) => {
-          addCityMarker(e.latlng, mapInstance, L);
+
+        mapInstance.on("click", (e: { latlng: LatLng }) => {
+          addCityMarker(
+            { lat: e.latlng.lat, lng: e.latlng.lng },
+            mapInstance,
+            L,
+          );
         });
       }
     };
+
     script.onload = () => initMap();
     document.body.appendChild(script);
+
     return () => {
       if (map) map.remove();
     };
-  }, []);
+  }, [addCityMarker, map]);
 
   useEffect(() => {
     if (markerRef.current) {
@@ -69,46 +126,6 @@ export default function CityMapSelector({ setCity }: CityMapSelector) {
       );
     }
   }, [radius, cityName]);
-
-  const addCityMarker = (latlng: Coordinates, mapInstance: any, L: any) => {
-    if (markerRef.current) mapInstance.removeLayer(markerRef.current);
-    if (circleRef.current) mapInstance.removeLayer(circleRef.current);
-
-    const newMarker = L.marker([latlng.lat, latlng.lng]).addTo(mapInstance);
-    const newCircle = L.circle([latlng.lat, latlng.lng], {
-      radius: radius,
-      color: "#3b82f6",
-      fillColor: "#3b82f6",
-      fillOpacity: 0.2,
-      weight: 2,
-    }).addTo(mapInstance);
-
-    markerRef.current = newMarker;
-    circleRef.current = newCircle;
-    setSelectedCity(latlng);
-
-    mapInstance.setView([latlng.lat, latlng.lng], 12);
-
-    fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`,
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const city =
-          data.address.city ||
-          data.address.town ||
-          data.address.village ||
-          data.address.municipality ||
-          "Località sconosciuta";
-        setCityName(city);
-
-        newMarker.bindPopup("").openPopup();
-      })
-      .catch((err) => {
-        console.error("Errore geocoding:", err);
-        setCityName("Località sconosciuta");
-      });
-  };
 
   const handleRadiusChange = (newRadius: number) => {
     setRadius(newRadius);
@@ -121,14 +138,13 @@ export default function CityMapSelector({ setCity }: CityMapSelector) {
     if (!selectedCity || !cityName) {
       return;
     }
-    const locationData: SavedLocation = {
+
+    console.log("Location saved:", {
       city: cityName,
-      coordinates: { lat: selectedCity.lat, lng: selectedCity.lng },
-      radiusMeters: radius,
+      coordinates: selectedCity,
       radiusKm: (radius / 1000).toFixed(1),
-      timestamp: new Date().toISOString(),
-    };
-    console.log(cityName);
+    });
+
     setCity(cityName);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
@@ -152,19 +168,19 @@ export default function CityMapSelector({ setCity }: CityMapSelector) {
     <div className="col-span-2 flex h-200 w-full flex-col">
       {showToast && (
         <div className="toast toast-top toast-center mt-20">
-          <div className="alert alert-info bg-gold border-gold">
+          <div className="alert alert-info border-gold bg-gold">
             <span>Posizione Salvata</span>
           </div>
         </div>
       )}
-      <div className="bg-second-theme flex-col p-4 shadow-md">
+      <div className="flex-col bg-[#232323] p-4 shadow-md">
         <h1 className="text-2xl font-bold">
           Seleziona la città e il raggio in cui vuoi operare
         </h1>
         <div className="flex flex-wrap items-center gap-4">
           <div className="min-w-[200px] flex-1"></div>
           <div className="w-full">
-            <label className="text-gold block text-sm font-medium">
+            <label className="block text-sm font-medium text-[#c8a36a]">
               Raggio zona: {(radius / 1000).toFixed(1)} km
             </label>
             <input
@@ -185,13 +201,13 @@ export default function CityMapSelector({ setCity }: CityMapSelector) {
           <div className="mt-4 flex gap-2">
             <button
               onClick={saveLocation}
-              className="bg-gold text-second-theme rounded-lg px-6 py-2 font-medium transition hover:bg-green-600"
+              className="rounded-lg bg-[#c8a36a] px-6 py-2 font-medium text-[#0a0a0a] transition hover:bg-[#d4b480]"
             >
               Salva Posizione
             </button>
             <button
               onClick={clearLocation}
-              className="border-gold text-gold rounded-lg border-1 px-6 py-2 font-medium transition hover:bg-red-600"
+              className="rounded-lg border border-[#c8a36a] px-6 py-2 font-medium text-[#c8a36a] transition hover:bg-red-600 hover:text-white"
             >
               Cancella
             </button>

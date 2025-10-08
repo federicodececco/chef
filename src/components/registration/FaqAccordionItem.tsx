@@ -5,7 +5,7 @@ interface FaqAccordionItemInterface {
   index: number;
   actualIndex: number;
   openIndex: number | null;
-  toggleAccordion: Function;
+  toggleAccordion: (value: number) => void;
 }
 
 export default function FaqAccordioItem({

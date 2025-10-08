@@ -3,9 +3,9 @@ import Image from "next/image";
 import { useState } from "react";
 
 interface HeroPersonalComponentInterface {
-  imageUrl: any | string;
-  briefDescription: any | string;
-  description: any | string;
+  imageUrl: string | null;
+  briefDescription: string | null;
+  description: string | null;
   facts: Facts[] | null;
 }
 
@@ -47,16 +47,18 @@ export default function HeroPersonalComponent({
         </div>
         {/* third column */}
         <div className="col-span-1 max-w-full">
-          <div className="relative aspect-square">
-            <Image
-              src={imageUrl}
-              alt="chef image"
-              fill
-              className="rounded-2xl object-cover"
-              placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j"
-            />
-          </div>
+          {imageUrl && (
+            <div className="relative aspect-square">
+              <Image
+                src={imageUrl}
+                alt="chef image"
+                fill
+                className="rounded-2xl object-cover"
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j"
+              />
+            </div>
+          )}
         </div>
       </div>
       {/*br line */}

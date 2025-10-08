@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import axiosIstance from "@/lib/axios";
+import axios from "axios";
 import { useState } from "react";
 
 interface FormDataInterface {
@@ -13,7 +16,7 @@ interface FormDataInterface {
 }
 
 interface RegistrationPopUpInterface {
-  handleToggle: Function;
+  handleToggle: () => void;
 }
 export default function RegistrationPopUp({
   handleToggle,
@@ -94,9 +97,13 @@ export default function RegistrationPopUp({
       window.location.reload();
 
       console.log("Registrazione completata:", data.message);
-    } catch (error: any) {
-      if (error.response?.data?.error) {
-        setError(error.response.data.error);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.data?.error) {
+          setError(error.response.data.error);
+        } else {
+          setError("Errore durante la registrazione. Riprova più tardi.");
+        }
       } else {
         setError("Errore durante la registrazione. Riprova più tardi.");
       }

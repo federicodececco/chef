@@ -6,10 +6,14 @@ export async function createMessage(data: {
   chatId: string;
   isChef: boolean;
   text: string;
+  isRed?: boolean;
 }) {
   try {
     const message = await prisma.message.create({
-      data,
+      data: {
+        ...data,
+        isRed: data.isRed ?? false,
+      },
     });
     return { success: true, data: message };
   } catch (error) {

@@ -114,16 +114,14 @@ export default function MenuComponent({
 
   const selectedMenu = menus.find((m) => m.id === selectedMenuId);
 
-  // Ottieni i piatti del menu selezionato
   const menuDishes = selectedMenu
     ? dishes
-        .filter((dish) => dish.Menus?.some((m) => m.id === selectedMenuId))
+        .filter((dish) => dish.menus?.some((m) => m.id === selectedMenuId))
         .sort((a, b) => (a.listOrder || 0) - (b.listOrder || 0))
     : [];
 
-  // Piatti disponibili da aggiungere (non ancora nel menu)
   const availableDishes = dishes.filter(
-    (dish) => !dish.Menus?.some((m: Menu) => m.id === selectedMenuId),
+    (dish) => !dish.menus?.some((m) => m.id === selectedMenuId),
   );
 
   const handleAdd = () => {

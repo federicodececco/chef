@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { userId: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await getReviewsByUserId(params.userId);
+    const { id } = await params;
+    const result = await getReviewsByUserId(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });

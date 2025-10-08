@@ -3,10 +3,11 @@ import { getPhotosByChef } from "@/actions/photo";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { chefId: string } },
+  { params }: { params: Promise<{ chefId: string }> },
 ) {
   try {
-    const result = await getPhotosByChef(params.chefId);
+    const { chefId } = await params;
+    const result = await getPhotosByChef(chefId);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });

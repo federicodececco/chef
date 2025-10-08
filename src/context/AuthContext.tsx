@@ -9,6 +9,7 @@ import {
   useCallback,
 } from "react";
 import axiosInstance from "@/lib/axios";
+import axios from "axios";
 
 interface User {
   id: string;
@@ -108,9 +109,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await axiosInstance.get("/auth/user");
       updateUser(response.data.user);
       return true;
-    } catch (error: any) {
-      if (error?.response?.status === 401) {
-        updateUser(null);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          updateUser(null);
+        }
       }
       return false;
     } finally {

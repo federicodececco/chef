@@ -51,7 +51,7 @@ export default function ChefPersonalPage() {
         const data = res.data;
 
         setChefData(data);
-
+        console.log(data);
         /* Verifica se il profilo è completo */
         if (!data.coverUrl || !data.avatarUrl) {
           setIsProfileComplete(false);
@@ -117,6 +117,11 @@ export default function ChefPersonalPage() {
   const shouldShowChatButton =
     isAuthenticated && user && user.id !== chefData.id && !currentUserIsChef;
 
+  const menusWithDishes = (chefData.Menus || []).map((menu) => ({
+    ...menu,
+    Dishes: menu.Dishes || [],
+  }));
+
   return (
     <>
       <HeaderComponent
@@ -130,7 +135,7 @@ export default function ChefPersonalPage() {
           imageUrl={chefData.avatarUrl}
           description={chefData.bio}
           facts={chefData.Facts || null}
-          briefDescription={chefData.bioBrief}
+          briefDescription={chefData.bioBrief || null}
         />
       </section>
 
@@ -138,7 +143,7 @@ export default function ChefPersonalPage() {
         <h1 className="py-6 text-center text-4xl font-bold text-white">
           I miei menu
         </h1>
-        <MenuCarouselComponent menus={chefData.Menus || []} />
+        <MenuCarouselComponent menus={menusWithDishes || []} />
       </section>
 
       <section className="bg-[#232323] md:px-4">

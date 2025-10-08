@@ -2,7 +2,11 @@
 
 import { prisma } from "@/lib/prisma";
 
-export async function createMenu(data: { chefId: string }) {
+export async function createMenu(data: {
+  chefId: string;
+  name: string;
+  maxPeople?: number;
+}) {
   try {
     const menu = await prisma.menu.create({
       data,

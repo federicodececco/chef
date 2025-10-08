@@ -3,10 +3,11 @@ import { getDishesByMenu } from "@/actions/dish";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { menuId: string } },
+  { params }: { params: Promise<{ menuId: string }> },
 ) {
   try {
-    const result = await getDishesByMenu(params.menuId);
+    const { menuId } = await params;
+    const result = await getDishesByMenu(menuId);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });

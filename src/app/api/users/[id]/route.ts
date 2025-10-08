@@ -29,9 +29,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
 
     const { firstname, lastname, email } = body;
@@ -46,7 +47,7 @@ export async function PATCH(
       }
     }
 
-    const result = await updateUser(params.id, {
+    const result = await updateUser(id, {
       firstname,
       lastname,
       email,

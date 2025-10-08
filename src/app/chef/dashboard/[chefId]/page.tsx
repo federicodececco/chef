@@ -24,20 +24,22 @@ import { Review } from "@prisma/client";
 import { useAuth } from "@/context/AuthContext";
 export interface ChefInterface {
   id: string;
-  bio?: string;
-  bioBrief?: string;
-  avatarUrl?: string;
-  coverUrl?: string;
-  phoneNumber?: string;
-  nation?: string;
-  slug?: string;
-  city?: string;
+  bio?: string | null;
+  bioBrief?: string | null;
+  avatarUrl?: string | null;
+  coverUrl?: string | null;
+  phoneNumber?: string | null;
+  nation?: string | null;
+  slug?: string | null;
+  city?: string | null;
 }
 
 export interface MenuInterface {
   id: string;
   name: string;
   dishCount?: number;
+  maxPeople?: number;
+  Dishes?: DishInterface[];
 }
 
 export interface DishInterface {
@@ -405,6 +407,7 @@ export default function ChefDashboard() {
           <DishesComponent
             dishes={dishes}
             menus={menus}
+            chefId={chefId}
             onAdd={handleAddDish}
             onUpdate={handleUpdateDish}
             onDelete={handleDeleteDish}
@@ -426,10 +429,8 @@ export default function ChefDashboard() {
             onDelete={handleDeleteFact}
           />
         )}
-        {activeTab === "reviews" && (
-          <ReviewComponent chef={chef} reviews={reviews} />
-        )}
-        {activeTab === "messages" && <MessagesComponent />}
+        {activeTab === "reviews" && <ReviewComponent reviews={reviews} />}
+        {activeTab === "messages" && <MessagesComponent chefId={chefId} />}
       </main>
     </div>
   );

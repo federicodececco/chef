@@ -3,10 +3,11 @@ import { getDish, updateDish, deleteDish } from "@/actions/dish";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await getDish(params.id);
+    const { id } = await params;
+    const result = await getDish(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });
@@ -47,10 +48,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const result = await deleteDish(params.id);
+    const { id } = await params;
+    const result = await deleteDish(id);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });

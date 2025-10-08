@@ -3,10 +3,11 @@ import { getMessagesByChat, deleteMessagesByChat } from "@/actions/message";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { chatId: string } },
+  { params }: { params: Promise<{ chatId: string }> },
 ) {
   try {
-    const result = await getMessagesByChat(params.chatId);
+    const { chatId } = await params;
+    const result = await getMessagesByChat(chatId);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });
@@ -24,10 +25,11 @@ export async function GET(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { chatId: string } },
+  { params }: { params: Promise<{ chatId: string }> },
 ) {
   try {
-    const result = await deleteMessagesByChat(params.chatId);
+    const { chatId } = await params;
+    const result = await deleteMessagesByChat(chatId);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 500 });

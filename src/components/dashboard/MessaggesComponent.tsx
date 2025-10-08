@@ -55,17 +55,17 @@ export default function MessagesComponent({ chefId }: MessagesComponentProps) {
     };
 
     fetchChats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chefId]);
 
   useEffect(() => {
     if (selectedChatId) {
+      const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      };
       scrollToBottom();
     }
   }, [selectedChatId, chats]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   const handleSendMessage = async () => {
     if (!messageInput.trim() || !selectedChatId) return;

@@ -16,13 +16,6 @@ export default function ChefReviewComponent({
   const [users, setUsers] = useState<undefined | User[]>(undefined);
   console.log(reviews);
 
-  const fetchReviewUser = async () => {
-    const userPromises = await Promise.all(
-      reviews.map((elem) => axiosIstance.get(`users/${elem.userId}`)),
-    );
-    setUsers(userPromises.map((response) => response.data));
-  };
-
   useEffect(() => {
     const countMean = () => {
       let notMean = 0;
@@ -33,7 +26,14 @@ export default function ChefReviewComponent({
       setMean(notMean);
     };
     countMean();
+    const fetchReviewUser = async () => {
+      const userPromises = await Promise.all(
+        reviews.map((elem) => axiosIstance.get(`users/${elem.userId}`)),
+      );
+      setUsers(userPromises.map((response) => response.data));
+    };
     fetchReviewUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     console.log(users);

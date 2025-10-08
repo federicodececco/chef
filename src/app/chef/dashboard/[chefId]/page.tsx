@@ -20,6 +20,8 @@ import MessagesComponent from "@/components/dashboard/MessaggesComponent";
 import axiosIstance from "@/lib/axios";
 import { ChefComplete } from "@/util/types";
 import { useRouter, useParams } from "next/navigation";
+import { Review } from "@prisma/client";
+import { useAuth } from "@/context/AuthContext";
 export interface ChefInterface {
   id: string;
   bio?: string;
@@ -80,7 +82,7 @@ export default function ChefDashboard() {
   const [chefId, setChefId] = useState("");
   const router = useRouter();
   const params = useParams<{ chefId: string }>();
-
+  const { logout } = useAuth();
   const handleUpdateChef = async (updatedChef: ChefComplete) => {
     try {
       const res = await axiosIstance.patch(`/chefs/${chefId}`, updatedChef);
@@ -90,7 +92,11 @@ export default function ChefDashboard() {
     }
   };
 
-  const handleUploadPhoto = async (data: any) => {
+  const handleUploadPhoto = async (data: {
+    imageUrl: string;
+    id: string;
+    filename: string;
+  }) => {
     try {
       const newPhoto = {
         imageUrl: data.imageUrl,
@@ -264,8 +270,12 @@ export default function ChefDashboard() {
   ];
 
   const handleLogOut = async () => {
-    await axiosIstance.post("/api/logout");
-    router.push("/chef/chef-registration");
+    try {
+      await logout();
+      router.push("/chef/chef-registration");
+    } catch (error) {
+      console.error("Errore durante il logout:", error);
+    }
   };
 
   const handleNavigateToPage = async () => {
@@ -297,7 +307,7 @@ export default function ChefDashboard() {
         setFacts(data.Facts || []);
 
         if (data.Review) {
-          const formattedReviews = data.Review.map((review: any) => ({
+          const formattedReviews = data.Review.map((review: Review) => ({
             id: review.id,
             rating: review.rating,
             text: review.text,
@@ -402,6 +412,7 @@ export default function ChefDashboard() {
         )}
         {activeTab === "photos" && (
           <PhotosComponent
+            chef={chef}
             photos={photos}
             onUpload={handleUploadPhoto}
             onDelete={handleDeletePhoto}

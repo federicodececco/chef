@@ -64,41 +64,6 @@ export default function ChatComponent({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const initializeSingleChat = async () => {
-    if (!targetChefId || !currentUserId) return;
-
-    setIsLoading(true);
-    try {
-      /* da implementare */
-      const checkResponse = await fetch(
-        `/api/chats/by-users?chefId=${targetChefId}&userId=${currentUserId}`,
-      );
-
-      let chat;
-      if (checkResponse.ok) {
-        chat = await checkResponse.json();
-      } else {
-        // Se non esiste, creala
-        const createResponse = await fetch("/api/chats", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chefId: targetChefId,
-            userId: currentUserId,
-          }),
-        });
-        chat = await createResponse.json();
-      }
-
-      setChats([chat]);
-      setExpandedChatId(chat.id);
-    } catch (error) {
-      console.error("Errore nell'inizializzazione della chat:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleSendMessage = async (chatId: string) => {
     if (!messageInput.trim()) return;
 
@@ -165,6 +130,40 @@ export default function ChatComponent({
     if (isOpen) {
       if (targetChefId) {
         /*  Modalità chat singola per utente */
+        const initializeSingleChat = async () => {
+          if (!targetChefId || !currentUserId) return;
+
+          setIsLoading(true);
+          try {
+            /* da implementare */
+            const checkResponse = await fetch(
+              `/api/chats/by-users?chefId=${targetChefId}&userId=${currentUserId}`,
+            );
+
+            let chat;
+            if (checkResponse.ok) {
+              chat = await checkResponse.json();
+            } else {
+              // Se non esiste, creala
+              const createResponse = await fetch("/api/chats", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  chefId: targetChefId,
+                  userId: currentUserId,
+                }),
+              });
+              chat = await createResponse.json();
+            }
+
+            setChats([chat]);
+            setExpandedChatId(chat.id);
+          } catch (error) {
+            console.error("Errore nell'inizializzazione della chat:", error);
+          } finally {
+            setIsLoading(false);
+          }
+        };
         initializeSingleChat();
       } else {
         /*  Modalità lista chat (per chef o utenti nella navbar) */
@@ -188,7 +187,9 @@ export default function ChatComponent({
         fetchChats();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, targetChefId]);
+
   /* Se è una chat singola (targetChefId definito), non mostrare il pulsante toggle */
   if (targetChefId) {
     return (
@@ -293,7 +294,6 @@ export default function ChatComponent({
     );
   }
 
-  // Modalità lista chat (codice originale)
   return (
     <>
       <button

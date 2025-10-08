@@ -1,5 +1,5 @@
 "use client";
-
+import { Map as LeafletMap, Circle, Marker } from "leaflet";
 import { useState, useEffect, useRef } from "react";
 
 interface Coordinates {
@@ -17,19 +17,19 @@ interface SavedLocation {
 
 interface CityMapSelector {
   city: string;
-  setCity: Function;
+  setCity: (city: string) => void;
 }
 
-export default function CityMapSelector({ setCity, city }: CityMapSelector) {
-  const [map, setMap] = useState<any>(null);
+export default function CityMapSelector({ setCity }: CityMapSelector) {
+  const [map, setMap] = useState<LeafletMap | null>(null);
   const [selectedCity, setSelectedCity] = useState<Coordinates | null>(null);
   const [radius, setRadius] = useState<number>(5000);
   const [cityName, setCityName] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
   const [isMapReady, setIsMapReady] = useState<boolean>(false);
 
-  const circleRef = useRef<any>(null);
-  const markerRef = useRef<any>(null);
+  const circleRef = useRef<Circle | null>(null);
+  const markerRef = useRef<Marker | null>(null);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -38,9 +38,23 @@ export default function CityMapSelector({ setCity, city }: CityMapSelector) {
     document.head.appendChild(link);
     const script = document.createElement("script");
     script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    const initMap = () => {
+      if (typeof window !== "undefined" && (window as any).L) {
+        const L = (window as any).L;
+        const mapInstance = L.map("map").setView([41.9028, 12.4964], 6);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "© OpenStreetMap contributors",
+          maxZoom: 19,
+        }).addTo(mapInstance);
+        setMap(mapInstance);
+        setIsMapReady(true);
+        mapInstance.on("click", (e: any) => {
+          addCityMarker(e.latlng, mapInstance, L);
+        });
+      }
+    };
     script.onload = () => initMap();
     document.body.appendChild(script);
-    const saved = localStorage.getItem("savedLocation");
     return () => {
       if (map) map.remove();
     };
@@ -55,22 +69,6 @@ export default function CityMapSelector({ setCity, city }: CityMapSelector) {
       );
     }
   }, [radius, cityName]);
-
-  const initMap = () => {
-    if (typeof window !== "undefined" && (window as any).L) {
-      const L = (window as any).L;
-      const mapInstance = L.map("map").setView([41.9028, 12.4964], 6);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-        maxZoom: 19,
-      }).addTo(mapInstance);
-      setMap(mapInstance);
-      setIsMapReady(true);
-      mapInstance.on("click", (e: any) => {
-        addCityMarker(e.latlng, mapInstance, L);
-      });
-    }
-  };
 
   const addCityMarker = (latlng: Coordinates, mapInstance: any, L: any) => {
     if (markerRef.current) mapInstance.removeLayer(markerRef.current);

@@ -31,6 +31,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Menu } from "@prisma/client";
 
 interface MenuComponentInterface {
   menus: MenuInterface[];
@@ -122,7 +123,7 @@ export default function MenuComponent({
 
   // Piatti disponibili da aggiungere (non ancora nel menu)
   const availableDishes = dishes.filter(
-    (dish) => !dish.Menus?.some((m) => m.id === selectedMenuId),
+    (dish) => !dish.Menus?.some((m: Menu) => m.id === selectedMenuId),
   );
 
   const handleAdd = () => {

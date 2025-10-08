@@ -1,14 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ChefInterface,
-  FactInterface,
-} from "@/app/chef/dashboard/[chefId]/page";
+import { FactInterface } from "@/app/chef/dashboard/[chefId]/page";
 import { Edit, PlusCircle, Trash2, X, Check } from "lucide-react";
 
 interface FactsComponentInterface {
-  chef: ChefInterface;
   facts: FactInterface[];
   onAdd: (fact: Omit<FactInterface, "id">) => void;
   onUpdate: (id: string, fact: Partial<FactInterface>) => void;

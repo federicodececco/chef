@@ -20,7 +20,6 @@ export default function ChefCarousel() {
     const url = `/chef/${id}-${chefSlug}`;
     router.push(url);
   };
-
   const slides: Slide[] = [
     {
       id: "1",
@@ -52,8 +51,37 @@ export default function ChefCarousel() {
   ];
 
   const [actualSlides, setActualSlides] = useState<Slide[]>(slides);
-
   useEffect(() => {
+    const slides: Slide[] = [
+      {
+        id: "1",
+        avatarUrl: "/registration/placeholder.png",
+        user: {
+          firstname: "chef",
+          lastname: "1",
+        },
+        chefSlug: "1/chef",
+      },
+      {
+        id: "2",
+        avatarUrl: "/registration/placeholder.png",
+        user: {
+          firstname: "chef",
+          lastname: "2",
+        },
+        chefSlug: "2/chef",
+      },
+      {
+        id: "3",
+        avatarUrl: "/registration/placeholder.png",
+        user: {
+          firstname: "chef",
+          lastname: "3",
+        },
+        chefSlug: "3/chef",
+      },
+    ];
+
     const fetchChef = async () => {
       try {
         const res = await axiosIstance.get("/chefs");

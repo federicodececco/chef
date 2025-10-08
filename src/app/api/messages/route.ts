@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       senderName,
       messageText: text,
       chatUrl,
-    }).catch((error: any) => {
+    }).catch((error: unknown) => {
       console.error("Errore nell'invio dell'email:", error);
     });
 

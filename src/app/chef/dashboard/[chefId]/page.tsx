@@ -332,8 +332,8 @@ export default function ChefDashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0a0a0a] text-white">
-        Caricamento dashboard...
+      <div className="bg-first-theme flex h-screen justify-center">
+        <span className="loading loading-bars loading-xl text-gold"></span>
       </div>
     );
   }

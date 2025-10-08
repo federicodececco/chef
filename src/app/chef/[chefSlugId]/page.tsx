@@ -13,6 +13,8 @@ import ChefReviewComponent from "@/components/ChefReviewsComponent";
 import ReservationComponent from "@/components/ReservationComponent";
 import { useRouter, useParams } from "next/navigation";
 import { ChefComplete } from "@/util/types";
+import { MessageSquare } from "lucide-react";
+import ChatComponent from "@/components/ChatComponent";
 
 export default function ChefPersonalPage() {
   const { chefSlugId } = useParams<{ chefSlugId: string }>();
@@ -21,7 +23,20 @@ export default function ChefPersonalPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [headerImage, setHeaderImage] = useState<string | null>();
   const [avatarImage, setAvatarImage] = useState<string | null>();
+  const [showChat, setShowChat] = useState(false);
+  const [isProfileComplete, setIsProfileComplete] = useState(true);
+  const [currentUser, setCurrentUser] = useState({
+    id: "cmgesmex60000iwvs6bjms2b2",
+  });
   const router = useRouter();
+
+  const handleChatClick = () => {
+    if (!currentUser) {
+      router.push("/login");
+      return;
+    }
+    setShowChat(true);
+  };
 
   useEffect(() => {
     if (!chefSlugId) return;
@@ -37,6 +52,9 @@ export default function ChefPersonalPage() {
         const data = res.data;
 
         setChefData(data);
+        if (!data.coverUrl || !data.avatarUrl) {
+          setIsProfileComplete(false);
+        }
 
         setHeaderImage(data.coverUrl);
         setAvatarImage(data.avatarUrl);
@@ -57,8 +75,26 @@ export default function ChefPersonalPage() {
     return <div>io sono un caricamento</div>;
   }
 
+  /* 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axiosIstance.get("/auth/user");
+        if (res.data.user) {
+          setCurrentUser(res.data.user);
+        }
+      } catch (error) {
+        console.error("Utente non autenticato");
+      }
+    };
+    fetchUser();
+  }, []); */
+
   if (!chefData) {
     return <div>404</div>;
+  }
+  if (!isProfileComplete) {
+    return <div>lavori in corso</div>;
   }
   if (!isLoading) {
     return (
@@ -72,7 +108,7 @@ export default function ChefPersonalPage() {
           <HeroPersonalComponent
             imageUrl={chefData?.avatarUrl}
             description={chefData?.bio}
-            facts={chefData!.Facts}
+            facts={chefData.Facts ? chefData.Facts : null}
             briefDescription={chefData?.bioBrief}
           />
         </section>
@@ -94,6 +130,26 @@ export default function ChefPersonalPage() {
         <section className="rounded-t-2xl bg-[#0A0A0A] py-6 md:px-4 lg:bg-[#232323]">
           <ReservationComponent firstname={chefData!.user!.firstname} />
         </section>
+
+        {currentUser && currentUser.id !== chefData.id && !currentUser.chef && (
+          <>
+            <button
+              onClick={handleChatClick}
+              className="fixed right-6 bottom-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-[#c8a36a] text-[#0a0a0a] shadow-lg transition hover:bg-[#d4b480] hover:shadow-xl"
+            >
+              <MessageSquare size={28} />
+            </button>
+
+            {showChat && (
+              <ChatComponent
+                currentUserId={currentUser.id}
+                isChef={false}
+                targetChefId={chefData.id}
+                onClose={() => setShowChat(false)}
+              />
+            )}
+          </>
+        )}
       </>
     );
   }

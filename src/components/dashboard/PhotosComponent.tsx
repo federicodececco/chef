@@ -1,7 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ChefInterface, PhotoInterface } from "@/app/chef/dashboard/page";
+import {
+  ChefInterface,
+  PhotoInterface,
+} from "@/app/chef/dashboard/[chefId]/page";
 import { PlusCircle, Trash2, Upload, Loader2 } from "lucide-react";
 import Image from "next/image";
 import axiosInstance from "@/lib/axios";

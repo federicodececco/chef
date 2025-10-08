@@ -1,6 +1,8 @@
 import Footer from "@/components/Footer";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
+import ChatComponent from "@/components/ChatComponent";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function RootLayout({
   children,
@@ -9,7 +11,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="relative">{children}</body>
+      <body className="relative">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

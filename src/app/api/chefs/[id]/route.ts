@@ -36,12 +36,21 @@ export async function PATCH(
 
     const body = await request.json();
 
-    const { bio, bioBrief, avatarUrl, coverUrl, phoneNumber, nation, slug } =
-      body;
+    const {
+      bio,
+      bioBrief,
+      avatarUrl,
+      coverUrl,
+      phoneNumber,
+      nation,
+      slug,
+      city,
+    } = body;
 
     const result = await updateChef(id, {
       bio,
       bioBrief,
+      city,
       avatarUrl,
       coverUrl,
       phoneNumber,

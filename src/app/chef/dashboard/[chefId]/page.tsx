@@ -19,7 +19,7 @@ import ReviewComponent from "@/components/dashboard/ReviewComponent";
 import MessagesComponent from "@/components/dashboard/MessaggesComponent";
 import axiosIstance from "@/lib/axios";
 import { ChefComplete } from "@/util/types";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 export interface ChefInterface {
   id: string;
   bio?: string;
@@ -71,26 +71,28 @@ export default function ChefDashboard() {
   const [activeTab, setActiveTab] = useState("profile");
   const [isLoading, setIsLoading] = useState(true);
   const [chef, setChef] = useState<ChefComplete | undefined>();
-  const router = useRouter();
-
-  const chefId = "cmgdlc2dc0000iw7w7irjpprz";
 
   const [menus, setMenus] = useState<MenuInterface[]>([]);
   const [dishes, setDishes] = useState<DishInterface[]>([]);
   const [photos, setPhotos] = useState<PhotoInterface[]>([]);
   const [facts, setFacts] = useState<FactInterface[]>([]);
   const [reviews, setReviews] = useState<ReviewInterface[]>([]);
+  const [chefId, setChefId] = useState("");
+  const router = useRouter();
+  const params = useParams<{ chefId: string }>();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
 
-        const res = await axiosIstance.get(`/chefs/${chefId}`);
+        const res = await axiosIstance.get(`/chefs/${params.chefId}`);
         const data = res.data;
 
-        setChef(data);
+        setChefId(params.chefId);
 
+        setChef(data);
+        console.log(data);
         if (data.Menus) {
           setMenus(data.Menus);
         }
@@ -304,7 +306,7 @@ export default function ChefDashboard() {
   ];
 
   const handleLogOut = async () => {
-    /*  await axiosIstance.post("/api/logout"); */
+    await axiosIstance.post("/api/logout");
     router.push("/chef/chef-registration");
   };
 

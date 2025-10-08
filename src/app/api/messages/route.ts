@@ -1,26 +1,80 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createMessage } from "@/actions/message";
-import { requireAuth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { sendNewMessageEmail } from "@/util/email";
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const user = await requireAuth(req);
+    const body = await request.json();
+    const { chatId, isChef, text } = body;
 
-    if (!user) {
-      return NextResponse.json({ error: "Access Denied" }, { status: 403 });
+    if (!chatId || text === undefined || isChef === undefined) {
+      return NextResponse.json(
+        { error: "chatId, text e isChef sono obbligatori" },
+        { status: 400 },
+      );
     }
 
-    const isChef = user.isChef;
+    const message = await prisma.message.create({
+      data: {
+        chatId,
+        isChef,
+        text,
+        isRed: false,
+      },
+    });
 
-    const { chatId, text } = await req.json();
-    const result = await createMessage({ chatId, text, isChef });
+    const chat = await prisma.chat.findUnique({
+      where: { id: chatId },
+      include: {
+        chef: {
+          include: {
+            user: {
+              select: {
+                firstname: true,
+                lastname: true,
+                email: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            firstname: true,
+            lastname: true,
+            email: true,
+          },
+        },
+      },
+    });
 
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+    if (!chat) {
+      return NextResponse.json({ error: "Chat non trovata" }, { status: 404 });
     }
 
-    return NextResponse.json(result.data, { status: 201 });
+    const recipientEmail = isChef ? chat.user.email : chat.chef.user.email;
+    const senderName = isChef
+      ? `Chef ${chat.chef.user.firstname} ${chat.chef.user.lastname}`
+      : `${chat.user.firstname} ${chat.user.lastname}`;
+
+    const chatUrl = isChef
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/user/messages`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/chef/dashboard?tab=messages`;
+
+    sendNewMessageEmail({
+      to: recipientEmail,
+      senderName,
+      messageText: text,
+      chatUrl,
+    }).catch((error: any) => {
+      console.error("Errore nell'invio dell'email:", error);
+    });
+
+    return NextResponse.json(message);
   } catch (error) {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    console.error("Errore nella creazione del messaggio:", error);
+    return NextResponse.json(
+      { error: "Errore nella creazione del messaggio" },
+      { status: 500 },
+    );
   }
 }

@@ -1,3 +1,4 @@
+import axiosIstance from "@/lib/axios";
 import { useState } from "react";
 
 interface FormDataInterface {
@@ -29,6 +30,8 @@ export default function RegistrationPopUp({
   });
 
   const [emailError, setEmailError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<null | string>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -56,21 +59,53 @@ export default function RegistrationPopUp({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.email !== formData.confirmEmail) {
-      setEmailError("Le email non corrispondono");
-      return;
-    }
+    try {
+      if (
+        !formData.firstName ||
+        !formData.lastName ||
+        !formData.email ||
+        !formData.password
+      ) {
+        setError("Tutti i campi sono obbligatori");
+        return;
+      }
 
-    if (!formData.acceptTerms) {
-      alert("Devi accettare i termini di servizio per continuare");
-      return;
-    }
+      if (formData.password.length < 8) {
+        setError("La password deve contenere almeno 8 caratteri");
+        return;
+      }
 
-    console.log("Form data:", formData);
+      setIsLoading(true);
+      setError(null);
+
+      const res = await axiosIstance.post("/auth/register", {
+        firstname: formData.firstName,
+        lastname: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        isChef: true,
+      });
+
+      const data = res.data;
+
+      window.location.reload();
+
+      console.log("Registrazione completata:", data.message);
+    } catch (error: any) {
+      if (error.response?.data?.error) {
+        setError(error.response.data.error);
+      } else {
+        setError("Errore durante la registrazione. Riprova più tardi.");
+      }
+      console.error("Errore registrazione:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       handleToggle();

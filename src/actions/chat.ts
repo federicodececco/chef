@@ -51,15 +51,31 @@ export async function getChatByUsers(chefId: string, userId: string) {
       },
       include: {
         Messages: {
-          orderBy: {
-            id: "asc",
+          orderBy: { createdAt: "asc" },
+        },
+        chef: {
+          include: {
+            user: {
+              select: {
+                firstname: true,
+                lastname: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            firstname: true,
+            lastname: true,
           },
         },
       },
     });
+
     return { success: true, data: chat };
   } catch (error) {
-    return { success: false, error: "Failed to fetch chat" };
+    console.error("Errore nel recupero della chat:", error);
+    return { success: false, error: "Errore nel recupero della chat" };
   }
 }
 

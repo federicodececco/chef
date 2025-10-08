@@ -1,4 +1,7 @@
-import { ChefInterface, ReviewInterface } from "@/app/chef/dashboard/page";
+import {
+  ChefInterface,
+  ReviewInterface,
+} from "@/app/chef/dashboard/[chefId]/page";
 import { Star } from "lucide-react";
 
 interface ReviewComponentInterface {

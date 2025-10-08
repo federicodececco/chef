@@ -26,7 +26,8 @@ model Chef {
   Facts  Facts[]
   Review Review[]
 
-  user User @relation(fields: [id], references: [id], onDelete: Cascade)
+  user User   @relation(fields: [id], references: [id], onDelete: Cascade)
+  Chat Chat[]
 }
 
 model User {
@@ -39,6 +40,7 @@ model User {
 
   chef   Chef?
   Review Review[]
+  Chat   Chat[]
 }
 
 model Menu {
@@ -114,6 +116,8 @@ model Chat {
   userId    String
   createdAt DateTime @default(now())
 
+  chef     Chef      @relation(fields: [chefId], references: [id])
+  user     User      @relation(fields: [userId], references: [id])
   Messages Message[]
 
   @@index([chefId])
@@ -124,6 +128,7 @@ model Message {
   chatId    String
   isChef    Boolean
   text      String
+  isRed     Boolean
   createdAt DateTime @default(now())
 
   Chat Chat @relation(fields: [chatId], references: [id])

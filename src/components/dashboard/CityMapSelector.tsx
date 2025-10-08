@@ -134,6 +134,7 @@ export default function CityMapSelector({ setCity, city }: CityMapSelector) {
       radiusKm: (radius / 1000).toFixed(1),
       timestamp: new Date().toISOString(),
     };
+    console.log(cityName);
     setCity(cityName);
     setSavedLocation(locationData);
     setShowToast(true);

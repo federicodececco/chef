@@ -1,35 +1,81 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getOrCreateChat } from "@/actions/chat";
-import { requireAuth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const user = await requireAuth(req);
-    if (!user) {
-      return NextResponse.json({ error: "Access Denied" }, { status: 403 });
-    }
-    const userId = user.userId;
-
-    const body = await req.json();
-    const { chefId } = body;
+    const body = await request.json();
+    const { chefId, userId } = body;
 
     if (!chefId || !userId) {
       return NextResponse.json(
-        { error: "chefId and userId are required" },
+        { error: "chefId e userId sono obbligatori" },
         { status: 400 },
       );
     }
 
-    const result = await getOrCreateChat(chefId, userId);
+    const existingChat = await prisma.chat.findFirst({
+      where: {
+        chefId,
+        userId,
+      },
+      include: {
+        Messages: {
+          orderBy: { createdAt: "asc" },
+        },
+        chef: {
+          include: {
+            user: {
+              select: {
+                firstname: true,
+                lastname: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            firstname: true,
+            lastname: true,
+          },
+        },
+      },
+    });
 
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 500 });
+    if (existingChat) {
+      return NextResponse.json(existingChat);
     }
 
-    return NextResponse.json(result.data);
+    const chat = await prisma.chat.create({
+      data: {
+        chefId,
+        userId,
+      },
+      include: {
+        Messages: true,
+        chef: {
+          include: {
+            user: {
+              select: {
+                firstname: true,
+                lastname: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            firstname: true,
+            lastname: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(chat);
   } catch (error) {
+    console.error("Errore nella creazione della chat:", error);
     return NextResponse.json(
-      { error: "Failed to get or create chat" },
+      { error: "Errore nella creazione della chat" },
       { status: 500 },
     );
   }

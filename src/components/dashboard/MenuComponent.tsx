@@ -5,7 +5,7 @@ import {
   ChefInterface,
   DishInterface,
   MenuInterface,
-} from "@/app/chef/dashboard/page";
+} from "@/app/chef/dashboard/[chefId]/page";
 import {
   Edit,
   PlusCircle,

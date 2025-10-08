@@ -4,54 +4,45 @@ import axiosIstance from "@/lib/axios";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import ChatComponent from "./ChatComponent";
+import { useAuth } from "@/context/AuthContext";
 
 export default function NavBar() {
-  const [isAuth, setIsAuth] = useState(false);
-  const [isChef, setIsChef] = useState(false);
-  const [chefSlug, setChefSlug] = useState("");
+  const { user, isAuthenticated, isChef, chefSlug, isLoading, logout } =
+    useAuth();
+
   const router = useRouter();
 
-  const fetchUser = async () => {
-    try {
-      const res = await axiosIstance.get("/auth/user");
-      if (!res) {
-        return;
-      }
-      if (res.data.user.chef) {
-        setIsChef(true);
-        setChefSlug(`${res.data.user.chef.id}-${res.data.user.chef.slug}`);
-      }
-      console.log(res);
-      setIsAuth(true);
-    } catch (error) {
-      console.error(error);
+  const handleNavigation = (value: string) => {
+    if ((value = "dashboard")) {
+      router.push(`/chef/dashboard/${user?.id}`);
     }
   };
+
   const handleLogout = async () => {
     try {
-      await axiosIstance.post("/auth/logout");
-      window.location.replace(`/chef/chef-registration`);
+      await logout();
+      router.push("/login");
     } catch (error) {
-      console.log(error);
+      console.error("Errore durante il logout:", error);
     }
   };
 
   const handleLogin = () => {
-    try {
-      router.push(`/login`);
-    } catch (error) {
-      console.error(error);
-    }
+    router.push("/login");
   };
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
   return (
     <nav className="bg-first-theme absolute -top-18 z-12 grid h-18 w-full grid-cols-12 text-center text-white">
+      {/*  {currentUser && (
+        <ChatComponent
+          currentUserId={currentUser}
+          isChef={isChef}
+        ></ChatComponent>
+      )} */}
       Sono una navbar
       <div className="col-start-10 flex items-center justify-center">
-        {!isAuth && (
+        {!isAuthenticated && (
           <button
             onClick={() => {
               handleLogin();
@@ -61,7 +52,7 @@ export default function NavBar() {
             Login
           </button>
         )}
-        {isAuth && (
+        {isAuthenticated && (
           <button
             className="outline-gold bg-gold hover:text-gold rounded-xl px-6 py-3 duration-200 hover:cursor-pointer hover:bg-transparent hover:outline"
             onClick={() => {
@@ -77,7 +68,7 @@ export default function NavBar() {
           <button
             className="outline-gold bg-gold hover:text-gold rounded-xl px-6 py-3 duration-200 hover:cursor-pointer hover:bg-transparent hover:outline"
             onClick={() => {
-              router.push(`/chef/dashboard`);
+              handleNavigation("dashboard");
             }}
           >
             Area personale

@@ -23,11 +23,13 @@ export async function updateChef(
   id: string,
   data: {
     bio?: string;
+    bioBrief?: string;
     avatarUrl?: string;
     coverUrl?: string;
     phoneNumber?: string;
     nation?: string;
     slug?: string;
+    city?: string;
   },
 ) {
   try {

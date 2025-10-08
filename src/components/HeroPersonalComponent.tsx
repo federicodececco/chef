@@ -6,7 +6,7 @@ interface HeroPersonalComponentInterface {
   imageUrl: any | string;
   briefDescription: any | string;
   description: any | string;
-  facts: Facts[];
+  facts: Facts[] | null;
 }
 
 export default function HeroPersonalComponent({
@@ -16,7 +16,7 @@ export default function HeroPersonalComponent({
   facts,
 }: HeroPersonalComponentInterface) {
   const [extended, setIsExtended] = useState(false);
-
+  if (facts != null) facts = facts[0] ? facts : null;
   return (
     <div className="mx-auto bg-[#232323] md:rounded-b-2xl lg:max-w-4xl 2xl:max-w-7xl">
       {/* first section */}
@@ -66,20 +66,22 @@ export default function HeroPersonalComponent({
       {/* second section */}
       <div className="p-5 px-10">
         <h1 className="font py-3 text-3xl">Di più su di me</h1>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div>
-            <h1 className="font-semibold">{facts[0].short}</h1>
-            <h2 className="py-4 text-white/70">{facts[0].long}</h2>
+        {facts != null && (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div>
+              <h1 className="font-semibold">{facts[0].short}</h1>
+              <h2 className="py-4 text-white/70">{facts[0].long}</h2>
+            </div>
+            <div>
+              <h1 className="font-semibold">{facts[1].short}</h1>
+              <h2 className="py-4 text-white/70">{facts[0].long}</h2>
+            </div>
+            <div>
+              <h1 className="font-semibold">{facts[2].short}</h1>
+              <h2 className="py-4 text-white/70">{facts[0].long}</h2>
+            </div>
           </div>
-          <div>
-            <h1 className="font-semibold">{facts[1].short}</h1>
-            <h2 className="py-4 text-white/70">{facts[0].long}</h2>
-          </div>
-          <div>
-            <h1 className="font-semibold">{facts[2].short}</h1>
-            <h2 className="py-4 text-white/70">{facts[0].long}</h2>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

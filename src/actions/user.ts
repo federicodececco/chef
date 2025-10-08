@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { hash } from "bcrypt";
+import bcryptjs from "bcryptjs";
 
 export async function createUser(data: {
   firstname: string;
@@ -10,7 +10,7 @@ export async function createUser(data: {
   password: string;
 }) {
   try {
-    const hashedPassword = await hash(data.password, 10);
+    const hashedPassword = await bcryptjs.hash(data.password, 10);
 
     const user = await prisma.user.create({
       data: {
@@ -19,11 +19,16 @@ export async function createUser(data: {
       },
     });
 
-    const { ...userWithoutPassword } = user;
+    const { password: _, ...userWithoutPassword } = user;
 
     return { success: true, data: userWithoutPassword };
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    console.error("Error creating user:", error);
+
+    if (error.code === "P2002") {
+      return { success: false, error: "Email già registrata" };
+    }
+
     return { success: false, error: "Failed to create user" };
   }
 }

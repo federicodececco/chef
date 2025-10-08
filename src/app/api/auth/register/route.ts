@@ -3,9 +3,20 @@ import { createUser, getUserByEmail } from "@/actions/user";
 import { generateToken, setAuthCookie } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (e) {
+      return NextResponse.json(
+        { error: "Formato richiesta non valido" },
+        { status: 400 },
+      );
+    }
+
     const { firstname, lastname, email, password, isChef } = body;
 
     if (!firstname || !lastname || !email || !password) {
@@ -30,6 +41,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log("Checking if user exists:", email);
     const existingUserResult = await getUserByEmail(email);
     if (existingUserResult.success && existingUserResult.data) {
       return NextResponse.json(
@@ -38,6 +50,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log("Creating user:", { firstname, lastname, email });
     const userResult = await createUser({
       firstname,
       lastname,
@@ -45,40 +58,71 @@ export async function POST(request: NextRequest) {
       password,
     });
 
-    if (!userResult.success) {
+    if (!userResult.success || !userResult.data) {
+      console.error("User creation failed:", userResult.error);
       return NextResponse.json(
-        { error: userResult.error || "Errore durante la registrazione" },
+        {
+          error: userResult.error || "Errore durante la creazione dell'utente",
+        },
         { status: 500 },
       );
     }
 
     let chefData = null;
-    if (isChef && userResult.data) {
-      const chef = await prisma.chef.create({
-        data: {
-          id: userResult.data.id,
-          slug: `${firstname.toLowerCase()}-${lastname.toLowerCase()}`,
-        },
-      });
-      chefData = {
-        id: chef.id,
-        slug: chef.slug,
-      };
+    if (isChef) {
+      try {
+        console.log("Creating chef profile for user:", userResult.data.id);
+        const chef = await prisma.chef.create({
+          data: {
+            id: userResult.data.id,
+            slug: `${firstname.toLowerCase()}-${lastname.toLowerCase()}`.replace(
+              /\s+/g,
+              "-",
+            ),
+          },
+        });
+        chefData = {
+          id: chef.id,
+          slug: chef.slug,
+        };
+        console.log("Chef created successfully:", chefData);
+      } catch (chefError: any) {
+        console.error("Error creating chef:", chefError);
+
+        await prisma.user.delete({ where: { id: userResult.data.id } });
+
+        return NextResponse.json(
+          {
+            error: "Errore durante la creazione del profilo chef",
+            details:
+              process.env.NODE_ENV === "development"
+                ? chefError.message
+                : undefined,
+          },
+          { status: 500 },
+        );
+      }
     }
 
+    console.log("Generating token for user:", userResult.data.id);
     const token = await generateToken({
-      userId: userResult.data!.id,
-      email: userResult.data!.email,
+      userId: userResult.data.id,
+      email: userResult.data.email,
       isChef: !!chefData,
     });
 
     await setAuthCookie(token);
 
+    console.log("Registration successful for:", email);
+
     return NextResponse.json(
       {
         message: "Registrazione completata con successo",
         user: {
-          ...userResult.data,
+          id: userResult.data.id,
+          firstname: userResult.data.firstname,
+          lastname: userResult.data.lastname,
+          email: userResult.data.email,
           isChef: !!chefData,
           chef: chefData,
         },
@@ -86,10 +130,37 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     );
-  } catch (error) {
-    console.error("Errore durante la registrazione:", error);
+  } catch (error: any) {
+    console.error("Unexpected registration error:", error);
+    console.error("Error stack:", error.stack);
+
+    if (error.code === "P2002") {
+      return NextResponse.json(
+        { error: "Email già registrata" },
+        { status: 409 },
+      );
+    }
+
+    if (error.code === "P2003") {
+      return NextResponse.json(
+        { error: "Errore di relazione nel database" },
+        { status: 500 },
+      );
+    }
+
+    if (error.code === "P1001") {
+      return NextResponse.json(
+        { error: "Impossibile connettersi al database" },
+        { status: 500 },
+      );
+    }
+
     return NextResponse.json(
-      { error: "Errore durante la registrazione" },
+      {
+        error: "Errore durante la registrazione",
+        details:
+          process.env.NODE_ENV === "development" ? error.message : undefined,
+      },
       { status: 500 },
     );
   }

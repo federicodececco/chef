@@ -47,14 +47,6 @@ export default function Custom404() {
 
           <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm">
             <button
-              onClick={() => router.push("/chef")}
-              className="flex items-center gap-2 text-[#c8a36a] transition hover:text-[#d4b480]"
-            >
-              <Search size={16} />
-              Cerca Chef
-            </button>
-            <span className="text-white/30">•</span>
-            <button
               onClick={() => router.push("/login")}
               className="text-white/70 transition hover:text-white"
             >

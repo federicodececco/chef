@@ -13,6 +13,7 @@ import ReservationComponent from "@/components/ReservationComponent";
 import ChatComponent from "@/components/ChatComponent";
 import { ChefComplete } from "@/util/types";
 import { useAuth } from "@/context/AuthContext";
+import Custom404 from "@/components/codes/Custom404";
 
 export default function ChefPersonalPage() {
   const { chefSlugId } = useParams<{ chefSlugId: string }>();
@@ -82,20 +83,7 @@ export default function ChefPersonalPage() {
 
   /* Error state - Chef non trovato */
   if (!chefData) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-[#0a0a0a]">
-        <div className="text-center">
-          <h1 className="mb-4 text-6xl font-bold text-[#c8a36a]">404</h1>
-          <p className="mb-6 text-xl text-white">Chef non trovato</p>
-          <button
-            onClick={() => router.push("/")}
-            className="rounded bg-[#c8a36a] px-6 py-3 font-semibold text-[#0a0a0a] transition hover:bg-[#d4b480]"
-          >
-            Torna alla home
-          </button>
-        </div>
-      </div>
-    );
+    return <Custom404 />;
   }
   /* 
    Profilo incompleto */

@@ -42,6 +42,7 @@ export async function createMultiplePhotos(
 
     return { success: true, data: createdPhotos };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to create photos" };
   }
 }
@@ -60,22 +61,20 @@ export async function updatePhoto(
     });
     return { success: true, data: photo };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to update photo" };
   }
 }
 
 export async function deletePhoto(id: string) {
   try {
-    const photo = await prisma.photo.findUnique({
-      where: { id },
-    });
-
     await prisma.photo.delete({
       where: { id },
     });
 
     return { success: true };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to delete photo" };
   }
 }
@@ -94,6 +93,7 @@ export async function getPhoto(id: string) {
     });
     return { success: true, data: photo };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch photo" };
   }
 }
@@ -108,6 +108,7 @@ export async function getPhotosByChef(chefId: string) {
     });
     return { success: true, data: photos };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch photos" };
   }
 }
@@ -128,6 +129,7 @@ export async function getAllPhotos() {
     });
     return { success: true, data: photos };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch photos" };
   }
 }

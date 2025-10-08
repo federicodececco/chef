@@ -14,6 +14,7 @@ export async function GET(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to fetch message" },
       { status: 500 },
@@ -34,6 +35,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Message deleted successfully" });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to delete message" },
       { status: 500 },

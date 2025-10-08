@@ -14,6 +14,7 @@ export async function GET(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to fetch dish" },
       { status: 500 },
@@ -36,6 +37,7 @@ export async function PATCH(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to update dish" },
       { status: 500 },
@@ -56,6 +58,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Dish deleted successfully" });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to delete dish" },
       { status: 500 },

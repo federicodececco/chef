@@ -20,6 +20,7 @@ export async function GET(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -64,6 +65,7 @@ export async function PATCH(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -87,6 +89,7 @@ export async function DELETE(
       { status: 200 },
     );
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

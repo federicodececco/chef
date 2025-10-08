@@ -1,6 +1,4 @@
 "use client";
-
-import { ReactNode } from "react";
 import ChefCarousel from "../ChefCarousel";
 
 export default function ChefsShowcaseSection() {

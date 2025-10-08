@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
   ReactNode,
+  useCallback,
 } from "react";
 import axiosInstance from "@/lib/axios";
 
@@ -78,23 +79,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const fetchUser = async () => {
-    try {
-      setIsLoading(true);
-      const response = await axiosInstance.get("/auth/user");
-      updateUser(response.data.user);
-      return true;
-    } catch (error: any) {
-      if (error?.response?.status === 401) {
-        updateUser(null);
-      }
-      return false;
-    } finally {
-      setIsLoading(false);
-      setHasChecked(true);
-    }
-  };
-
   const login = async (email: string, password: string) => {
     try {
       const response = await axiosInstance.post("/auth/login", {
@@ -118,19 +102,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const refreshUser = async () => {
+  const fetchUser = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.get("/auth/user");
+      updateUser(response.data.user);
+      return true;
+    } catch (error: any) {
+      if (error?.response?.status === 401) {
+        updateUser(null);
+      }
+      return false;
+    } finally {
+      setIsLoading(false);
+      setHasChecked(true);
+    }
+  }, []);
+
+  const refreshUser = useCallback(async () => {
     await fetchUser();
-  };
+  }, [fetchUser]);
 
   useEffect(() => {
     if (!hasChecked) {
-      if (user) {
-        fetchUser();
-      } else {
-        fetchUser();
-      }
+      fetchUser();
     }
-  }, []);
+  }, [fetchUser, hasChecked]);
 
   return (
     <AuthContext.Provider

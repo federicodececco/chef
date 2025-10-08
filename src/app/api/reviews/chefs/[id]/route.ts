@@ -1,4 +1,4 @@
-import { createReview, getReviewsByChefId } from "@/actions/review";
+import { getReviewsByChefId } from "@/actions/review";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -14,6 +14,7 @@ export async function GET(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to reviews menus" },
       { status: 500 },

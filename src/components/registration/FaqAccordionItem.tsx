@@ -10,7 +10,6 @@ interface FaqAccordionItemInterface {
 
 export default function FaqAccordioItem({
   faq,
-  index,
   actualIndex,
   toggleAccordion,
   openIndex,

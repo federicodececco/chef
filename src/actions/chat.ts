@@ -9,6 +9,7 @@ export async function createChat(data: { chefId: string; userId: string }) {
     });
     return { success: true, data: chat };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to create chat" };
   }
 }
@@ -20,6 +21,7 @@ export async function deleteChat(id: string) {
     });
     return { success: true };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to delete chat" };
   }
 }
@@ -38,6 +40,7 @@ export async function getChat(id: string) {
     });
     return { success: true, data: chat };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch chat" };
   }
 }
@@ -94,6 +97,7 @@ export async function getChatsByChef(chefId: string) {
     });
     return { success: true, data: chats };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch chats" };
   }
 }
@@ -113,6 +117,7 @@ export async function getChatsByUser(userId: string) {
     });
     return { success: true, data: chats };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch chats" };
   }
 }
@@ -147,6 +152,7 @@ export async function getOrCreateChat(chefId: string, userId: string) {
 
     return { success: true, data: chat };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to get or create chat" };
   }
 }

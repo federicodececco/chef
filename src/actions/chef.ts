@@ -15,6 +15,7 @@ export async function createChef(data: {
     });
     return { success: true, data: chef };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to create chef" };
   }
 }
@@ -39,6 +40,7 @@ export async function updateChef(
     });
     return { success: true, data: chef };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to update chef" };
   }
 }
@@ -49,6 +51,7 @@ export async function deleteChef(id: string) {
     });
     return { success: true };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to delete chef" };
   }
 }
@@ -77,6 +80,7 @@ export async function getChef(id: string) {
     });
     return { success: true, data: chef };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch chef" };
   }
 }
@@ -101,6 +105,7 @@ export async function getChefBySlug(slug: string) {
     });
     return { success: true, data: chef };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch chef" };
   }
 }
@@ -118,6 +123,7 @@ export async function getAllChefs(options?: { limit?: number }) {
     });
     return { success: true, data: chefs };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch chefs" };
   }
 }

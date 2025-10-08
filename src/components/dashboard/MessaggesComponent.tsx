@@ -36,6 +36,24 @@ export default function MessagesComponent({ chefId }: MessagesComponentProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const fetchChats = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`/api/chefs/${chefId}/chats`);
+        if (!response.ok) throw new Error("Errore nel caricamento delle chat");
+        const data = await response.json();
+        setChats(data);
+
+        if (data.length > 0 && !selectedChatId) {
+          setSelectedChatId(data[0].id);
+        }
+      } catch (error) {
+        console.error("Errore nel caricamento delle chat:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchChats();
   }, [chefId]);
 
@@ -47,24 +65,6 @@ export default function MessagesComponent({ chefId }: MessagesComponentProps) {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const fetchChats = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`/api/chefs/${chefId}/chats`);
-      if (!response.ok) throw new Error("Errore nel caricamento delle chat");
-      const data = await response.json();
-      setChats(data);
-
-      if (data.length > 0 && !selectedChatId) {
-        setSelectedChatId(data[0].id);
-      }
-    } catch (error) {
-      console.error("Errore nel caricamento delle chat:", error);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleSendMessage = async () => {

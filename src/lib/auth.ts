@@ -32,6 +32,7 @@ export async function verifyToken(
     const verified = await jwtVerify(token, JWT_SECRET);
     return verified.payload as unknown as JWTPayloadInterface;
   } catch (err) {
+    console.error(err);
     return null;
   }
 }

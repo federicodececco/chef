@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import {
-  ChefInterface,
   DishInterface,
   MenuInterface,
 } from "@/app/chef/dashboard/[chefId]/page";
 import { Edit, PlusCircle, Trash2, X, Check } from "lucide-react";
 
 interface DishesComponentInterface {
-  chef: ChefInterface;
   dishes: DishInterface[];
   menus: MenuInterface[];
   onAdd: (dish: Omit<DishInterface, "id">) => void;
@@ -18,7 +16,6 @@ interface DishesComponentInterface {
 }
 
 export default function DishesComponent({
-  chef,
   dishes,
   menus,
   onAdd,

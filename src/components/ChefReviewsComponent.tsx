@@ -15,14 +15,6 @@ export default function ChefReviewComponent({
   const [mean, setMean] = useState(0);
   const [users, setUsers] = useState<undefined | User[]>(undefined);
   console.log(reviews);
-  const countMean = () => {
-    let notMean = 0;
-    reviews.forEach((elem) => {
-      notMean += elem.rating;
-    });
-    notMean /= reviews?.length;
-    setMean(notMean);
-  };
 
   const fetchReviewUser = async () => {
     const userPromises = await Promise.all(
@@ -32,6 +24,14 @@ export default function ChefReviewComponent({
   };
 
   useEffect(() => {
+    const countMean = () => {
+      let notMean = 0;
+      reviews.forEach((elem) => {
+        notMean += elem.rating;
+      });
+      notMean /= reviews?.length;
+      setMean(notMean);
+    };
     countMean();
     fetchReviewUser();
   }, []);
@@ -52,7 +52,10 @@ export default function ChefReviewComponent({
         <div className="carousel carousel-center rounded-box max-w-full gap-4">
           {reviews.map((rev, index) => {
             return (
-              <div className="carousel-item max-w-1/2 rounded-2xl bg-[#0A0A0A] p-4 shadow-2xl md:max-w-1/3 xl:max-w-1/4">
+              <div
+                key={`${rev.id}-${index}`}
+                className="carousel-item max-w-1/2 rounded-2xl bg-[#0A0A0A] p-4 shadow-2xl md:max-w-1/3 xl:max-w-1/4"
+              >
                 <div className="flex max-w-full flex-col gap-2 text-center">
                   <h1 className="flex justify-center">
                     <Star color="#c8a36a" />

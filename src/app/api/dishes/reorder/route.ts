@@ -12,6 +12,7 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json({ message: "Dishes reordered successfully" });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to reorder dishes" },
       { status: 500 },

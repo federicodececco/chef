@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
 import FaqAccordionItem from "./FaqAccordionItem";
 
 export const revalidate = 3600;
 
 export default function FAQAccordion() {
   const [openIndex, setOpenIndex] = useState<null | number>(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => setHasAnimated(true), 100);
-  }, []);
+  useEffect(() => {}, []);
 
   const faqs = [
     {

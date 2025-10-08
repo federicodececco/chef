@@ -1,18 +1,11 @@
-import {
-  ChefInterface,
-  ReviewInterface,
-} from "@/app/chef/dashboard/[chefId]/page";
+import { ReviewInterface } from "@/app/chef/dashboard/[chefId]/page";
 import { Star } from "lucide-react";
 
 interface ReviewComponentInterface {
-  chef: ChefInterface;
   reviews: ReviewInterface[];
 }
 
-export default function ReviewComponent({
-  chef,
-  reviews,
-}: ReviewComponentInterface) {
+export default function ReviewComponent({ reviews }: ReviewComponentInterface) {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-[#c8a36a]">Recensioni</h2>

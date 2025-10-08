@@ -26,9 +26,6 @@ export default function CityMapSelector({ setCity, city }: CityMapSelector) {
   const [radius, setRadius] = useState<number>(5000);
   const [cityName, setCityName] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
-  const [savedLocation, setSavedLocation] = useState<SavedLocation | null>(
-    null,
-  );
   const [isMapReady, setIsMapReady] = useState<boolean>(false);
 
   const circleRef = useRef<any>(null);
@@ -44,7 +41,6 @@ export default function CityMapSelector({ setCity, city }: CityMapSelector) {
     script.onload = () => initMap();
     document.body.appendChild(script);
     const saved = localStorage.getItem("savedLocation");
-    if (saved) setSavedLocation(JSON.parse(saved));
     return () => {
       if (map) map.remove();
     };
@@ -136,7 +132,6 @@ export default function CityMapSelector({ setCity, city }: CityMapSelector) {
     };
     console.log(cityName);
     setCity(cityName);
-    setSavedLocation(locationData);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
   };
@@ -153,7 +148,6 @@ export default function CityMapSelector({ setCity, city }: CityMapSelector) {
     setSelectedCity(null);
     setCityName("");
     setCity("");
-    setSavedLocation(null);
   };
 
   return (

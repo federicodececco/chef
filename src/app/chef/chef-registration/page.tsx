@@ -1,4 +1,3 @@
-import ChefCarousel from "@/components/ChefCarousel";
 import CitySlider from "@/components/CitySlider";
 import ChefsShowcaseSection from "@/components/registration/ChefShowcaseSection";
 import DescriptionSection from "@/components/registration/DescriptionSection";

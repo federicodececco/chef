@@ -63,21 +63,19 @@ export async function updateDish(
 
     return { success: true, data: dish };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to update dish" };
   }
 }
 
 export async function deleteDish(id: string) {
   try {
-    const dish = await prisma.dish.findUnique({
-      where: { id },
-    });
-
     await prisma.dish.delete({
       where: { id },
     });
     return { success: true };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to delete dish" };
   }
 }
@@ -93,11 +91,12 @@ export async function getDish(id: string) {
             user: true,
           },
         },
-        menu: true,
+        Menus: true,
       },
     });
     return { success: true, data: dish };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch dish" };
   }
 }
@@ -115,6 +114,7 @@ export async function getDishesByMenu(menuId: string) {
     });
     return { success: true, data: dishes };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch dishes" };
   }
 }
@@ -133,6 +133,7 @@ export async function getDishesByChef(chefId: string) {
     });
     return { success: true, data: dishes };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch dishes" };
   }
 }
@@ -152,6 +153,7 @@ export async function reorderDishes(
 
     return { success: true };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to reorder dishes" };
   }
 }

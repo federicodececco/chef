@@ -13,21 +13,19 @@ export async function createMessage(data: {
     });
     return { success: true, data: message };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to create message" };
   }
 }
 
 export async function deleteMessage(id: string) {
   try {
-    const message = await prisma.message.findUnique({
-      where: { id },
-    });
-
     await prisma.message.delete({
       where: { id },
     });
     return { success: true };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to delete message" };
   }
 }
@@ -42,6 +40,7 @@ export async function getMessage(id: string) {
     });
     return { success: true, data: message };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch message" };
   }
 }
@@ -56,6 +55,7 @@ export async function getMessagesByChat(chatId: string) {
     });
     return { success: true, data: messages };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch messages" };
   }
 }
@@ -67,6 +67,7 @@ export async function deleteMessagesByChat(chatId: string) {
     });
     return { success: true };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to delete messages" };
   }
 }

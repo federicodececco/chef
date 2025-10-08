@@ -139,11 +139,6 @@ export async function createMultipleFacts(
       })),
     });
 
-    const chef = await prisma.chef.findUnique({
-      where: { id: chefId },
-      select: { slug: true },
-    });
-
     return { success: true, count: createdFacts.count };
   } catch (error) {
     console.error("Error creating multiple facts:", error);

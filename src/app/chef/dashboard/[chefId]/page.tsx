@@ -81,48 +81,6 @@ export default function ChefDashboard() {
   const router = useRouter();
   const params = useParams<{ chefId: string }>();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-
-        const res = await axiosIstance.get(`/chefs/${params.chefId}`);
-        const data = res.data;
-
-        setChefId(params.chefId);
-
-        setChef(data);
-        console.log(data);
-        if (data.Menus) {
-          setMenus(data.Menus);
-        }
-        if (data.Dishes) {
-          setDishes(data.Dishes);
-        }
-
-        setPhotos(data.Photos || []);
-
-        setFacts(data.Facts || []);
-
-        if (data.Review) {
-          const formattedReviews = data.Review.map((review: any) => ({
-            id: review.id,
-            rating: review.rating,
-            text: review.text,
-            createdAt: new Date(review.createdAt).toLocaleDateString("it-IT"),
-          }));
-          setReviews(formattedReviews);
-        }
-      } catch (err) {
-        console.error("Errore nel caricamento dei dati dello chef:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [chefId]);
-
   const handleUpdateChef = async (updatedChef: ChefComplete) => {
     try {
       const res = await axiosIstance.patch(`/chefs/${chefId}`, updatedChef);
@@ -315,6 +273,48 @@ export default function ChefDashboard() {
     router.push(`/chef/${url}`);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+
+        const res = await axiosIstance.get(`/chefs/${params.chefId}`);
+        const data = res.data;
+
+        setChefId(params.chefId);
+
+        setChef(data);
+        console.log(data);
+        if (data.Menus) {
+          setMenus(data.Menus);
+        }
+        if (data.Dishes) {
+          setDishes(data.Dishes);
+        }
+
+        setPhotos(data.Photos || []);
+
+        setFacts(data.Facts || []);
+
+        if (data.Review) {
+          const formattedReviews = data.Review.map((review: any) => ({
+            id: review.id,
+            rating: review.rating,
+            text: review.text,
+            createdAt: new Date(review.createdAt).toLocaleDateString("it-IT"),
+          }));
+          setReviews(formattedReviews);
+        }
+      } catch (err) {
+        console.error("Errore nel caricamento dei dati dello chef:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [params.chefId]);
+
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-[#0a0a0a] text-white">
@@ -381,7 +381,6 @@ export default function ChefDashboard() {
 
         {activeTab === "menus" && (
           <MenuComponent
-            chef={chef}
             menus={menus}
             dishes={dishes}
             onAddDishToMenu={handleAddDishToMenu}
@@ -394,7 +393,6 @@ export default function ChefDashboard() {
         )}
         {activeTab === "dishes" && (
           <DishesComponent
-            chef={chef}
             dishes={dishes}
             menus={menus}
             onAdd={handleAddDish}
@@ -404,7 +402,6 @@ export default function ChefDashboard() {
         )}
         {activeTab === "photos" && (
           <PhotosComponent
-            chef={chef}
             photos={photos}
             onUpload={handleUploadPhoto}
             onDelete={handleDeletePhoto}
@@ -412,7 +409,6 @@ export default function ChefDashboard() {
         )}
         {activeTab === "facts" && (
           <FactsComponent
-            chef={chef}
             facts={facts}
             onAdd={handleAddFact}
             onUpdate={handleUpdateFact}

@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  createPhoto,
-  createMultiplePhotos,
-  getAllPhotos,
-} from "@/actions/photo";
-import path, { join } from "path";
+import { createPhoto, getAllPhotos } from "@/actions/photo";
+import { join } from "path";
 import sharp from "sharp";
 import { writeFile } from "fs/promises";
 import { updateChef } from "@/actions/chef";
@@ -65,11 +61,11 @@ export async function POST(request: NextRequest) {
 
     if (type === "avatar") {
       path = `/uploads/avatarImages/${filename}`;
-      const chefResult = await updateChef(chefId, { avatarUrl: path });
+      await updateChef(chefId, { avatarUrl: path });
     }
     if (type === "cover") {
       path = `/uploads/coverImages/${filename}`;
-      const chefResult = await updateChef(chefId, { coverUrl: path });
+      await updateChef(chefId, { coverUrl: path });
     }
     const result = await createPhoto({
       filename: file.name,
@@ -109,6 +105,7 @@ export async function GET() {
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to fetch photos" },
       { status: 500 },

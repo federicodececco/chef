@@ -1,15 +1,9 @@
 "use client";
-
-import axiosIstance from "@/lib/axios";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import ChatComponent from "./ChatComponent";
 import { useAuth } from "@/context/AuthContext";
 
 export default function NavBar() {
-  const { user, isAuthenticated, isChef, chefSlug, isLoading, logout } =
-    useAuth();
+  const { user, isAuthenticated, isChef, chefSlug, logout } = useAuth();
 
   const router = useRouter();
 

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  ChefInterface,
   DishInterface,
   MenuInterface,
 } from "@/app/chef/dashboard/[chefId]/page";
@@ -34,7 +33,6 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 interface MenuComponentInterface {
-  chef: ChefInterface;
   menus: MenuInterface[];
   dishes: DishInterface[];
   onAddMenu: (menu: Omit<MenuInterface, "id">) => void;
@@ -87,7 +85,6 @@ function SortableDishItem({ dish, onRemove }: SortableDishItemProps) {
 }
 
 export default function MenuComponent({
-  chef,
   menus,
   dishes,
   onAddMenu,

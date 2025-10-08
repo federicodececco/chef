@@ -16,7 +16,6 @@ interface FactsComponentInterface {
 }
 
 export default function FactsComponent({
-  chef,
   facts,
   onAdd,
   onUpdate,

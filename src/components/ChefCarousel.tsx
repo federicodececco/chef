@@ -14,7 +14,6 @@ interface Slide {
 }
 
 export default function ChefCarousel() {
-  const [chefs, setChefs] = useState();
   const router = useRouter();
 
   const handleNavigation = (id: string, chefSlug: string) => {
@@ -53,19 +52,19 @@ export default function ChefCarousel() {
   ];
 
   const [actualSlides, setActualSlides] = useState<Slide[]>(slides);
-  const fetchChef = async () => {
-    try {
-      const res = await axiosIstance.get("/chefs");
-      if (res) {
-        setActualSlides(res.data);
-      } else setActualSlides(slides);
-      console.log(res);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   useEffect(() => {
+    const fetchChef = async () => {
+      try {
+        const res = await axiosIstance.get("/chefs");
+        if (res) {
+          setActualSlides(res.data);
+        } else setActualSlides(slides);
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     fetchChef();
   }, []);
 
@@ -73,7 +72,7 @@ export default function ChefCarousel() {
     <div className="mx-auto w-full">
       <div className="relative max-w-6xl">
         <div className="carousel carousel-center bg-neutral rounded-box relative mx-auto w-full space-x-4 p-4">
-          {actualSlides.map((slide, index) => (
+          {actualSlides.map((slide) => (
             <div
               onClick={() => {
                 handleNavigation(slide.id, slide.chefSlug);

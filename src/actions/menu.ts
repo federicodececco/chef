@@ -10,6 +10,7 @@ export async function createMenu(data: { chefId: string }) {
 
     return { success: true, data: menu };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to create menu" };
   }
 }
@@ -33,16 +34,13 @@ export async function updateMenu(id: string, data: { name: string }) {
 
 export async function deleteMenu(id: string) {
   try {
-    const menu = await prisma.menu.findUnique({
-      where: { id },
-    });
-
     await prisma.menu.delete({
       where: { id },
     });
 
     return { success: true };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to delete menu" };
   }
 }
@@ -69,6 +67,7 @@ export async function getMenu(id: string) {
     });
     return { success: true, data: menu };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch menu" };
   }
 }
@@ -93,6 +92,7 @@ export async function getMenusByChef(chefId: string) {
     });
     return { success: true, data: menus };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch menus" };
   }
 }
@@ -114,6 +114,7 @@ export async function getAllMenus() {
     });
     return { success: true, data: menus };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch menus" };
   }
 }

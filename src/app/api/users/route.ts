@@ -2,9 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createUser, getAllUsers } from "@/actions/user";
 import { createChef } from "@/actions/chef";
 import { prisma } from "@/lib/prisma";
-import { SignJWT, jwtVerify } from "jose";
-import { cookies } from "next/headers";
-import bcrypt from "bcryptjs";
 import { generateToken, setAuthCookie } from "@/lib/auth";
 
 export async function GET() {
@@ -17,6 +14,7 @@ export async function GET() {
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -67,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
     if (result.data?.id && isChef) {
       const chefSlug = `${result.data.firstname.toLowerCase}-${result.data.lastname.toLowerCase}`;
-      const chefResult = await createChef({
+      await createChef({
         id: result.data.id,
         slug: chefSlug,
       });
@@ -84,6 +82,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(user, { status: 201 });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

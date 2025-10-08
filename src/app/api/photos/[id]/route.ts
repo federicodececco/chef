@@ -15,6 +15,7 @@ export async function GET(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to fetch photo" },
       { status: 500 },
@@ -36,6 +37,7 @@ export async function PATCH(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to update photo" },
       { status: 500 },
@@ -59,6 +61,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Photo deleted successfully" });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to delete photo" },
       { status: 500 },

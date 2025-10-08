@@ -19,10 +19,11 @@ export async function createUser(data: {
       },
     });
 
-    const { password, ...userWithoutPassword } = user;
+    const { ...userWithoutPassword } = user;
 
     return { success: true, data: userWithoutPassword };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to create user" };
   }
 }
@@ -33,7 +34,7 @@ export async function updateUser(
     firstname?: string;
     lastname?: string;
     email?: string;
-  }
+  },
 ) {
   try {
     const user = await prisma.user.update({
@@ -50,6 +51,7 @@ export async function updateUser(
 
     return { success: true, data: user };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to update user" };
   }
 }
@@ -62,6 +64,7 @@ export async function deleteUser(id: string) {
 
     return { success: true };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to delete user" };
   }
 }
@@ -81,6 +84,7 @@ export async function getUser(id: string) {
     });
     return { success: true, data: user };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch user" };
   }
 }
@@ -100,6 +104,7 @@ export async function getUserByEmail(email: string) {
     });
     return { success: true, data: user };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch user" };
   }
 }
@@ -120,6 +125,7 @@ export async function getAllUsers() {
     });
     return { success: true, data: users };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch users" };
   }
 }

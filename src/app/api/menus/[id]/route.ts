@@ -15,6 +15,7 @@ export async function GET(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to fetch menu" },
       { status: 500 },
@@ -119,6 +120,7 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Menu deleted successfully" });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to delete menu" },
       { status: 500 },

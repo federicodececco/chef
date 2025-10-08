@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getCategoriesWithDishes } from "@/actions/category";
 
 export async function GET() {
@@ -11,6 +11,7 @@ export async function GET() {
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to fetch categories with dishes" },
       { status: 500 },

@@ -9,6 +9,7 @@ export async function createCategory(data: { name: string }) {
     });
     return { success: true, data: category };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to create category" };
   }
 }
@@ -17,7 +18,7 @@ export async function updateCategory(
   id: string,
   data: {
     name: string;
-  }
+  },
 ) {
   try {
     const category = await prisma.category.update({
@@ -26,6 +27,7 @@ export async function updateCategory(
     });
     return { success: true, data: category };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to update category" };
   }
 }
@@ -37,6 +39,7 @@ export async function deleteCategory(id: string) {
     });
     return { success: true };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to delete category" };
   }
 }
@@ -59,6 +62,7 @@ export async function getCategory(id: string) {
     });
     return { success: true, data: category };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch category" };
   }
 }
@@ -79,6 +83,7 @@ export async function getAllCategories() {
     });
     return { success: true, data: categories };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch categories" };
   }
 }
@@ -104,6 +109,7 @@ export async function getCategoriesWithDishes() {
     });
     return { success: true, data: categories };
   } catch (error) {
+    console.error(error);
     return { success: false, error: "Failed to fetch categories with dishes" };
   }
 }

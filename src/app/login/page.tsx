@@ -39,6 +39,7 @@ export default function LoginPage() {
         window.location.href = "/chef/chef-registration";
       }
     } catch (err) {
+      console.error(err);
       setError("Errore di connessione. Riprova.");
       setIsLoading(false);
     }

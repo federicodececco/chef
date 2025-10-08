@@ -55,18 +55,6 @@ export default function ChatComponent({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      if (targetChefId) {
-        // Modalità chat singola per utente
-        initializeSingleChat();
-      } else {
-        // Modalità lista chat (per chef o utenti nella navbar)
-        fetchChats();
-      }
-    }
-  }, [isOpen, targetChefId]);
-
-  useEffect(() => {
     if (expandedChatId) {
       scrollToBottom();
     }
@@ -106,23 +94,6 @@ export default function ChatComponent({
       setExpandedChatId(chat.id);
     } catch (error) {
       console.error("Errore nell'inizializzazione della chat:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchChats = async () => {
-    setIsLoading(true);
-    try {
-      const endpoint = isChef
-        ? `/api/chefs/${chefId}/chats`
-        : `/api/users/${currentUserId}/chats`;
-
-      const response = await fetch(endpoint);
-      const data = await response.json();
-      setChats(data);
-    } catch (error) {
-      console.error("Errore nel caricamento delle chat:", error);
     } finally {
       setIsLoading(false);
     }
@@ -190,7 +161,35 @@ export default function ChatComponent({
       : lastMsg.text;
   };
 
-  // Se è una chat singola (targetChefId definito), non mostrare il pulsante toggle
+  useEffect(() => {
+    if (isOpen) {
+      if (targetChefId) {
+        /*  Modalità chat singola per utente */
+        initializeSingleChat();
+      } else {
+        /*  Modalità lista chat (per chef o utenti nella navbar) */
+        const fetchChats = async () => {
+          setIsLoading(true);
+          try {
+            const endpoint = isChef
+              ? `/api/chefs/${chefId}/chats`
+              : `/api/users/${currentUserId}/chats`;
+
+            const response = await fetch(endpoint);
+            const data = await response.json();
+            setChats(data);
+          } catch (error) {
+            console.error("Errore nel caricamento delle chat:", error);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+
+        fetchChats();
+      }
+    }
+  }, [isOpen, targetChefId]);
+  /* Se è una chat singola (targetChefId definito), non mostrare il pulsante toggle */
   if (targetChefId) {
     return (
       <>

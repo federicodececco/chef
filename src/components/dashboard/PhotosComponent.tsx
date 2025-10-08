@@ -26,70 +26,13 @@ export default function PhotosComponent({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string[]>([]);
 
-  const compressImage = (file: File): Promise<File> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-
-      reader.onload = (event) => {
-        const img = new window.Image();
-        img.src = event.target?.result as string;
-
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-
-          let width = img.width;
-          let height = img.height;
-          const maxSize = 1920;
-
-          if (width > maxSize || height > maxSize) {
-            if (width > height) {
-              height = (height / width) * maxSize;
-              width = maxSize;
-            } else {
-              width = (width / height) * maxSize;
-              height = maxSize;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-
-          ctx?.drawImage(img, 0, 0, width, height);
-
-          canvas.toBlob(
-            (blob) => {
-              if (blob) {
-                const compressedFile = new File([blob], file.name, {
-                  type: "image/jpeg",
-                  lastModified: Date.now(),
-                });
-                resolve(compressedFile);
-              } else {
-                reject(new Error("Errore nella compressione"));
-              }
-            },
-            "image/jpeg",
-            0.85,
-          );
-        };
-
-        img.onerror = reject;
-      };
-
-      reader.onerror = reject;
-    });
-  };
-
   const uploadFile = async (file: File) => {
     try {
       setUploadProgress((prev) => [...prev, file.name]);
 
-      const compressedFile = await compressImage(file);
-
       const formData = new FormData();
-      formData.append("photo", compressedFile);
+
+      formData.append("photo", file);
       formData.append("chefId", chef.id);
       formData.append("type", "gallery");
 
@@ -126,9 +69,8 @@ export default function PhotosComponent({
     setIsUploading(true);
     setUploadProgress([]);
 
-    for (const file of imageFiles) {
-      await uploadFile(file);
-    }
+    const uploadPromises = imageFiles.map(uploadFile);
+    await Promise.all(uploadPromises);
 
     setIsUploading(false);
 
@@ -162,9 +104,8 @@ export default function PhotosComponent({
     setIsUploading(true);
     setUploadProgress([]);
 
-    for (const file of files) {
-      await uploadFile(file);
-    }
+    const uploadPromises = files.map(uploadFile);
+    await Promise.all(uploadPromises);
 
     setIsUploading(false);
   };

@@ -26,6 +26,90 @@ export default function PhotosComponent({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string[]>([]);
 
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = (event) => {
+        const img = new window.Image();
+        img.src = event.target?.result as string;
+
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          let width = img.width;
+          let height = img.height;
+          const maxSize = 1920;
+
+          if (width > maxSize || height > maxSize) {
+            if (width > height) {
+              height = (height / width) * maxSize;
+              width = maxSize;
+            } else {
+              width = (width / height) * maxSize;
+              height = maxSize;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name, {
+                  type: "image/jpeg",
+                  lastModified: Date.now(),
+                });
+                resolve(compressedFile);
+              } else {
+                reject(new Error("Errore nella compressione"));
+              }
+            },
+            "image/jpeg",
+            0.85,
+          );
+        };
+
+        img.onerror = reject;
+      };
+
+      reader.onerror = reject;
+    });
+  };
+
+  const uploadFile = async (file: File) => {
+    try {
+      setUploadProgress((prev) => [...prev, file.name]);
+
+      const compressedFile = await compressImage(file);
+
+      const formData = new FormData();
+      formData.append("photo", compressedFile);
+      formData.append("chefId", chef.id);
+      formData.append("type", "gallery");
+
+      const res = await axiosInstance.post("/photos", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 60000,
+      });
+
+      if (res.data.success) {
+        onUpload(res.data.photo);
+      }
+
+      setUploadProgress((prev) => prev.filter((name) => name !== file.name));
+    } catch (error) {
+      console.error(`Errore upload ${file.name}:`, error);
+      alert(`Errore durante l'upload di ${file.name}`);
+      setUploadProgress((prev) => prev.filter((name) => name !== file.name));
+    }
+  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -43,33 +127,11 @@ export default function PhotosComponent({
     setUploadProgress([]);
 
     for (const file of imageFiles) {
-      try {
-        setUploadProgress((prev) => [...prev, file.name]);
-
-        const formData = new FormData();
-        formData.append("photo", file);
-        formData.append("chefId", chef.id);
-        formData.append("type", "gallery");
-
-        const res = await axiosInstance.post("/photos", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        if (res.data.success) {
-          onUpload(res.data.photo);
-        }
-        console.log(res.data);
-
-        setUploadProgress((prev) => prev.filter((name) => name !== file.name));
-      } catch (error) {
-        console.error(`Errore upload ${file.name}:`, error);
-        alert(`Errore durante l'upload di ${file.name}`);
-      }
+      await uploadFile(file);
     }
 
     setIsUploading(false);
 
-    // Reset input
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -101,28 +163,7 @@ export default function PhotosComponent({
     setUploadProgress([]);
 
     for (const file of files) {
-      try {
-        setUploadProgress((prev) => [...prev, file.name]);
-
-        const formData = new FormData();
-        formData.append("photo", file);
-        formData.append("chefId", chef.id);
-        formData.append("type", "gallery");
-
-        const res = await axiosInstance.post("/photos", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        if (res.data.success) {
-          console.log(res.data.photo);
-          onUpload(res.data.photo);
-        }
-
-        setUploadProgress((prev) => prev.filter((name) => name !== file.name));
-      } catch (error) {
-        console.error(`Errore upload ${file.name}:`, error);
-        alert(`Errore durante l'upload di ${file.name}`);
-      }
+      await uploadFile(file);
     }
 
     setIsUploading(false);
@@ -200,7 +241,6 @@ export default function PhotosComponent({
             <p className="mb-2 text-white">
               Clicca per caricare o trascina le immagini qui
             </p>
-            <p className="text-sm text-white/50">PNG, JPG, GIF fino a 10MB</p>
           </>
         )}
       </div>

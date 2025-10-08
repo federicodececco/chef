@@ -5,29 +5,104 @@ import { sendNewMessageEmail } from "@/util/email";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { chatId, isChef, text } = body;
+    const { chatId, chefId, userId, isChef, text } = body;
 
-    if (!chatId || text === undefined || isChef === undefined) {
+    if (text === undefined || isChef === undefined) {
       return NextResponse.json(
-        { error: "chatId, text e isChef sono obbligatori" },
+        { error: "text e isChef sono obbligatori" },
         { status: 400 },
       );
     }
 
-    const message = await prisma.message.create({
-      data: {
-        chatId,
-        isChef,
-        text,
-        isRed: false,
-      },
-    });
+    let chat;
+    let isNewChat = false;
 
-    const chat = await prisma.chat.findUnique({
-      where: { id: chatId },
-      include: {
-        chef: {
+    if (chatId) {
+      chat = await prisma.chat.findUnique({
+        where: { id: chatId },
+        include: {
+          chef: {
+            include: {
+              user: {
+                select: {
+                  firstname: true,
+                  lastname: true,
+                  email: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              firstname: true,
+              lastname: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      if (!chat) {
+        return NextResponse.json(
+          { error: "Chat non trovata" },
+          { status: 404 },
+        );
+      }
+    } else {
+      if (!chefId || !userId) {
+        return NextResponse.json(
+          {
+            error: "chefId e userId sono obbligatori per creare una nuova chat",
+          },
+          { status: 400 },
+        );
+      }
+
+      chat = await prisma.chat.findFirst({
+        where: {
+          chefId,
+          userId,
+        },
+        include: {
+          chef: {
+            include: {
+              user: {
+                select: {
+                  firstname: true,
+                  lastname: true,
+                  email: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              firstname: true,
+              lastname: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      if (!chat) {
+        chat = await prisma.chat.create({
+          data: {
+            chefId,
+            userId,
+          },
           include: {
+            chef: {
+              include: {
+                user: {
+                  select: {
+                    firstname: true,
+                    lastname: true,
+                    email: true,
+                  },
+                },
+              },
+            },
             user: {
               select: {
                 firstname: true,
@@ -36,20 +111,19 @@ export async function POST(request: NextRequest) {
               },
             },
           },
-        },
-        user: {
-          select: {
-            firstname: true,
-            lastname: true,
-            email: true,
-          },
-        },
+        });
+        isNewChat = true;
+      }
+    }
+
+    const message = await prisma.message.create({
+      data: {
+        chatId: chat.id,
+        isChef,
+        text,
+        isRed: false,
       },
     });
-
-    if (!chat) {
-      return NextResponse.json({ error: "Chat non trovata" }, { status: 404 });
-    }
 
     const recipientEmail = isChef ? chat.user.email : chat.chef.user.email;
     const senderName = isChef
@@ -69,11 +143,15 @@ export async function POST(request: NextRequest) {
       console.error("Errore nell'invio dell'email:", error);
     });
 
-    return NextResponse.json(message);
+    return NextResponse.json({
+      ...message,
+      chatId: chat.id,
+      isNewChat,
+    });
   } catch (error) {
-    console.error("Errore nella creazione del messaggio:", error);
+    console.error("Errore nella gestione del messaggio:", error);
     return NextResponse.json(
-      { error: "Errore nella creazione del messaggio" },
+      { error: "Errore nella gestione del messaggio" },
       { status: 500 },
     );
   }

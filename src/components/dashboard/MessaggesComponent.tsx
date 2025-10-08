@@ -114,6 +114,9 @@ export default function MessagesComponent({ chefId }: MessagesComponentProps) {
   const getLastMessage = (chat: Chat) => {
     if (chat.Messages.length === 0) return "Nessun messaggio";
     const lastMsg = chat.Messages[chat.Messages.length - 1];
+
+    if (!lastMsg.text) return "Messaggio vuoto";
+
     const prefix = lastMsg.isChef ? "Tu: " : "";
     return (
       prefix +

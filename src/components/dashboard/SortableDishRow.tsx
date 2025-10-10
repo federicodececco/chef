@@ -146,8 +146,8 @@ export default function SortableDishRow({
             </div>
           ) : (
             <div className="flex flex-wrap gap-1">
-              {dish.Categories && dish.Categories.length > 0 ? (
-                dish.Categories.map((cat) => (
+              {dish.categories && dish.categories.length > 0 ? (
+                dish.categories.map((cat) => (
                   <span
                     key={cat.id}
                     className="flex items-center gap-1 rounded-full bg-[#c8a36a]/20 px-2 py-1 text-xs text-[#c8a36a]"

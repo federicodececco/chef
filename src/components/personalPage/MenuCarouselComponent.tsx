@@ -211,6 +211,8 @@ export default function MenuCarouselComponent({
               <X className="h-6 w-6" />
             </button>
 
+            <h2 className="text-gold">Per Persona € {selectedMenu.price}</h2>
+
             {/* Menu Title */}
             <h2 className="mb-8 text-4xl font-bold text-[#c8a36a] md:text-5xl">
               {selectedMenu.name}

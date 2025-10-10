@@ -119,7 +119,7 @@ export default function DishesComponent({
 
     if (selectedCategory !== "all") {
       filtered = filtered.filter((dish) =>
-        dish.Categories?.some((cat) => cat.id === selectedCategory),
+        dish.categories?.some((cat) => cat.id === selectedCategory),
       );
     }
 
@@ -130,7 +130,7 @@ export default function DishesComponent({
 
   const getCategoryCount = (categoryId: string) => {
     return dishes.filter((dish) =>
-      dish.Categories?.some((cat) => cat.id === categoryId),
+      dish.categories?.some((cat) => cat.id === categoryId),
     ).length;
   };
 
@@ -180,7 +180,7 @@ export default function DishesComponent({
     setEditingId(dish.id);
     setEditData({
       ...dish,
-      categoryIds: dish.Categories?.map((c) => c.id) || [],
+      categoryIds: dish.categories?.map((c) => c.id) || [],
     });
   };
 

@@ -16,14 +16,14 @@ export async function createDish(data: {
     const dish = await prisma.dish.create({
       data: {
         ...dishData,
-        Categories: categoryIds
+        categories: categoryIds
           ? {
               connect: categoryIds.map((id) => ({ id })),
             }
           : undefined,
       },
       include: {
-        Categories: true,
+        categories: true,
       },
     });
 
@@ -50,14 +50,14 @@ export async function updateDish(
       where: { id },
       data: {
         ...dishData,
-        Categories: categoryIds
+        categories: categoryIds
           ? {
               set: categoryIds.map((id) => ({ id })),
             }
           : undefined,
       },
       include: {
-        Categories: true,
+        categories: true,
       },
     });
 
@@ -85,7 +85,7 @@ export async function getDish(id: string) {
     const dish = await prisma.dish.findUnique({
       where: { id },
       include: {
-        Categories: true,
+        categories: true,
         chef: {
           include: {
             user: true,
@@ -112,7 +112,7 @@ export async function getDishesByMenu(menuId: string) {
         },
       },
       include: {
-        Categories: true,
+        categories: true,
       },
       orderBy: {
         listOrder: "asc",
@@ -130,7 +130,7 @@ export async function getDishesByChef(chefId: string) {
     const dishes = await prisma.dish.findMany({
       where: { chefId },
       include: {
-        Categories: true,
+        categories: true,
         Menus: true,
       },
       orderBy: {

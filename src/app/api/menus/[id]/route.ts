@@ -71,25 +71,54 @@ export async function PATCH(
 ) {
   try {
     const { id: menuId } = await params;
-    const { dishIds } = await request.json();
+    const body = await request.json();
 
-    if (!Array.isArray(dishIds)) {
-      return NextResponse.json(
-        { error: "dishIds must be an array" },
-        { status: 400 },
+    if ("dishIds" in body) {
+      const { dishIds } = body;
+
+      if (!Array.isArray(dishIds)) {
+        return NextResponse.json(
+          { error: "dishIds must be an array" },
+          { status: 400 },
+        );
+      }
+
+      await Promise.all(
+        dishIds.map((dishId, index) =>
+          prisma.dish.update({
+            where: { id: dishId },
+            data: { listOrder: index + 1 },
+          }),
+        ),
       );
-    }
-    await Promise.all(
-      dishIds.map((dishId, index) =>
-        prisma.dish.update({
-          where: { id: dishId },
-          data: { listOrder: index + 1 },
-        }),
-      ),
-    );
 
-    const menu = await prisma.menu.findUnique({
+      const menu = await prisma.menu.findUnique({
+        where: { id: menuId },
+        include: {
+          Dishes: {
+            orderBy: {
+              listOrder: "asc",
+            },
+          },
+        },
+      });
+
+      return NextResponse.json(menu);
+    }
+
+    const updateData: {
+      name?: string;
+      price?: number;
+      maxPeople?: number;
+    } = {};
+
+    if (body.name !== undefined) updateData.name = body.name;
+    if (body.price !== undefined) updateData.price = body.price;
+    if (body.maxPeople !== undefined) updateData.maxPeople = body.maxPeople;
+
+    const updatedMenu = await prisma.menu.update({
       where: { id: menuId },
+      data: updateData,
       include: {
         Dishes: {
           orderBy: {
@@ -98,11 +127,12 @@ export async function PATCH(
         },
       },
     });
-    return NextResponse.json(menu);
+
+    return NextResponse.json(updatedMenu);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Failed to reorder dishes" },
+      { error: "Failed to update menu" },
       { status: 500 },
     );
   }

@@ -68,7 +68,7 @@ export async function getChef(id: string) {
         Review: true,
         Dishes: {
           include: {
-            Categories: true,
+            categories: true,
             Menus: {
               select: {
                 id: true,
@@ -96,7 +96,7 @@ export async function getChefBySlug(slug: string) {
           include: {
             Dishes: {
               include: {
-                Categories: true,
+                categories: true,
               },
             },
           },

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { MenuInterface } from "@/app/chef/dashboard/[chefId]/page";
 import {
   Edit,
   PlusCircle,
@@ -9,7 +8,7 @@ import {
   X,
   Check,
   ChevronRight,
-  GripVertical,
+  Euro,
 } from "lucide-react";
 import {
   DndContext,
@@ -24,11 +23,11 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { DishInterface } from "@/util/types";
+
+import { DishInterface, MenuInterface } from "@/util/types";
+import SortableDishItem from "./SortableDishItem";
 
 interface MenuComponentInterface {
   menus: MenuInterface[];
@@ -39,47 +38,6 @@ interface MenuComponentInterface {
   onAddDishToMenu: (menuId: string, dishId: string) => void;
   onRemoveDishFromMenu: (menuId: string, dishId: string) => void;
   onReorderDishes: (dishes: DishInterface[]) => void;
-}
-
-interface SortableDishItemProps {
-  dish: DishInterface;
-  onRemove: () => void;
-}
-
-function SortableDishItem({ dish, onRemove }: SortableDishItemProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: dish.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className="flex items-center gap-3 rounded-lg bg-[#2a2a2a] p-4 transition"
-    >
-      <div {...attributes} {...listeners} className="cursor-move touch-none">
-        <GripVertical size={20} className="text-white/50" />
-      </div>
-      <div className="flex-1">
-        <p className="font-semibold text-white">{dish.name}</p>
-        <p className="text-sm text-white/50">{dish.course}</p>
-      </div>
-      <button onClick={onRemove} className="text-red-400 hover:text-red-300">
-        <Trash2 size={18} />
-      </button>
-    </div>
-  );
 }
 
 export default function MenuComponent({
@@ -99,6 +57,7 @@ export default function MenuComponent({
   const [formData, setFormData] = useState({
     name: "",
     maxPeople: 0,
+    price: 0,
   });
   const [editData, setEditData] = useState<Partial<MenuInterface>>({});
 
@@ -124,7 +83,7 @@ export default function MenuComponent({
   const handleAdd = () => {
     if (formData.name.trim()) {
       onAddMenu(formData);
-      setFormData({ name: "", maxPeople: 0 });
+      setFormData({ name: "", maxPeople: 0, price: 0 });
       setShowAddModal(false);
     }
   };
@@ -199,20 +158,39 @@ export default function MenuComponent({
                       onChange={(e) =>
                         setEditData({ ...editData, name: e.target.value })
                       }
+                      placeholder="Nome menu"
                       className="w-full rounded border border-[#c8a36a]/30 bg-[#0a0a0a] p-2 text-white outline-none focus:border-[#c8a36a]"
                     />
                     <input
                       type="number"
-                      value={editData.maxPeople || 0}
+                      value={editData.maxPeople || ""}
                       onChange={(e) =>
                         setEditData({
                           ...editData,
-                          maxPeople: parseInt(e.target.value),
+                          maxPeople: parseInt(e.target.value) || 0,
                         })
                       }
                       placeholder="Max persone"
                       className="w-full rounded border border-[#c8a36a]/30 bg-[#0a0a0a] p-2 text-white outline-none focus:border-[#c8a36a]"
                     />
+                    <div className="relative">
+                      <input
+                        type="number"
+                        value={editData.price || ""}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            price: parseInt(e.target.value) || 0,
+                          })
+                        }
+                        placeholder="Prezzo a persona"
+                        className="w-full rounded border border-[#c8a36a]/30 bg-[#0a0a0a] p-2 pr-8 text-white outline-none focus:border-[#c8a36a]"
+                      />
+                      <Euro
+                        size={16}
+                        className="absolute top-1/2 right-3 -translate-y-1/2 text-white/50"
+                      />
+                    </div>
                     <div className="flex justify-end gap-2">
                       <button
                         onClick={() => handleUpdate(menu.id)}
@@ -238,10 +216,20 @@ export default function MenuComponent({
                         <h3 className="text-lg font-semibold text-[#c8a36a]">
                           {menu.name}
                         </h3>
-                        <p className="text-sm text-white/50">
-                          {menu.Dishes?.length || 0} piatti
-                          {menu.maxPeople && ` • Max ${menu.maxPeople} persone`}
-                        </p>
+                        <div className="mt-1 space-y-1">
+                          <p className="text-sm text-white/50">
+                            {menu.Dishes?.length || 0} piatti
+                            {menu.maxPeople &&
+                              ` • Max ${menu.maxPeople} persone`}
+                            {menu.price && ` • € ${menu.price} per persona`}
+                          </p>
+                          {menu.price && (
+                            <p className="flex items-center gap-1 text-sm font-semibold text-[#c8a36a]">
+                              <Euro size={14} />
+                              {menu.price} a persona
+                            </p>
+                          )}
+                        </div>
                       </button>
                       <ChevronRight
                         size={20}
@@ -282,9 +270,17 @@ export default function MenuComponent({
           {selectedMenu ? (
             <div className="rounded-lg bg-[#232323] p-6">
               <div className="mb-6 flex items-center justify-between">
-                <h3 className="text-xl font-bold text-[#c8a36a]">
-                  {selectedMenu.name}
-                </h3>
+                <div>
+                  <h3 className="text-xl font-bold text-[#c8a36a]">
+                    {selectedMenu.name}
+                  </h3>
+                  {selectedMenu.price && (
+                    <p className="mt-1 flex items-center gap-1 text-lg font-semibold text-white/70">
+                      <Euro size={18} />
+                      {selectedMenu.price} a persona
+                    </p>
+                  )}
+                </div>
                 <button
                   onClick={() => setShowAddDishModal(true)}
                   className="flex items-center gap-2 rounded bg-[#c8a36a] px-4 py-2 text-sm font-semibold text-[#0a0a0a] transition hover:bg-[#d4b480]"
@@ -335,7 +331,7 @@ export default function MenuComponent({
 
       {/* Modal Aggiungi Menu */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-md rounded-lg bg-[#232323] p-6">
             <h3 className="mb-4 text-xl font-bold text-[#c8a36a]">
               Nuovo Menu
@@ -349,6 +345,7 @@ export default function MenuComponent({
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
+                  placeholder="Es: Menu Degustazione"
                   className="w-full rounded border border-[#c8a36a]/30 bg-[#0a0a0a] p-3 text-white outline-none focus:border-[#c8a36a]"
                 />
               </div>
@@ -365,20 +362,48 @@ export default function MenuComponent({
                       maxPeople: parseInt(e.target.value) || 0,
                     })
                   }
+                  placeholder="Es: 10"
                   className="w-full rounded border border-[#c8a36a]/30 bg-[#0a0a0a] p-3 text-white outline-none focus:border-[#c8a36a]"
                 />
+              </div>
+              <div>
+                <label className="mb-2 block text-white/70">
+                  Prezzo a persona (€)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    value={formData.price || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        price: parseInt(e.target.value) || 0,
+                      })
+                    }
+                    placeholder="Es: 50"
+                    className="w-full rounded border border-[#c8a36a]/30 bg-[#0a0a0a] p-3 pr-10 text-white outline-none focus:border-[#c8a36a]"
+                  />
+                  <Euro
+                    size={18}
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-white/50"
+                  />
+                </div>
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
               <button
-                onClick={() => setShowAddModal(false)}
+                onClick={() => {
+                  setShowAddModal(false);
+                  setFormData({ name: "", maxPeople: 0, price: 0 });
+                }}
                 className="rounded bg-white/10 px-4 py-2 text-white transition hover:bg-white/20"
               >
                 Annulla
               </button>
               <button
                 onClick={handleAdd}
-                className="rounded bg-[#c8a36a] px-4 py-2 font-semibold text-[#0a0a0a] transition hover:bg-[#d4b480]"
+                disabled={!formData.name.trim()}
+                className="rounded bg-[#c8a36a] px-4 py-2 font-semibold text-[#0a0a0a] transition hover:bg-[#d4b480] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Crea Menu
               </button>
@@ -387,9 +412,9 @@ export default function MenuComponent({
         </div>
       )}
 
-      {/* modale Aggiungi Piatto al Menu */}
+      {/* Modal Aggiungi Piatto al Menu */}
       {showAddDishModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-md rounded-lg bg-[#232323] p-6">
             <h3 className="mb-4 text-xl font-bold text-[#c8a36a]">
               Aggiungi Piatto al Menu

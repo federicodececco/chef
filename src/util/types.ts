@@ -24,7 +24,7 @@ export interface DishInterface {
   course: string;
   listOrder?: number;
   chefId: string;
-  Categories?: CategoryInterface[];
+  categories?: CategoryInterface[];
   Menus?: Menu[];
   createdAt?: string;
 }
@@ -35,4 +35,12 @@ export interface CreateDishInput {
   listOrder: number;
   chefId: string;
   categoryIds: string[];
+}
+export interface MenuInterface {
+  id: string;
+  name: string;
+  dishCount?: number;
+  maxPeople?: number;
+  price?: number;
+  Dishes?: DishInterface[];
 }

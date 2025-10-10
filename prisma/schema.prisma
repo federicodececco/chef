@@ -48,6 +48,7 @@ model Menu {
   chefId     String
   name       String
   maxPeople  Int?
+  price      Int?
   created_at DateTime @default(now())
   Dishes     Dish[]
 
@@ -94,7 +95,7 @@ model Dish {
   created_at DateTime @default(now())
   Menus      Menu[]
 
-  Categories Category[]
+  categories Category[]
 
   chef Chef @relation(fields: [chefId], references: [id], onDelete: Cascade)
 
@@ -143,4 +144,6 @@ model Review {
 
   chef Chef @relation(fields: [chefId], references: [id])
   user User @relation(fields: [userId], references: [id])
+
+  @@index([chefId])
 }

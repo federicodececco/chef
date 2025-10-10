@@ -94,7 +94,7 @@ export async function getCategoriesWithDishes() {
       include: {
         Dishes: {
           include: {
-            Categories: true,
+            categories: true,
             chef: {
               include: {
                 user: true,

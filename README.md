@@ -10,5 +10,6 @@ L'applicazioni presenta tutte le componenti richiesete:
 -Le pagine pubbliche e le corrispondenti chiamate API sono automaticamente cacheate attraverso le funzionalità di NextJs, così vale anche per le immagini, attraverso il component Image di next, esse vengono automaticamente impostate come lazy loading.
 -L'autenticazione è gestita attraverso JWT e conseguenti coockies, inoltre le password sono sottoposte ad hashing attravero bcrypt.
 -Lo chef ha possibilità di caricare foto di copertina, foto di profilo (avatar) e foto per la sua galleria. Queste vengono ottimizzate, venendo converite a webp e ridimensionate attraverso Sharp nel BE. Purtoppo in questo momento a causa delle limitatissime capacità di calcolo del profilo free di Vercel, questo processo necessità di diversi secondi.
+-Gestione menù: è possibile creare dei menù, partendo da zero, o partendo dalla sezione piatti, i piatti sono filtrabili per portata o categoria.
 
--
+Per quanto riguarda il database, tutte le tabelle hanno automaticamente indici sui propri id ed è stata impostata l'indicizzazione anche per chefId, ove presente.

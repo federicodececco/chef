@@ -1,16 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Menu, Dish } from "@prisma/client";
-
-interface MenuWithDishes {
-  id: string;
-  chefId: string;
-  name: string;
-  maxPeople: number | null;
-  price: number | undefined;
-  created_at: Date;
-  Dishes: Dish[];
-}
+import { MenuWithDishes } from "@/util/types";
 
 interface MenuCarouselComponentInterface {
   menus: MenuWithDishes[];

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDish, updateDish, deleteDish } from "@/actions/dish";
+import { getDish, deleteDish } from "@/actions/dish";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: NextRequest,
@@ -30,15 +31,44 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await req.json();
-    const result = await updateDish(id, body);
 
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+    const {
+      categoryIds,
+      Menus,
+      categories,
+      id: dishId,
+      created_at,
+      chefId,
+      ...dishData
+    } = body;
+
+    const updateData: any = {
+      ...dishData,
+    };
+
+    if (categoryIds !== undefined) {
+      updateData.categories = {
+        set: categoryIds.map((categoryId: string) => ({ id: categoryId })),
+      };
     }
 
-    return NextResponse.json(result.data);
+    const updatedDish = await prisma.dish.update({
+      where: { id },
+      data: updateData,
+      include: {
+        categories: true,
+        Menus: true,
+        chef: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(updatedDish);
   } catch (error) {
-    console.error(error);
+    console.error("Error updating dish:", error);
     return NextResponse.json(
       { error: "Failed to update dish" },
       { status: 500 },

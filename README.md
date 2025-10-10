@@ -1,22 +1,193 @@
-Quest'app è stata creata attraverso nextJs, come framework Fullstack, typescript come lingauggio, e Prisma ORM, come tramite tra BE e DB, il quale è postgreSQL.
-L'app è hostata nella sua componente FE/BE su Vercel e Vercel blob, per le immagini, e su neon per la sua parte DB servless.
+Stack Tecnologico
+Frontend
 
-L'applicazioni presenta tutte le componenti richiesete:
--Tre pagine principali:
--una di "registrazione" per lo chef, contenente un pulsante sull'header per aprire un pop up di registrazione.
--una "personale", ovvero una pagina autogenerata, disponibile solo dopo il completamento del profilo dello chef, contenente la sua presentazione.
--una dashboard, ovvero una pagina in cui lo chef puo modificare le sue info, come biografia, piatti, menu, fatti e controllare i messaggi
--Un sistema di messaggistica: per testarlo, dopo aver creato un account del quale si ha accesso alla mail, e dopo averlo completato, si procede ad eseguire il log-out, per poi fare il login con l'utente di test, creato appositamente per lo scopo, con queste credenziali:email= giorgioneri@gmail.com password= password, si può ora procedere alla pagina di "registrazione" dove ci sarà un carosello contente i primi, e per ora unici, 7 chef, ovviamente è presente anche quello appena creato. Cliccando sul suo avatar, si viene reindirizzati alla sua pagina autogenerata, ed in basso a destra ci sarà l'icona per aprire la chat. Il destinatario del messaggio, che sia chef o user, riceverà una mail di notifca, contenente il testo del messaggio. Lo chef può molto più semplicemnte visualizzare e rispondere al messaggio dalla sua dashboard.
--Le pagine pubbliche e le corrispondenti chiamate API sono automaticamente cacheate attraverso le funzionalità di NextJs, così vale anche per le immagini, attraverso il component Image di next, esse vengono automaticamente impostate come lazy loading.
--L'autenticazione è gestita attraverso JWT e conseguenti coockies, inoltre le password sono sottoposte ad hashing attravero bcrypt.
--Lo chef ha possibilità di caricare foto di copertina, foto di profilo (avatar) e foto per la sua galleria. Queste vengono ottimizzate, venendo converite a webp e ridimensionate attraverso Sharp nel BE. Purtoppo in questo momento a causa delle limitatissime capacità di calcolo del profilo free di Vercel, questo processo necessità di diversi secondi.
--Gestione menù: è possibile creare dei menù, partendo da zero, o partendo dalla sezione piatti, i piatti sono filtrabili per portata o categoria.
+Framework: Next.js 14+ (App Router)
+Linguaggio: TypeScript
+Styling: Tailwind CSS
+UI Components: Lucide React (icone)
+Drag & Drop: @dnd-kit
+Map Integration: Leaflet
 
-Per quanto riguarda il database, tutte le tabelle hanno automaticamente indici sui propri id ed è stata impostata l'indicizzazione anche per chefId, ove presente.
+Backend
 
-Struttura:
-Il progetto utilizza AppRouter di NextJs per l'indirizzamento delle pagine, quindi una pagina route.ts, contenuta in src/app/chef/chef-registration avrà un URL uguale https://host.qualcosa/chef/chef-registration, mentre una pagina route.ts contenuta in src/app/chef/[chefSlugId] avrà un URL uguale https://host.qualcosa/chef/idchef-mario-rossi
-Analogamente per accedere ad un API, ad esempio quella per ottenere gli chef, questa sarà https://host.qualcosa/api/chef/ con metodo GET, mentre la stessa rotta con metodo POST invece creerà uno chef
-Tutti i pezzi sono contenuti dentro la cartella src, eccezzione prisma, dentro la quale cartella sono presenti i modelli, rappresentanti il DB e le sue impostazioni
-Dentro src, è presente actions, dentro la quale ci sono le server actions di Next, per velocizzare quando possible la richiesta dati dai componenti SSR,app, dove sono contenute le pagine, e quindi le rotte, le api, nella cartella api, e i layout, oltre che il global.css. Ci sono anche le cartelle components, a sua volta sottodivisa in altre cartelle, in base alla pagina in per la quale vengono utilizzate, context, in quale è presente l'unico context dell'applicazione, ovvero authContext, lib che contiene i file che inizializzano prisma e axios oltre auth.ts, che gestisce le funzioni di autenticazione. L'ultima cartella è utli, contente types, un file di interfaccie typescript, email, il file che gestisce l'invio di email e fonts, cartella contente il font Italiana, come richiesto.
-è presente inoltre anche il file middleware.ts, può essere tranquillamente ignorato in quanto è necessario solo per il contesto di deploy su Vercel
+Runtime: Next.js API Routes
+ORM: Prisma
+Database: PostgreSQL (Neon - serverless)
+Autenticazione: JWT + HTTP-only cookies
+Password Hashing: bcrypt
+Image Processing: Sharp
+
+Hosting & Storage
+
+Applicazione: Vercel
+Immagini: Vercel Blob Storage
+Database: Neon (PostgreSQL serverless)
+
+Funzionalità Principali
+
+1. Gestione Profilo Chef
+
+Registrazione completa: form multi-step per la creazione del profilo
+Informazioni personali: bio, contatti, località
+Selezione geografica: mappa interattiva con Leaflet per definire area operativa e raggio
+Upload immagini:
+
+Foto profilo (avatar)
+Foto copertina
+Galleria foto piatti
+Ottimizzazione automatica (conversione WebP + ridimensionamento con Sharp)
+
+2. Gestione Menu e Piatti
+
+Creazione menu personalizzati con numero massimo di persone
+Gestione piatti:
+
+Organizzazione per portata (Antipasto, Primo, Secondo, Contorno, Dolce)
+Categorizzazione con tag multipli
+Riordino drag & drop con @dnd-kit
+Assegnazione piatti a menu specifici
+
+Fatti interessanti: sezione dedicata per evidenziare premi, riconoscimenti o particolarità
+
+3. Sistema di Messaggistica
+
+Chat in tempo reale tra chef e utenti
+Notifiche email per nuovi messaggi
+Interfaccia conversazionale con cronologia completa
+Dashboard messaggi per gli chef
+
+4. Pagine e Routing
+   Pagine Pubbliche
+
+/chef/chef-registration - Pagina di registrazione e carosello chef
+/chef/[chefSlugId] - Pagina profilo pubblico dello chef (formato: {id}-{slug})
+
+Pagine Private (Autenticate)
+
+/chef/dashboard/[chefId] - Dashboard completa dello chef con sezioni:
+
+Profilo
+Menu
+Piatti
+Foto
+Fatti
+Recensioni
+Messaggi
+
+Schema Database
+prisma- User (utenti base e chef)
+
+- Chef (profili chef estesi)
+- Menu (menu personalizzati)
+- Dish (piatti)
+- Category (categorie piatti)
+- Photo (immagini)
+- Facts (fatti interessanti)
+- Review (recensioni)
+- Chat (conversazioni)
+- Message (messaggi)
+  Ottimizzazioni Database
+
+Indici automatici su tutti gli ID primari
+Indici personalizzati su chefId per query veloci
+Relazioni cascade per mantenere l'integrità referenziale
+
+Sicurezza e Autenticazione
+
+JWT tokens con HTTP-only cookies
+Password hashing con bcrypt
+Protezione route tramite middleware
+Validazione input su tutti gli endpoint API
+
+Performance e Ottimizzazioni
+Caching
+
+Cache automatica di pagine pubbliche (Next.js ISR)
+Cache API routes per dati statici
+Image optimization con Next.js Image component
+Lazy loading automatico per tutte le immagini
+
+Ottimizzazione Immagini
+
+Conversione automatica a WebP
+Ridimensionamento con Sharp
+Storage su Vercel Blob con CDN integrato
+
+Nota: Sul piano gratuito di Vercel, l'elaborazione delle immagini può richiedere diversi secondi a causa delle limitazioni di compute.
+
+Struttura del Progetto
+src/
+├── app/ # App Router (pagine e API)
+│ ├── api/ # API Routes
+│ │ ├── auth/ # Autenticazione
+│ │ ├── chefs/ # Gestione chef
+│ │ ├── dishes/ # Gestione piatti
+│ │ ├── menus/ # Gestione menu
+│ │ ├── messages/ # Sistema messaggi
+│ │ └── photos/ # Upload immagini
+│ ├── chef/
+│ │ ├── [chefSlugId]/ # Pagina profilo pubblico (dinamica)
+│ │ ├── chef-registration/ # Registrazione chef
+│ │ └── dashboard/[chefId]/ # Dashboard chef (protetta)
+│ ├── layout.tsx # Layout principale
+│ └── globals.css # Stili globali
+│
+├── components/ # Componenti React
+│ ├── dashboard/ # Componenti dashboard
+│ │ ├── ProfileComponent.tsx
+│ │ ├── MenuComponent.tsx
+│ │ ├── DishesComponent.tsx
+│ │ ├── PhotosComponent.tsx
+│ │ ├── FactsComponent.tsx
+│ │ ├── MessagesComponent.tsx
+│ │ ├── CityMapSelector.tsx # Selezione mappa
+│ │ └── SortableDishRow.tsx # Drag & drop
+│ └── codes/ # Pagine errore
+│
+├── context/ # React Context
+│ └── AuthContext.tsx # Gestione autenticazione
+│
+├── lib/ # Librerie e utility
+│ ├── prisma.ts # Client Prisma
+│ ├── axios.ts # Configurazione Axios
+│ └── auth.ts # Utility autenticazione
+│
+├── util/ # Utility e types
+│ ├── types.ts # TypeScript interfaces
+│ ├── email.ts # Invio email
+│ └── fonts/ # Font personalizzati (Italiana)
+│
+└── actions/ # Server Actions Next.js
+└── category.ts # Azioni categorie
+
+prisma/
+└── schema.prisma # Schema database
+
+middleware.ts # Middleware Next.js (Vercel)
+
+Testing dell'App
+Setup Account Test
+
+Creare un nuovo chef:
+
+Andare su /chef/chef-registration
+Cliccare il pulsante "diventa uno dei nostri chef"
+Compilare il form di registrazione
+Completare il profilo nella dashboard
+
+Testare il sistema di messaggistica:
+
+Fare logout dal nuovo account
+Login con account test:
+
+Email: giorgioneri@gmail.com
+Password: password
+
+Navigare al carosello chef su /chef/chef-registration
+Selezionare lo chef creato
+Utilizzare l'icona chat in basso a destra
+
+Verificare notifiche:
+
+Controllare la mail del destinatario
+Rispondere dalla dashboard dello chef

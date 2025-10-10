@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ChefHat, Mail, Lock, AlertCircle } from "lucide-react";
+import { ChefHat, Mail, Lock, AlertCircle, House } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ export default function LoginPage() {
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +60,15 @@ export default function LoginPage() {
 
         {/* Form di Login */}
         <div className="rounded-lg bg-[#232323] p-8 shadow-xl">
+          <button
+            onClick={() => {
+              router.push("/");
+            }}
+            className="text-gold hover:bg-first-theme/70 ml-auto flex flex-col items-center justify-center rounded-xl p-2 duration-200 hover:cursor-pointer hover:shadow-2xl"
+          >
+            Home
+            <House />
+          </button>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Campo Email */}
             <div>

@@ -54,7 +54,7 @@ export default function ChefCarousel() {
 
     const fetchChef = async () => {
       try {
-        const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/chefs");
+        const res = await fetch("/api/chefs");
         const data = await res.json();
         if (data) {
           setActualSlides(data);

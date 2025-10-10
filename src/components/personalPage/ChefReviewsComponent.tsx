@@ -1,7 +1,7 @@
 import axiosIstance from "@/lib/axios";
 import { Review, User } from "@prisma/client";
 import { ChevronsLeftRightEllipsis, Star } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface ChefReviewComponent {
   reviews: Review[];
@@ -12,34 +12,44 @@ export default function ChefReviewComponent({
   reviews,
   firstname,
 }: ChefReviewComponent) {
-  const [mean, setMean] = useState(0);
   const [users, setUsers] = useState<undefined | User[]>(undefined);
-  console.log(reviews);
+  const hasFetchedRef = useRef(false);
+
+  const mean = useMemo(() => {
+    if (reviews.length === 0) return 0;
+    const total = reviews.reduce((acc, elem) => acc + elem.rating, 0);
+    return total / reviews.length;
+  }, [reviews]);
 
   useEffect(() => {
-    const countMean = () => {
-      let notMean = 0;
-      reviews.forEach((elem) => {
-        notMean += elem.rating;
-      });
-      notMean /= reviews?.length;
-      setMean(notMean);
-    };
-    countMean();
+    if (hasFetchedRef.current || reviews.length === 0) return;
+
     const fetchReviewUser = async () => {
-      const userPromises = await Promise.all(
-        reviews.map((elem) => axiosIstance.get(`users/${elem.userId}`)),
-      );
-      setUsers(userPromises.map((response) => response.data));
+      try {
+        hasFetchedRef.current = true;
+        const userPromises = await Promise.all(
+          reviews.map((elem) => axiosIstance.get(`/users/${elem.userId}`)),
+        );
+        setUsers(userPromises.map((response) => response.data));
+      } catch (error) {
+        console.error("Errore nel caricamento degli utenti:", error);
+        hasFetchedRef.current = false;
+      }
     };
-    fetchReviewUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    console.log(users);
-  }, [users]);
 
-  console.log(mean);
+    fetchReviewUser();
+  }, [reviews]);
+
+  if (!users) {
+    return (
+      <div className="mx-auto p-4 lg:max-w-4xl 2xl:max-w-7xl">
+        <div className="flex h-48 items-center justify-center">
+          <span className="loading text-gold loading-bars loading-md"></span>
+        </div>
+      </div>
+    );
+  }
+
   if (users != undefined) {
     return (
       <div className="mx-auto p-4 lg:max-w-4xl 2xl:max-w-7xl">

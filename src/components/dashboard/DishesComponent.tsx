@@ -89,7 +89,6 @@ export default function DishesComponent({
         }
 
         const data = await res.json();
-        console.log("Fetched categories:", data);
 
         if (Array.isArray(data)) {
           setCategories(data);

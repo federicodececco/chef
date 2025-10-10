@@ -10,6 +10,7 @@ export type ChefComplete = Chef & {
 
 export type MenuWithDishes = Menu & {
   Dishes: Dish[];
+  price?: number;
 };
 
 export interface CategoryInterface {

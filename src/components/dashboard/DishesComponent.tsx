@@ -82,9 +82,7 @@ export default function DishesComponent({
     const fetchCategories = async () => {
       try {
         setIsLoadingCategories(true);
-        const res = await fetch(
-          process.env.NEXT_PUBLIC_API_URL + "/categories",
-        );
+        const res = await fetch("/api/categories");
 
         if (!res.ok) {
           throw new Error("Failed to fetch categories");

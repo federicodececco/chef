@@ -10,11 +10,8 @@ export async function POST(request: NextRequest) {
     let body;
     try {
       body = await request.json();
-    } catch (e) {
-      return NextResponse.json(
-        { error: "Formato richiesta non valido" },
-        { status: 400 },
-      );
+    } catch (error) {
+      return NextResponse.json({ error: error }, { status: 400 });
     }
 
     const { firstname, lastname, email, password, isChef } = body;

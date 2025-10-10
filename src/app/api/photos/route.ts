@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPhoto, getAllPhotos } from "@/actions/photo";
-import { join } from "path";
 import { put } from "@vercel/blob";
 import sharp from "sharp";
-import { writeFile } from "fs/promises";
 import { updateChef } from "@/actions/chef";
 
 /* export async function POST(request: NextRequest) {

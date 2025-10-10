@@ -1,5 +1,5 @@
 "use client";
-import ChefCarousel from "../ChefCarousel";
+import ChefCarousel from "./ChefCarousel";
 
 export default function ChefsShowcaseSection() {
   return (

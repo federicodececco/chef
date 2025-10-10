@@ -105,6 +105,7 @@ export default function ProfileComponent({
               src={localChef.coverUrl}
               alt="Cover"
               fill
+              sizes=""
               className="object-cover"
               priority
             />
@@ -141,6 +142,7 @@ export default function ProfileComponent({
                   src={localChef.avatarUrl}
                   alt={`${chef.user?.firstname || ""} ${chef.user?.lastname || ""}`}
                   fill
+                  sizes="180"
                   className="object-cover"
                   priority
                 />

@@ -7,9 +7,9 @@ export default function GlobalLeaderSection() {
         <div className="absolute inset-0 -z-5 bg-black/40" />
         <div className="absolute top-[50%] left-[50%] -translate-[50%] text-center md:w-xl">
           <h1 className="text-lg font-semibold text-white md:text-3xl">
-            Leader Globali dal 2012
+            Leader Globali
           </h1>
-          <button className="z-20 mt-8 rounded-4xl bg-white px-6 py-3 text-sm font-semibold md:px-8 md:py-3">
+          <button className="bg-gold z-20 mt-8 rounded-4xl px-6 py-3 text-sm font-semibold md:px-8 md:py-3">
             Unisciti a noi ora
           </button>
         </div>

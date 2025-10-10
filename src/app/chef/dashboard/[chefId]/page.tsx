@@ -20,7 +20,7 @@ import FactsComponent from "@/components/dashboard/FactsComponent";
 import ReviewComponent from "@/components/dashboard/ReviewComponent";
 import MessagesComponent from "@/components/dashboard/MessaggesComponent";
 import axiosIstance from "@/lib/axios";
-import { ChefComplete } from "@/util/types";
+import { ChefComplete, DishInterface } from "@/util/types";
 import { useRouter, useParams } from "next/navigation";
 import { Review } from "@prisma/client";
 import { useAuth } from "@/context/AuthContext";
@@ -43,15 +43,6 @@ export interface MenuInterface {
   dishCount?: number;
   maxPeople?: number;
   Dishes?: DishInterface[];
-}
-
-export interface DishInterface {
-  id: string;
-  name: string;
-  course: string;
-  listOrder?: number;
-  chefId: string;
-  Menus?: { id: string; name: string }[];
 }
 
 export interface PhotoInterface {
@@ -78,7 +69,6 @@ export default function ChefDashboard() {
   const [activeTab, setActiveTab] = useState("profile");
   const [isLoading, setIsLoading] = useState(true);
   const [chef, setChef] = useState<ChefComplete | undefined>();
-
   const [menus, setMenus] = useState<MenuInterface[]>([]);
   const [dishes, setDishes] = useState<DishInterface[]>([]);
   const [photos, setPhotos] = useState<PhotoInterface[]>([]);
@@ -163,6 +153,28 @@ export default function ChefDashboard() {
     }
   };
 
+  const handleAddMenuWithDish = async (
+    menuName: string,
+    dishId: string,
+    maxPeople?: number,
+  ) => {
+    try {
+      const newMenu: Omit<MenuInterface, "id"> = {
+        name: menuName,
+        maxPeople: maxPeople || undefined,
+      };
+      const res = await axiosIstance.post(`/menus/dish/${dishId}`, {
+        ...newMenu,
+        chefId,
+      });
+      if (res) {
+        setMenus([...menus, res.data]);
+      }
+    } catch (error) {
+      console.error("Errore nell'aggiunta del menu:", error);
+    }
+  };
+
   const handleUpdateMenu = async (
     id: string,
     updatedMenu: Partial<MenuInterface>,
@@ -208,25 +220,33 @@ export default function ChefDashboard() {
     }
   };
 
-  const handleReorderDishes = async (
-    menuId: string,
-    reorderedDishes: DishInterface[],
-  ) => {
+  const handleReorderDishes = async (reorderedDishes: DishInterface[]) => {
     try {
-      const updates = reorderedDishes.map((dish, index) => ({
-        id: dish.id,
-        listOrder: index,
-      }));
+      const updates = reorderedDishes
+        .map((dish) => {
+          const originalDish = dishes.find((d) => d.id === dish.id);
+          return {
+            id: dish.id,
+            listOrder: dish.listOrder,
+            originalOrder: originalDish?.listOrder,
+          };
+        })
+        .filter((update) => update.originalOrder !== update.listOrder)
+        .map(({ id, listOrder }) => ({ id, listOrder }));
 
-      await axiosIstance.patch(`/menus/${menuId}/reorder`, { dishes: updates });
-      setDishes(
-        dishes.map((dish) => {
-          const update = updates.find((u) => u.id === dish.id);
-          return update ? { ...dish, listOrder: update.listOrder } : dish;
-        }),
-      );
+      console.log("Updates to send:", updates);
+
+      if (updates.length === 0) {
+        console.log("No changes detected");
+        return;
+      }
+
+      await axiosIstance.patch(`/dishes/reorder`, { dishes: updates });
+
+      setDishes(reorderedDishes);
     } catch (error) {
       console.error("Errore nel riordino dei piatti:", error);
+      setDishes([...dishes]);
     }
   };
 
@@ -425,7 +445,7 @@ export default function ChefDashboard() {
           Fatti
           <button
             className="btn btn-lg btn-circle text-gold bg-first-theme"
-            onClick={() => setActiveTab("fatti")}
+            onClick={() => setActiveTab("facts")}
           >
             <NotebookText />
           </button>
@@ -470,9 +490,11 @@ export default function ChefDashboard() {
         )}
         {activeTab === "dishes" && (
           <DishesComponent
+            onSetMenuActive={() => setActiveTab("menus")}
             dishes={dishes}
-            menus={menus}
             chefId={chefId}
+            onReorder={handleReorderDishes}
+            onAddMenuWithDish={handleAddMenuWithDish}
             onAdd={handleAddDish}
             onUpdate={handleUpdateDish}
             onDelete={handleDeleteDish}

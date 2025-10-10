@@ -1,7 +1,7 @@
 "use client";
 
 import headerImage from "../../../public/registration/header-chef.webp";
-import RegistrationPopUp from "@/components/RegistrationPopUp";
+import RegistrationPopUp from "@/components/registration/RegistrationPopUp";
 import Image from "next/image";
 import { useState } from "react";
 

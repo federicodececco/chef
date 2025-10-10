@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  DishInterface,
-  MenuInterface,
-} from "@/app/chef/dashboard/[chefId]/page";
+import { MenuInterface } from "@/app/chef/dashboard/[chefId]/page";
 import {
   Edit,
   PlusCircle,
@@ -31,7 +28,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Menu } from "@prisma/client";
+import { DishInterface } from "@/util/types";
 
 interface MenuComponentInterface {
   menus: MenuInterface[];
@@ -41,7 +38,7 @@ interface MenuComponentInterface {
   onDeleteMenu: (id: string) => void;
   onAddDishToMenu: (menuId: string, dishId: string) => void;
   onRemoveDishFromMenu: (menuId: string, dishId: string) => void;
-  onReorderDishes: (menuId: string, dishes: DishInterface[]) => void;
+  onReorderDishes: (dishes: DishInterface[]) => void;
 }
 
 interface SortableDishItemProps {
@@ -164,7 +161,7 @@ export default function MenuComponent({
       const newIndex = menuDishes.findIndex((dish) => dish.id === over.id);
 
       const reorderedDishes = arrayMove(menuDishes, oldIndex, newIndex);
-      onReorderDishes(selectedMenuId, reorderedDishes);
+      onReorderDishes(reorderedDishes);
     }
   };
 

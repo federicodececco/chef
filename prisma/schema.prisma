@@ -90,12 +90,11 @@ model Dish {
   listOrder  Int?
   name       String
   course     String
-  menuId     String?
   chefId     String
   created_at DateTime @default(now())
   Menus      Menu[]
 
-  categories Category[]
+  Categories Category[]
 
   chef Chef @relation(fields: [chefId], references: [id], onDelete: Cascade)
 

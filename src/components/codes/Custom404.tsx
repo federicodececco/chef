@@ -1,4 +1,4 @@
-import { ChefHat, Home, ArrowLeft, Search } from "lucide-react";
+import { ChefHat, Home, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Custom404() {

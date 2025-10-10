@@ -11,3 +11,28 @@ export type ChefComplete = Chef & {
 export type MenuWithDishes = Menu & {
   Dishes: Dish[];
 };
+
+export interface CategoryInterface {
+  id: string;
+  name: string;
+  createdAt?: string;
+}
+
+export interface DishInterface {
+  id: string;
+  name: string;
+  course: string;
+  listOrder?: number;
+  chefId: string;
+  Categories?: CategoryInterface[];
+  Menus?: Menu[];
+  createdAt?: string;
+}
+export interface CreateDishInput {
+  name: string;
+  menuId?: string;
+  course: string;
+  listOrder: number;
+  chefId: string;
+  categoryIds: string[];
+}

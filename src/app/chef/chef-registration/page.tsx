@@ -1,4 +1,4 @@
-import CitySlider from "@/components/CitySlider";
+import CitySlider from "@/components/registration/CitySlider";
 import ChefsShowcaseSection from "@/components/registration/ChefShowcaseSection";
 import DescriptionSection from "@/components/registration/DescriptionSection";
 import GlobalLeaderSection from "@/components/registration/GlobalLeaderSection";

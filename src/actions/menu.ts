@@ -65,7 +65,7 @@ export async function getMenu(id: string) {
         },
         Dishes: {
           include: {
-            categories: true,
+            Categories: true,
           },
           orderBy: {
             listOrder: "asc",
@@ -87,7 +87,7 @@ export async function getMenusByChef(chefId: string) {
       include: {
         Dishes: {
           include: {
-            categories: true,
+            Categories: true,
           },
           orderBy: {
             listOrder: "asc",

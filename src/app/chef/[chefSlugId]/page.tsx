@@ -136,7 +136,7 @@ export default function ChefPersonalPage() {
 
       <section className="bg-[#232323] md:px-4">
         <div className="px-4 md:px-0">
-          <GalleryComponent photos={chefData.Photos || []} />
+          <GalleryComponent photos={chefData.Photos} />
         </div>
       </section>
 

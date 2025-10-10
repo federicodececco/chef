@@ -15,6 +15,7 @@ export default function HeroPersonalComponent({
   description,
   facts,
 }: HeroPersonalComponentInterface) {
+  console.log(imageUrl);
   const [extended, setIsExtended] = useState(false);
   if (facts != null) facts = facts[0] ? facts : null;
   return (
@@ -76,11 +77,11 @@ export default function HeroPersonalComponent({
             </div>
             <div>
               <h1 className="font-semibold">{facts[1].short}</h1>
-              <h2 className="py-4 text-white/70">{facts[0].long}</h2>
+              <h2 className="py-4 text-white/70">{facts[1].long}</h2>
             </div>
             <div>
               <h1 className="font-semibold">{facts[2].short}</h1>
-              <h2 className="py-4 text-white/70">{facts[0].long}</h2>
+              <h2 className="py-4 text-white/70">{facts[2].long}</h2>
             </div>
           </div>
         )}

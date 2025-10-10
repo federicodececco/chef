@@ -18,7 +18,7 @@ export default function ChefReviewComponent({
   const mean = useMemo(() => {
     if (reviews.length === 0) return 0;
     const total = reviews.reduce((acc, elem) => acc + elem.rating, 0);
-    return total / reviews.length;
+    return Math.round(total / reviews.length);
   }, [reviews]);
 
   useEffect(() => {
@@ -69,7 +69,6 @@ export default function ChefReviewComponent({
                 <div className="flex max-w-full flex-col gap-2 text-center">
                   <h1 className="flex justify-center">
                     <Star color="#c8a36a" />
-                    {Math.round(rev.rating / 5)}
                   </h1>
                   <h2>
                     {users[index].firstname} {users[index].lastname}

@@ -42,7 +42,7 @@ export async function PATCH(
       ...dishData
     } = body;
 
-    const updateData: any = {
+    const updateData = {
       ...dishData,
     };
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { Menu, Dish } from "@prisma/client";
 import { MenuWithDishes } from "@/util/types";
 
 interface MenuCarouselComponentInterface {

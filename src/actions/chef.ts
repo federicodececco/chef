@@ -62,19 +62,18 @@ export async function getChef(id: string) {
       where: { id },
       include: {
         user: true,
-        Menus: { include: { Dishes: true } },
+        Menus: {
+          include: {
+            Dishes: true,
+          },
+        },
         Photos: true,
         Facts: true,
         Review: true,
         Dishes: {
           include: {
             categories: true,
-            Menus: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
+            Menus: true,
           },
         },
       },

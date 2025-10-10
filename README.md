@@ -13,3 +13,6 @@ L'applicazioni presenta tutte le componenti richiesete:
 -Gestione menù: è possibile creare dei menù, partendo da zero, o partendo dalla sezione piatti, i piatti sono filtrabili per portata o categoria.
 
 Per quanto riguarda il database, tutte le tabelle hanno automaticamente indici sui propri id ed è stata impostata l'indicizzazione anche per chefId, ove presente.
+
+Struttura:
+Il progetto utilizza AppRouter di NextJs per l'indirizzamento delle pagine, quindi una pagina route.ts, contenuta in src/app/chef/chef-registration avrà un URL uguale https://host.qualcosa/chef/chef-registration, mentre una pagina route.ts contenuta in src/app/chef/[chefSlugId] avrà un URL uguale https://host.qualcosa/chef/idchef-mario-rossi

@@ -69,7 +69,7 @@ export default function ChefReviewComponent({
                 <div className="flex max-w-full flex-col gap-2 text-center">
                   <h1 className="flex justify-center">
                     <Star color="#c8a36a" />
-                    {Math.floor(rev.rating / 5)}
+                    {Math.round(rev.rating / 5)}
                   </h1>
                   <h2>
                     {users[index].firstname} {users[index].lastname}

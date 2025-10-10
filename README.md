@@ -16,3 +16,4 @@ Per quanto riguarda il database, tutte le tabelle hanno automaticamente indici s
 
 Struttura:
 Il progetto utilizza AppRouter di NextJs per l'indirizzamento delle pagine, quindi una pagina route.ts, contenuta in src/app/chef/chef-registration avrà un URL uguale https://host.qualcosa/chef/chef-registration, mentre una pagina route.ts contenuta in src/app/chef/[chefSlugId] avrà un URL uguale https://host.qualcosa/chef/idchef-mario-rossi
+Analogamente per accedere ad un API, ad esempio

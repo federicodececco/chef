@@ -52,7 +52,7 @@ export default function ChefPersonalPage() {
         const data = res.data;
 
         setChefData(data);
-        console.log(data);
+
         /* Verifica se il profilo è completo */
         if (!data.coverUrl || !data.avatarUrl) {
           setIsProfileComplete(false);

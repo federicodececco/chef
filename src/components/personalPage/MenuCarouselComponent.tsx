@@ -7,7 +7,7 @@ interface MenuWithDishes {
   chefId: string;
   name: string;
   maxPeople: number | null;
-  price: number | null;
+  price: number | undefined;
   created_at: Date;
   Dishes: Dish[];
 }

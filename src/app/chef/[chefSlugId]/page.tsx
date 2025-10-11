@@ -52,14 +52,15 @@ export default function ChefPersonalPage() {
         const data = res.data;
 
         setChefData(data);
-        console.log(data);
+
         /* Verifica se il profilo è completo */
         if (!data.coverUrl || !data.avatarUrl) {
           setIsProfileComplete(false);
         }
 
         /* Reindirizza se lo slug non corrisponde */
-        if (data.slug && data.slug !== slug) {
+        const normalizeSlug = (str: string) => str.trim().toLowerCase();
+        if (slug && normalizeSlug(slug) !== normalizeSlug(data.slug)) {
           router.replace(`/chef/${chefId}-${data.slug}`);
         }
       } catch (err) {
@@ -117,7 +118,6 @@ export default function ChefPersonalPage() {
         subText={`Chef Privato da ${chefData.city}`}
         imageUrl={chefData.coverUrl}
       />
-
       <section className="bg-[#232323] pb-10 md:bg-[#0A0A0A] md:px-4">
         <HeroPersonalComponent
           imageUrl={chefData.avatarUrl}
@@ -126,20 +126,17 @@ export default function ChefPersonalPage() {
           briefDescription={chefData.bioBrief || null}
         />
       </section>
-
       <section className="bg-[#232323] py-4 pb-10 md:px-4">
         <h1 className="py-6 text-center text-4xl font-bold text-white">
           I miei menu
         </h1>
         <MenuCarouselComponent menus={menusWithDishes || []} />
       </section>
-
       <section className="bg-[#232323] md:px-4">
         <div className="px-4 md:px-0">
           <GalleryComponent photos={chefData.Photos} />
         </div>
       </section>
-
       <section className="bg-[#232323] py-6 md:px-4">
         {chefData.Review.length > 0 && (
           <ChefReviewComponent
@@ -148,12 +145,10 @@ export default function ChefPersonalPage() {
           />
         )}
       </section>
-
       <section className="rounded-t-2xl bg-[#0A0A0A] py-6 md:px-4 lg:bg-[#232323]">
         <ReservationComponent firstname={chefData.user?.firstname || ""} />
       </section>
-
-      {/*solo per utenti autenticati non-chef */}
+      solo per utenti autenticati non-chef
       {shouldShowChatButton && (
         <>
           <button

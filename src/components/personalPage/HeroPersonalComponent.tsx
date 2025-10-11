@@ -15,7 +15,6 @@ export default function HeroPersonalComponent({
   description,
   facts,
 }: HeroPersonalComponentInterface) {
-  console.log(imageUrl);
   const [extended, setIsExtended] = useState(false);
   if (facts != null) facts = facts[0] ? facts : null;
   return (

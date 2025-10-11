@@ -9,14 +9,14 @@ interface Slide {
     firstname: string;
     lastname: string;
   };
-  chefSlug: string;
+  slug: string;
 }
 
 export default function ChefCarousel() {
   const router = useRouter();
 
-  const handleNavigation = (id: string, chefSlug: string) => {
-    const url = `/chef/${id}-${chefSlug}`;
+  const handleNavigation = (id: string, slug: string) => {
+    const url = `/chef/${id}-${slug}`;
     router.push(url);
   };
 
@@ -30,7 +30,7 @@ export default function ChefCarousel() {
           firstname: "chef",
           lastname: "1",
         },
-        chefSlug: "1/chef",
+        slug: "1/chef",
       },
       {
         id: "2",
@@ -39,7 +39,7 @@ export default function ChefCarousel() {
           firstname: "chef",
           lastname: "2",
         },
-        chefSlug: "2/chef",
+        slug: "2/chef",
       },
       {
         id: "3",
@@ -48,7 +48,7 @@ export default function ChefCarousel() {
           firstname: "chef",
           lastname: "3",
         },
-        chefSlug: "3/chef",
+        slug: "3/chef",
       },
     ];
 
@@ -78,7 +78,7 @@ export default function ChefCarousel() {
               .map((slide) => (
                 <div
                   onClick={() => {
-                    handleNavigation(slide.id, slide.chefSlug);
+                    handleNavigation(slide.id, slide.slug);
                   }}
                   key={slide.id}
                   className={`carousel-item relative z-10 flex justify-center text-5xl font-bold text-white hover:animate-pulse hover:cursor-pointer`}

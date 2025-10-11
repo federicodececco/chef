@@ -191,7 +191,3 @@ Verificare notifiche:
 
 Controllare la mail del destinatario
 Rispondere dalla dashboard dello chef
-
-Problemi:
-nella pagina autogenerata dello chef, ci sarà un doppio caricamento, questo è dovuto alla strict mode di React,
-modalità attiva finchè l'ambiente rimane "dev" e non "prod"

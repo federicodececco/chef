@@ -11,12 +11,9 @@ export default function GalleryComponent({
 }: GalleryComponentInterface) {
   const [visibleCount, setVisibleCount] = useState(8);
 
-  console.log(photos);
-
   const filteredPhotos = photos.filter((photo) =>
     photo.path.startsWith("images/"),
   );
-  console.log(filteredPhotos);
   const visiblePhotos = filteredPhotos.slice(0, visibleCount);
   const hasMore = visibleCount < filteredPhotos.length;
   return (

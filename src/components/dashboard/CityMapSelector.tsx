@@ -139,12 +139,6 @@ export default function CityMapSelector({ setCity }: CityMapSelector) {
       return;
     }
 
-    console.log("Location saved:", {
-      city: cityName,
-      coordinates: selectedCity,
-      radiusKm: (radius / 1000).toFixed(1),
-    });
-
     setCity(cityName);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);

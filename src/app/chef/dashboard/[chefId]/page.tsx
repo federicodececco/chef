@@ -234,10 +234,7 @@ export default function ChefDashboard() {
         .filter((update) => update.originalOrder !== update.listOrder)
         .map(({ id, listOrder }) => ({ id, listOrder }));
 
-      console.log("Updates to send:", updates);
-
       if (updates.length === 0) {
-        console.log("No changes detected");
         return;
       }
 
@@ -319,7 +316,7 @@ export default function ChefDashboard() {
         setChefId(params.chefId);
 
         setChef(data);
-        console.log(data);
+
         if (data.Menus) {
           setMenus(data.Menus);
         }

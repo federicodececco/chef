@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { updateSession } from "@/lib/supabase/middleware";
 
 const allowedOrigins = [
   "https://chef-nine-fawn.vercel.app",
@@ -17,7 +18,7 @@ function corsHeaders(origin?: string | null) {
   };
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const origin = request.headers.get("origin");
   const headers = corsHeaders(origin);
 
@@ -28,15 +29,19 @@ export function middleware(request: NextRequest) {
     });
   }
 
-  const response = NextResponse.next();
+  // Update Supabase session
+  const { response: supabaseResponse } = await updateSession(request);
 
   Object.entries(headers).forEach(([key, value]) => {
-    response.headers.set(key, value);
+    supabaseResponse.headers.set(key, value);
   });
 
-  return response;
+  return supabaseResponse;
 }
 
 export const config = {
-  matcher: "/api/:path*",
+  matcher: [
+    "/api/:path*",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };

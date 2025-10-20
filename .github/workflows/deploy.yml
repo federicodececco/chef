@@ -1,0 +1,56 @@
+name: Deploy to AWS App Runner
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push Docker image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          echo "IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
+        id: build-image
+
+      - name: Deploy to App Runner (if service exists)
+        continue-on-error: true
+        run: |
+          if [ ! -z "${{ secrets.APP_RUNNER_SERVICE_ARN }}" ]; then
+            aws apprunner update-service \
+              --service-arn ${{ secrets.APP_RUNNER_SERVICE_ARN }} \
+              --source-configuration "ImageRepository={ImageIdentifier=${{ steps.build-image.outputs.IMAGE_URI }},ImageRepositoryType=ECR,ImageConfiguration={RuntimeEnvironmentVariables={DATABASE_URL=${{ secrets.DATABASE_URL }},DIRECT_URL=${{ secrets.DIRECT_URL }},NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }},NODE_ENV=production},Port=3000}}" \
+              --region ${{ secrets.AWS_REGION }}
+            echo "App Runner service updated successfully"
+          else
+            echo "APP_RUNNER_SERVICE_ARN not set - skipping deployment"
+            echo "create the App Runner service manually and add the ARN to secrets"
+          fi

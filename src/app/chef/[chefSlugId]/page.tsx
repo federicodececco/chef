@@ -11,7 +11,7 @@ import GalleryComponent from "@/components/personalPage/GalleryComponent";
 import ChefReviewComponent from "@/components/personalPage/ChefReviewsComponent";
 import ReservationComponent from "@/components/personalPage/ReservationComponent";
 import ChatComponent from "@/components/personalPage/ChatComponent";
-import { ChefComplete } from "@/util/types";
+import { ChefComplete, MenuWithDishes } from "@/util/types";
 import { useAuth } from "@/context/AuthContext";
 import Custom404 from "@/components/codes/Custom404";
 
@@ -106,7 +106,7 @@ export default function ChefPersonalPage() {
   const shouldShowChatButton =
     isAuthenticated && user && user.id !== chefData.id && !currentUserIsChef;
 
-  const menusWithDishes = (chefData.Menus || []).map((menu) => ({
+  const menusWithDishes = (chefData.Menus || []).map((menu: MenuWithDishes) => ({
     ...menu,
     Dishes: menu.Dishes || [],
   }));

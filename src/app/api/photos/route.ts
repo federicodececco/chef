@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPhoto, getAllPhotos } from "@/actions/photo";
-import { put } from "@vercel/blob";
 import sharp from "sharp";
 import { updateChef } from "@/actions/chef";
+import { createClient } from "@/lib/supabase/server";
 
 /* export async function POST(request: NextRequest) {
   try {
@@ -161,27 +161,47 @@ export async function POST(request: NextRequest) {
     };
 
     const folder = folderMap[type] || folderMap.default;
-    const blobPath = `${folder}/${filename}`;
+    const storagePath = `${folder}/${filename}`;
 
-    const blob = await put(blobPath, resizedBuffer, {
-      access: "public",
-      contentType: "image/jpeg",
-    });
+    // Upload to Supabase Storage
+    const supabase = await createClient();
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET_NAME!)
+      .upload(storagePath, resizedBuffer, {
+        contentType: "image/jpeg",
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error("Supabase upload error:", uploadError);
+      return NextResponse.json(
+        { error: "Errore durante l'upload su Supabase Storage" },
+        { status: 500 },
+      );
+    }
+
+    // Get public URL
+    const {
+      data: { publicUrl },
+    } = supabase.storage
+      .from(process.env.NEXT_PUBLIC_SUPABASE_BUCKET_NAME!)
+      .getPublicUrl(storagePath);
 
     if (type === "avatar") {
-      await updateChef(chefId, { avatarUrl: blob.url });
+      await updateChef(chefId, { avatarUrl: publicUrl });
     } else if (type === "cover") {
-      await updateChef(chefId, { coverUrl: blob.url });
+      await updateChef(chefId, { coverUrl: publicUrl });
     }
 
     const result = await createPhoto({
       filename: file.name,
-      path: blobPath,
+      path: storagePath,
       size: resizedBuffer.length,
       width: finalMetadata.width,
       height: finalMetadata.height,
       mimeType: "image/jpeg",
-      imageUrl: blob.url,
+      imageUrl: publicUrl,
       chefId: chefId,
     });
 
@@ -192,7 +212,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       photo: result.data,
-      url: blob.url,
+      url: publicUrl,
     });
   } catch (error) {
     console.error("Errore upload:", error);

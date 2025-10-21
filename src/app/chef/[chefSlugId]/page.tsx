@@ -41,9 +41,9 @@ export default function ChefPersonalPage() {
   useEffect(() => {
     if (!chefSlugId) return;
 
-    const [idPart, ...slugParts] = chefSlugId.split("-");
+    const [idPart, ...slugParts] = chefSlugId.split(".");
     const chefId = idPart;
-    const slug = slugParts.join("-");
+    const slug = slugParts.join(".");
 
     const fetchData = async () => {
       try {

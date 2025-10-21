@@ -38,8 +38,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
-# if in your application 3000 will not run, then change the expose port
-# ex: EXPOSE <port>
+
 EXPOSE 3000
 
 # set Environment port

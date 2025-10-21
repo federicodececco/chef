@@ -4,11 +4,26 @@ import { updateSession } from "@/lib/supabase/middleware";
 const allowedOrigins = [
   "https://chef-nine-fawn.vercel.app",
   "http://localhost:3000",
-];
+  process.env.NEXT_PUBLIC_BASE_URL, // Amplify or production domain
+].filter(Boolean); // Remove undefined values
 
 function corsHeaders(origin?: string | null) {
+  // Only set CORS headers if origin is in allowed list or if no origin (same-origin request)
   const allowedOrigin =
-    origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+    origin && allowedOrigins.includes(origin)
+      ? origin
+      : !origin
+        ? allowedOrigins[0]
+        : null;
+
+  if (!allowedOrigin) {
+    // Origin not allowed - return minimal headers
+    return {
+      "Access-Control-Allow-Origin": allowedOrigins[0],
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    };
+  }
 
   return {
     "Access-Control-Allow-Origin": allowedOrigin,

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -20,7 +22,7 @@ export default function ChefCarousel() {
     router.push(url);
   };
 
-  const [actualSlides, setActualSlides] = useState<Slide[]>();
+  const [actualSlides, setActualSlides] = useState<Slide[]>([]);
   useEffect(() => {
     const slides: Slide[] = [
       {
@@ -55,12 +57,24 @@ export default function ChefCarousel() {
     const fetchChef = async () => {
       try {
         const res = await fetch("/api/chefs");
+
+        if (!res.ok) {
+          console.error("API returned error status:", res.status);
+          setActualSlides(slides);
+          return;
+        }
+
         const data = await res.json();
-        if (data) {
+
+        if (Array.isArray(data) && data.length > 0) {
           setActualSlides(data);
-        } else setActualSlides(slides);
+        } else {
+          console.error("Expected array from API but got:", data);
+          setActualSlides(slides);
+        }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching chefs:", error);
+        setActualSlides(slides);
       }
     };
     fetchChef();
@@ -70,32 +84,29 @@ export default function ChefCarousel() {
     <div className="mx-auto w-full">
       <div className="relative max-w-6xl">
         <div className="carousel carousel-center bg-neutral rounded-box relative mx-auto w-full space-x-4 p-4">
-          {actualSlides &&
-            actualSlides
-              .filter(
-                (slide) => slide.avatarUrl && slide.avatarUrl.trim() !== "",
-              )
-              .map((slide) => (
-                <div
-                  onClick={() => {
-                    handleNavigation(slide.id, slide.slug);
-                  }}
-                  key={slide.id}
-                  className={`carousel-item relative z-10 flex justify-center text-5xl font-bold text-white hover:animate-pulse hover:cursor-pointer`}
-                >
-                  <Image
-                    src={slide.avatarUrl}
-                    width={300}
-                    height={500}
-                    alt={`${slide.user.firstname} ${slide.user.lastname}`}
-                    className="rounded-box cover z-2 object-cover"
-                  />
-                  <div className="absolute inset-0 z-5 bg-black/50"></div>
-                  <h2 className="text-gold absolute z-10 text-center text-5xl font-bold">
-                    {`${slide.user.firstname} ${slide.user.lastname}`}
-                  </h2>
-                </div>
-              ))}
+          {actualSlides
+            .filter((slide) => slide.avatarUrl && slide.avatarUrl.trim() !== "")
+            .map((slide) => (
+              <div
+                onClick={() => {
+                  handleNavigation(slide.id, slide.slug);
+                }}
+                key={slide.id}
+                className={`carousel-item relative z-10 flex justify-center text-5xl font-bold text-white hover:animate-pulse hover:cursor-pointer`}
+              >
+                <Image
+                  src={slide.avatarUrl}
+                  width={300}
+                  height={500}
+                  alt={`${slide.user.firstname} ${slide.user.lastname}`}
+                  className="rounded-box cover z-2 object-cover"
+                />
+                <div className="absolute inset-0 z-5 bg-black/50"></div>
+                <h2 className="text-gold absolute z-10 text-center text-5xl font-bold">
+                  {`${slide.user.firstname} ${slide.user.lastname}`}
+                </h2>
+              </div>
+            ))}
         </div>
       </div>
     </div>

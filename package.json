@@ -13,7 +13,8 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@prisma/client": "^6.16.3",
-    "@vercel/blob": "^2.0.0",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.76.0",
     "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
     "daisyui": "^5.1.27",
@@ -29,7 +30,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-leaflet": "^5.0.0",
-    "sharp": "^0.32.6"
+    "sharp": "^0.34.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

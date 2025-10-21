@@ -7,7 +7,6 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-
     const result = await getChef(id);
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });

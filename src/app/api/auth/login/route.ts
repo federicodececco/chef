@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
-import { generateToken, verifyPassword, setAuthCookie } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, password } = body;
-
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email e password sono obbligatori" },
@@ -14,35 +13,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const supabase = await createClient();
+
+    const { data: authData, error: authError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+    if (authError) {
+      console.error("Supabase auth error:", authError);
+      return NextResponse.json(
+        { error: "Credenziali non valide" },
+        { status: 401 },
+      );
+    }
+
+    if (!authData.user) {
+      return NextResponse.json(
+        { error: "Credenziali non valide" },
+        { status: 401 },
+      );
+    }
+
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { id: authData.user.id },
       include: { chef: true },
     });
 
-    console.log(user);
-
     if (!user) {
       return NextResponse.json(
-        { error: "Credenziali non valide" },
-        { status: 401 },
+        { error: "Utente non trovato" },
+        { status: 404 },
       );
     }
-
-    const isValidPassword = await verifyPassword(password, user.password);
-    if (!isValidPassword) {
-      return NextResponse.json(
-        { error: "Credenziali non valide" },
-        { status: 401 },
-      );
-    }
-
-    const token = await generateToken({
-      userId: user.id,
-      email: user.email,
-      isChef: !!user.chef,
-    });
-
-    await setAuthCookie(token);
 
     return NextResponse.json({
       user: {
@@ -60,7 +64,6 @@ export async function POST(request: NextRequest) {
             }
           : null,
       },
-      token,
     });
   } catch (error) {
     console.error("Login error:", error);

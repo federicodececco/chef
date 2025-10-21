@@ -301,7 +301,7 @@ export default function ChefDashboard() {
   };
 
   const handleNavigateToPage = async () => {
-    const url = `${chef?.id}-${chef?.slug}`;
+    const url = `${chef?.id}.${chef?.slug}`;
     router.push(`/chef/${url}`);
   };
 

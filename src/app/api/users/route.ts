@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createUser, getAllUsers } from "@/actions/user";
+import { getAllUsers } from "@/actions/user";
 import { createChef } from "@/actions/chef";
 import { prisma } from "@/lib/prisma";
-import { generateToken, setAuthCookie } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 
 export async function GET() {
   try {
@@ -53,34 +53,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await createUser({
-      firstname,
-      lastname,
+    const supabase = await createClient();
+
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          firstname,
+          lastname,
+        },
+      },
     });
 
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 500 });
+    if (authError || !authData.user) {
+      return NextResponse.json(
+        { error: authError?.message || "Failed to create user" },
+        { status: 500 },
+      );
     }
-    if (result.data?.id && isChef) {
-      const chefSlug = `${result.data.firstname.toLowerCase}-${result.data.lastname.toLowerCase}`;
+
+    const user = await prisma.user.create({
+      data: {
+        id: authData.user.id,
+        firstname,
+        lastname,
+        email,
+        password: "", // Password managed by Supabase
+      },
+    });
+
+    if (user.id && isChef) {
+      const chefSlug = `${user.firstname.toLowerCase()}-${user.lastname.toLowerCase()}`;
       await createChef({
-        id: result.data.id,
+        id: user.id,
         slug: chefSlug,
       });
     }
-    const user = { ...result.data!, isChef: isChef ? true : false };
 
-    const token = await generateToken({
-      userId: user.id,
-      email: user.email,
-      isChef: user.isChef,
-    });
-
-    await setAuthCookie(token);
-
-    return NextResponse.json(user, { status: 201 });
+    return NextResponse.json(
+      { ...user, isChef: isChef ? true : false },
+      { status: 201 },
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json(

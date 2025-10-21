@@ -1,13 +1,13 @@
 import type { NextConfig } from "next";
 import withFlowbiteReact from "flowbite-react/plugin/nextjs";
-/* 
-const nextConfig: NextConfig = {}; */
+
 const nextConfig: NextConfig = {
+  // Rimuovi "output: standalone" per Amplify (serve solo per Docker)
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**.vercel-storage.com",
+        hostname: "**.supabase.co",
       },
     ],
   },

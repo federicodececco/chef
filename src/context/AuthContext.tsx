@@ -8,6 +8,7 @@ import {
   ReactNode,
   useCallback,
 } from "react";
+import { createClient } from "@/lib/supabase/client";
 import axiosInstance from "@/lib/axios";
 import axios from "axios";
 
@@ -64,6 +65,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [hasChecked, setHasChecked] = useState(false);
+
+  const supabase = createClient();
 
   const isAuthenticated = !!user;
   const isChef = !!user?.chef;
@@ -125,6 +128,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const refreshUser = useCallback(async () => {
     await fetchUser();
   }, [fetchUser]);
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        await fetchUser();
+      } else if (event === "SIGNED_OUT") {
+        updateUser(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase.auth, fetchUser]);
 
   useEffect(() => {
     if (!hasChecked) {

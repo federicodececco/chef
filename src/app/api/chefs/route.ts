@@ -9,7 +9,8 @@ export async function GET() {
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
-    return NextResponse.json(result.data);
+    const data = Array.isArray(result.data) ? result.data : [];
+    return NextResponse.json(data);
   } catch (error) {
     console.error(error);
     return NextResponse.json(

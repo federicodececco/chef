@@ -7,8 +7,6 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    console.log("porcodio");
-    console.log(id);
     const result = await getChef(id);
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 404 });

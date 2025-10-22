@@ -15,10 +15,8 @@ const PRECACHE_URLS = [
 
 /* actual sw installation with precacheing */
 self.addEventListener("install", (event) => {
-  console.log("[SW] Installing Service Worker...");
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log("[SW] Precaching App Shell");
       return cache.addAll(PRECACHE_URLS);
     }),
   );
@@ -172,7 +170,6 @@ async function cacheFirst(request, cacheName) {
     }
     return networkResponse;
   } catch (error) {
-    console.error("[SW] Fetch failed:", error);
     throw error;
   }
 }

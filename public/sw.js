@@ -104,16 +104,19 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(networkFirst(request, RUNTIME_CACHE));
 });
 
-// Network First - prova network, poi cache
+/* cacheing that tries network first than cache */
 async function networkFirst(request, cacheName) {
   try {
+    /* tries network */
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
+      /* update cache */
       const cache = await caches.open(cacheName);
       cache.put(request, networkResponse.clone());
     }
     return networkResponse;
   } catch (error) {
+    /* get cache */
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
       return cachedResponse;

@@ -18,7 +18,7 @@ export default function ChefCarousel() {
   const router = useRouter();
 
   const handleNavigation = (id: string, slug: string) => {
-    const url = `/chef/${id}-${slug}`;
+    const url = `/chef/${id}.${slug}`;
     router.push(url);
   };
 

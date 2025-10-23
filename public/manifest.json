@@ -1,0 +1,28 @@
+{
+  "short_name": "Chef",
+  "name": "Chef - Progressive Web App",
+  "icons": [
+ 
+    {
+      "src": "/images/chef-hat-192-maskable.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose":"any maskable"
+    },
+    {
+      "src": "/images/chef-hat-512-maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose":"any maskable"
+    }
+  ],
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
+  "background_color": "#0a0a0a",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#0a0a0a",
+  "description": "Mvp of a chef app",
+  "lang": "it",
+  "orientation": "portrait"
+}

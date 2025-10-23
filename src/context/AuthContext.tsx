@@ -70,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isAuthenticated = !!user;
   const isChef = !!user?.chef;
-  const chefSlug = user?.chef ? `${user.chef.id}-${user.chef.slug}` : "";
+  const chefSlug = user?.chef ? `${user.chef.id}.${user.chef.slug}` : "";
 
   const updateUser = (newUser: User | null) => {
     setUser(newUser);

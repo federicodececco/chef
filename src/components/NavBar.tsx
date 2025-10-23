@@ -5,11 +5,17 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import { ChefHat, DoorOpen, House, LogIn, NotebookText } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function NavBar() {
   const { user, isAuthenticated, isChef, chefSlug, logout } = useAuth();
+  const [mounted, setMounted] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleNavigation = (value: string) => {
     if ((value = "dashboard")) {
@@ -30,6 +36,10 @@ export default function NavBar() {
     router.push("/login");
   };
 
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <>
       <div className="navbar bg-first-theme absolute -top-18 z-12 hidden h-18 shadow-sm md:flex">
@@ -48,8 +58,8 @@ export default function NavBar() {
             />
           </div>
         </div>
-        <div className="flex-1">
-          <ul className="menu menu-horizontal px-1">
+        <div className="flex-2">
+          <ul className="menu menu-horizontal px-2">
             <li>
               {!isAuthenticated && (
                 <button
@@ -76,7 +86,7 @@ export default function NavBar() {
               <li className="">
                 <details>
                   <summary className="text-gold">Pagine</summary>
-                  <ul className="bg-first-theme rounded-t-none p-2">
+                  <ul className="bg-first-theme rounded-t-none">
                     <li className="text-white/70">
                       <span
                         onClick={() => {

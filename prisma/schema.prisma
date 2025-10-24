@@ -3,20 +3,26 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Chef {
-  id          String  @id @default(cuid())
-  bio         String? @db.VarChar(800)
-  bioBrief    String?
-  avatarUrl   String?
-  coverUrl    String?
-  phoneNumber String?
-  nation      String?
-  slug        String?
-  city        String?
+  id             String    @id @default(cuid())
+  bio            String?   @db.VarChar(800)
+  bioBrief       String?
+  avatarUrl      String?
+  coverUrl       String?
+  phoneNumber    String?
+  nation         String?
+  slug           String?
+  city           String?
+  seoTitle       String?   @db.VarChar(60)
+  seoDescription String?   @db.VarChar(160)
+  seoKeywords    String[]  @default([])
+  structuredData Json?
+  seoUpdatedAt   DateTime?
 
   createdAt DateTime @default(now())
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Save, Camera, Upload } from "lucide-react";
+import { Save, Camera, Upload, Sparkles } from "lucide-react";
 import { ChefComplete } from "@/util/types";
 import Image from "next/image";
 import axiosInstance from "@/lib/axios";
@@ -20,6 +20,7 @@ export default function ProfileComponent({
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [isOptimizingSeo, setIsOptimizingSeo] = useState(false);
   const [city, setCity] = useState("");
 
   const avatarInputRef = useRef<HTMLInputElement>(null);
@@ -30,8 +31,27 @@ export default function ProfileComponent({
     if (city != "") {
       localChef.city = city;
     }
-    await onUpdate(localChef);
-    setTimeout(() => setIsSaving(false), 500);
+
+    try {
+      /* save simple modification */
+      await onUpdate(localChef);
+
+      /* optimeze the seo based on the new infos */
+      optimizeSeoInBackground();
+    } finally {
+      setTimeout(() => setIsSaving(false), 500);
+    }
+  };
+
+  /*optimize seo in background  */
+  const optimizeSeoInBackground = async () => {
+    try {
+      await axiosInstance.post("/seo/generate", {
+        chefId: chef.id,
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleImageUpload = async (file: File, type: "avatar" | "cover") => {
@@ -62,7 +82,6 @@ export default function ProfileComponent({
         onUpdate(updatedChef);
       }
     } catch (error) {
-      console.error(`Errore upload ${type}:`, error);
       alert(
         `Errore durante l'upload della ${type === "avatar" ? "foto profilo" : "cover"}`,
       );
@@ -92,6 +111,19 @@ export default function ProfileComponent({
     }
     if (coverInputRef.current) {
       coverInputRef.current.value = "";
+    }
+  };
+
+  const handleOptimizeSeo = async () => {
+    setIsOptimizingSeo(true);
+    try {
+      const res = await axiosInstance.post("/seo/generate", {
+        chefId: chef.id,
+      });
+    } catch (error: any) {
+      throw error;
+    } finally {
+      setIsOptimizingSeo(false);
     }
   };
 
@@ -250,14 +282,16 @@ export default function ProfileComponent({
           <CityMapSelector city={city} setCity={setCity}></CityMapSelector>
         </div>
 
-        <button
-          onClick={handleSave}
-          disabled={isSaving}
-          className="mt-6 flex items-center gap-2 rounded bg-[#c8a36a] px-6 py-3 font-semibold text-[#0a0a0a] transition hover:bg-[#d4b480] disabled:opacity-50"
-        >
-          <Save size={18} />
-          {isSaving ? "Salvataggio..." : "Salva Modifiche"}
-        </button>
+        <div className="mt-6 flex flex-col gap-4">
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            className="flex items-center justify-center gap-2 rounded bg-[#c8a36a] px-6 py-3 font-semibold text-[#0a0a0a] transition hover:bg-[#d4b480] disabled:opacity-50"
+          >
+            <Save size={18} />
+            {isSaving ? "Salvataggio..." : "Salva Modifiche"}
+          </button>
+        </div>
       </div>
     </div>
   );

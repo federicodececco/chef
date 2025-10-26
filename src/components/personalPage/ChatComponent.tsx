@@ -95,9 +95,7 @@ export default function ChatComponent({
       );
 
       setMessageInput("");
-    } catch (error) {
-      console.error("Errore nell'invio del messaggio:", error);
-    }
+    } catch (error) {}
   };
 
   const toggleChat = (chatId: string) => {

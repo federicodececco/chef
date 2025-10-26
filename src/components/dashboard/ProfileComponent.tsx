@@ -120,7 +120,7 @@ export default function ProfileComponent({
       const res = await axiosInstance.post("/seo/generate", {
         chefId: chef.id,
       });
-    } catch (error: any) {
+    } catch (error) {
       throw error;
     } finally {
       setIsOptimizingSeo(false);

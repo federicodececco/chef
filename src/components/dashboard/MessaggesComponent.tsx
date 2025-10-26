@@ -48,7 +48,6 @@ export default function MessagesComponent({ chefId }: MessagesComponentProps) {
           setSelectedChatId(data[0].id);
         }
       } catch (error) {
-        console.error("Errore nel caricamento delle chat:", error);
       } finally {
         setIsLoading(false);
       }

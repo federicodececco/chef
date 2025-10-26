@@ -4,7 +4,7 @@ interface SeoHeadProps {
   seoTitle?: string | null;
   seoDescription?: string | null;
   seoKeywords?: string[];
-  structuredData?: any;
+  structuredData?: () => void;
   imageUrl?: string | null;
   url?: string;
 }
@@ -67,7 +67,7 @@ export function generateSeoMetadata({
   };
 }
 
-export function StructuredData({ data }: { data: any }) {
+export function StructuredData({ data }: { data: Record<string, unknown> | unknown[] | string | number | boolean | null }) {
   if (!data) return null;
 
   return (

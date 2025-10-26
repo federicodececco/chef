@@ -93,11 +93,10 @@ export async function POST(req: NextRequest) {
         seoKeywords: updatedChef.seoKeywords,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         error: "Errore durante la generazione SEO",
-        details: error.message,
       },
       { status: 500 },
     );

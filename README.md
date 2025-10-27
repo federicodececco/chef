@@ -16,6 +16,7 @@ Database: PostgreSQL (Neon - serverless)
 Autenticazione: JWT + HTTP-only cookies
 Password Hashing: bcrypt
 Image Processing: Sharp
+AI Integration: Google Gemini 2.5 Flash (SEO generation)
 
 Hosting & Storage
 
@@ -115,6 +116,45 @@ Storage su Vercel Blob con CDN integrato
 
 Nota: Sul piano gratuito di Vercel, l'elaborazione delle immagini può richiedere diversi secondi a causa delle limitazioni di compute.
 
+5. Ottimizzazione SEO con AI
+
+Sistema automatico di generazione SEO per profili chef tramite Google Gemini AI:
+
+Generazione automatica di:
+
+SEO Title ottimizzato (max 60 caratteri)
+Meta Description accattivante (max 160 caratteri)
+Keywords long-tail per ricerca locale
+Structured Data (JSON-LD Schema.org)
+
+API Endpoint:
+
+POST /api/seo/generate - Genera e salva metadati SEO per uno chef
+
+Componenti SEO:
+
+generateSeoMetadata() - Genera metadata Next.js ottimizzati
+StructuredData - Component per JSON-LD Schema.org
+Open Graph tags per social sharing
+Twitter Card metadata
+Robots meta tags configurabili
+
+Dati utilizzati per la generazione:
+
+Nome chef e biografia
+Città e nazione di operatività
+Specialità culinarie (estratte dalle categorie piatti)
+Rating medio e numero recensioni
+Tipi di menu offerti
+Fascia di prezzo calcolata automaticamente
+
+Integrazione Gemini:
+
+Modello: gemini-2.5-flash
+Prompt engineering per SEO locale
+Validazione automatica lunghezza title/description
+Output JSON strutturato con Schema.org compliant data
+
 Struttura del Progetto
 src/
 ├── app/ # App Router (pagine e API)
@@ -124,7 +164,9 @@ src/
 │ │ ├── dishes/ # Gestione piatti
 │ │ ├── menus/ # Gestione menu
 │ │ ├── messages/ # Sistema messaggi
-│ │ └── photos/ # Upload immagini
+│ │ ├── photos/ # Upload immagini
+│ │ └── seo/
+│ │   └── generate/ # Generazione SEO con AI
 │ ├── chef/
 │ │ ├── [chefSlugId]/ # Pagina profilo pubblico (dinamica)
 │ │ ├── chef-registration/ # Registrazione chef
@@ -142,6 +184,7 @@ src/
 │ │ ├── MessagesComponent.tsx
 │ │ ├── CityMapSelector.tsx # Selezione mappa
 │ │ └── SortableDishRow.tsx # Drag & drop
+│ ├── SeoHead.tsx # Metadata e Structured Data
 │ └── codes/ # Pagine errore
 │
 ├── context/ # React Context
@@ -150,7 +193,8 @@ src/
 ├── lib/ # Librerie e utility
 │ ├── prisma.ts # Client Prisma
 │ ├── axios.ts # Configurazione Axios
-│ └── auth.ts # Utility autenticazione
+│ ├── auth.ts # Utility autenticazione
+│ └── gemini.ts # Integrazione Google Gemini AI
 │
 ├── util/ # Utility e types
 │ ├── types.ts # TypeScript interfaces

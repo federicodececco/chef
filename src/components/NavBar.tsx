@@ -42,7 +42,7 @@ export default function NavBar() {
 
   return (
     <>
-      <div className="navbar bg-first-theme absolute -top-18 z-12 hidden h-18 shadow-sm md:flex">
+      <div className="navbar bg-first-theme absolute -top-18 z-14 hidden h-18 shadow-sm md:flex">
         <div className="flex-9">
           <div
             className="btn bg-first-theme btn-ghost relative min-h-[70px] w-1/4 border-none lg:mx-0"

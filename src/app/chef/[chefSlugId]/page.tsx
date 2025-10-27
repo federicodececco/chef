@@ -148,7 +148,7 @@ export default function ChefPersonalPage() {
       <section className="rounded-t-2xl bg-[#0A0A0A] py-6 md:px-4 lg:bg-[#232323]">
         <ReservationComponent firstname={chefData.user?.firstname || ""} />
       </section>
-      solo per utenti autenticati non-chef
+      {/* solo per utenti autenticati non-chef */}
       {shouldShowChatButton && (
         <>
           <button

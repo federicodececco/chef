@@ -43,7 +43,7 @@ export default function ReservationComponent({
               <Image
                 src="/chef/reservation3.webp"
                 fill
-                className="rounded-2xl object-cover"
+                className="rounded-t-2xl object-cover"
                 alt="reservation 3"
               />
             </div>
